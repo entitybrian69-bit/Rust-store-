@@ -1,12 +1,17 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # Builds quick_place.hmod with the real, pinned Horizon toolchain, runs the host
 # unit tests, the legacy sandbox scripts in tests/, and the registry check.
 #
 # Nothing here is hand-zipped: `cargo horizon-mod build` compiles the crate to
 # wasm32-unknown-unknown, componentizes it and packs the .hmod with Horizon's own
 # `horizon-mods` packer.
-set -eu
+#
+# Every line is also written to build.log, which CI commits back to the branch so
+# compiler errors are readable from anywhere (Actions logs are not always fetchable).
+set -euo pipefail
 cd "$(dirname "$0")"
+LOG=${LOG:-build.log}
+exec > >(tee "$LOG") 2>&1
 
 # The last Horizon main commit that still had the WebAssembly server runtime
 # (2026-10-29T04:37:12Z). The commit that removed it is e7614d2197ebe9ffdaa75e1bbb432dc0ce855e70.

@@ -49,6 +49,22 @@ jobs:
           TOOL_DIR: ${{ runner.temp }}/qp-tool
         run: sh ./build.sh
 
+      - name: Keep the build log on the branch (even when the build fails)
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          if [ -f quick-place/build.log ]; then cp quick-place/build.log dist/build.log; else echo "build.log missing" > dist/build.log; fi
+          echo "---- tail of build log ----"
+          tail -n 120 dist/build.log || true
+          git config user.name "quick-place-ci"
+          git config user.email "quick-place-ci@users.noreply.github.com"
+          git add -f dist/build.log
+          if git diff --cached --quiet; then echo "log unchanged"; else
+            git commit -m "ci: quick place build log [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}" || true
+          fi
+
       - name: Collect the artifact, its base64 and its SHA-256
         working-directory: quick-place
         run: |
