@@ -8,6 +8,8 @@
 #
 # Every line is also written to build.log, which CI commits back to the branch so
 # compiler errors are readable from anywhere (Actions logs are not always fetchable).
+# Re-exec under bash when invoked as `sh build.sh`: the log capture needs bash.
+if [ -z "${BASH_VERSION:-}" ]; then exec bash "$0" "$@"; fi
 set -euo pipefail
 cd "$(dirname "$0")"
 LOG=${LOG:-build.log}
