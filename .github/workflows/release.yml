@@ -1,0 +1,23 @@
+name: Legacy Quick Place prototype CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test with pinned legacy SDK and tool
+        run: ./build.sh
+      - name: Upload tested preview-only prototype
+        uses: actions/upload-artifact@v4
+        with:
+          name: quick-place-legacy-preview-only
+          if-no-files-found: error
+          path: |
+            target/horizon-mod/quick_place.hmod
+            README.md

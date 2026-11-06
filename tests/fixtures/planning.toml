@@ -1,0 +1,35 @@
+[[case]]
+name = "south line skips a blocked candidate"
+yaw = 0.0
+mode = "line"
+limit = 3
+origin = [10, 64, -2]
+blocked = [[10, 64, 0]]
+expected = [[10, 64, -1], [10, 64, 1]]
+
+[[case]]
+name = "west line and negative coordinates"
+yaw = 90.0
+mode = "line"
+limit = 3
+origin = [0, 0, 0]
+blocked = []
+expected = [[-1, 0, 0], [-2, 0, 0], [-3, 0, 0]]
+
+[[case]]
+name = "south plane in deterministic order"
+yaw = 0.0
+mode = "plane"
+limit = 4
+origin = [0, 64, 0]
+blocked = []
+expected = [[0, 64, 1], [-1, 64, 1], [1, 64, 1], [0, 64, 2]]
+
+[[case]]
+name = "coordinate overflow is skipped"
+yaw = 270.0
+mode = "line"
+limit = 3
+origin = [2147483646, 64, 0]
+blocked = []
+expected = [[2147483647, 64, 0]]

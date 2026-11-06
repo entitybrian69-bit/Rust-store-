@@ -1,0 +1,17 @@
+[package]
+name = "quick_place"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+horizon-mod-sdk = { git = "https://github.com/horizon-rust/horizon", rev = "62a01db8f006b422e6db24e34dcee05ad41760ba" }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+[profile.release]
+opt-level = "s"
+lto = true

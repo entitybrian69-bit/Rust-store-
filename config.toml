@@ -1,0 +1,5 @@
+# Baked into the WASM at build time; rebuild after changing this file.
+enabled = true
+max_blocks_per_sweep = 3
+placement_mode = "line" # line or plane
+facing = "south"        # north, east, south, or west (player yaw unavailable)

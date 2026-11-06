@@ -1,0 +1,23 @@
+# Historical WASM sandbox integration: reads world, skips a non-air block,
+# reports the number of air candidates and makes no writes.
+[[step]]
+join = "Alex"
+
+[[step]]
+blocks = [{ x = 0, y = 64, z = 1, state = "minecraft:stone" }]
+place = { x = 0, y = 64, z = 0, state = "minecraft:stone" }
+expect.told = ["Alex: Quick Place preview: 2 air target(s); no blocks placed (no atomic air-only write)."]
+expect.blocks = [
+    { x = 0, y = 64, z = 1, state = "minecraft:stone" },
+    { x = 0, y = 64, z = 2, state = "minecraft:air" },
+    { x = 0, y = 64, z = 3, state = "minecraft:air" },
+]
+
+[[step]]
+blocks = [{ x = 4, y = 64, z = 1, state = "minecraft:oak_log[axis=y]" }]
+place = { x = 4, y = 64, z = 0, state = "minecraft:dirt" }
+expect.told = ["Alex: Quick Place preview: 2 air target(s); no blocks placed (no atomic air-only write)."]
+expect.blocks = [
+    { x = 4, y = 64, z = 1, state = "minecraft:oak_log[axis=y]" },
+    { x = 4, y = 64, z = 2, state = "minecraft:air" },
+]
