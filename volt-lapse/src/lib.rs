@@ -535,7 +535,7 @@ impl VoltLapse {
         let defaults = Config::default();
         NO_API
             .iter()
-            .filter(|(key, _)| self.config.get(key) != defaults.get(key))
+            .filter(|(key, _)| self.config.get(*key) != defaults.get(*key))
             .map(|(key, _)| *key)
             .collect()
     }
@@ -1480,7 +1480,7 @@ mod tests {
     #[test]
     fn every_no_api_entry_names_a_real_setting() {
         for (key, why) in NO_API {
-            assert!(settings::spec_for(key).is_some(), "{key} is not a setting");
+            assert!(settings::spec_for(*key).is_some(), "{key} is not a setting");
             assert!(!why.is_empty());
         }
     }
