@@ -1,0 +1,8 @@
+id = "buzzing_apiary"
+name = "Buzzing Apiary"
+version = "0.1.0"
+description = "Cozy beekeeping expansion for Horizon 26.3: Apiary Hives, Beeswax Bricks, Honey Lamps, Beeswax, Honeyed Bread, a Beekeeper's Smoker, tame Bee Swarms, and a Pollination status effect."
+authors = ["Rust-store-"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

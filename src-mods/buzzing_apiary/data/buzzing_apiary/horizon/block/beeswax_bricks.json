@@ -1,0 +1,9 @@
+{
+  "template": "minecraft:honeycomb_block",
+  "properties": {
+    "hardness": 1.2,
+    "resistance": 6.0,
+    "sounds": "minecraft:honeycomb_block"
+  },
+  "item": true
+}

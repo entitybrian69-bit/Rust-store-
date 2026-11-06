@@ -1,0 +1,10 @@
+{
+  "template": "minecraft:beehive",
+  "properties": {
+    "hardness": 2.0,
+    "resistance": 3.0,
+    "light": 3,
+    "sounds": "minecraft:wood"
+  },
+  "item": true
+}

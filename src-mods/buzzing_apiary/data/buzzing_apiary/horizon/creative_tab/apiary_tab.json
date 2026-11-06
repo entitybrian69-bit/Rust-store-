@@ -1,0 +1,12 @@
+{
+  "title": "Buzzing Apiary",
+  "icon": "buzzing_apiary:beeswax",
+  "items": [
+    "buzzing_apiary:apiary_hive",
+    "buzzing_apiary:beeswax_bricks",
+    "buzzing_apiary:honey_lamp",
+    "buzzing_apiary:beeswax",
+    "buzzing_apiary:honeyed_bread",
+    "buzzing_apiary:beekeeper_smoker"
+  ]
+}

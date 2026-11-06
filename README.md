@@ -37,6 +37,7 @@ All packages below use **Horizon Content API `0.2`** (`capabilities = ["registri
 | **Ruby Expansion**<br>`ruby_expansion` | `0.2.1` | 🖥️ PC<br>📱 Android | Ruby Ore, Block of Ruby, Ruby Gem, Crimson Ruby Blade, Ruby Vitality Status Effect | `7,319 B` | [**Download `.hmod`**](releases/ruby_expansion.hmod) | [`src-mods/ruby_expansion`](src-mods/ruby_expansion/) |
 | **Industrial Pipes & Grates**<br>`industrial_pipes` | `0.2.0` | 🖥️ PC<br>📱 Android | 6-Way Connecting Copper Pipe & Heavy Steel Duct, Non-Occluding Factory Grate, Pipe Wrench, Sorter Menu | `8,852 B` | [**Download `.hmod`**](releases/industrial_pipes.hmod) | [`src-mods/industrial_pipes`](src-mods/industrial_pipes/) |
 | **Dungeon Mobs & Frost Magic**<br>`dungeon_mobs_plus` | `0.2.0` | 🖥️ PC<br>📱 Android | Armored Dungeon Brute & Outpost Guard Mobs, Frost Orb Projectile, Frostbite Effect, Runic Frost Totem | `5,391 B` | [**Download `.hmod`**](releases/dungeon_mobs_plus.hmod) | [`src-mods/dungeon_mobs_plus`](src-mods/dungeon_mobs_plus/) |
+| **Buzzing Apiary**<br>`buzzing_apiary` | `0.1.0` | 🖥️ PC<br>📱 Android | Apiary Hives, Beeswax Bricks, Honey Lamps (Light 15), Beeswax, Honeyed Bread, Beekeeper's Smoker, Bee Swarm Mob, Pollination Effect, Apiary Extractor Menu | `11,772 B` | [**Download `.hmod`**](releases/buzzing_apiary.hmod) | [`src-mods/buzzing_apiary`](src-mods/buzzing_apiary/) |
 
 > **Machine-Readable Index:** [`catalog/mods-index.json`](catalog/mods-index.json) contains the full manifest metadata, entry counts, and SHA-256 hashes for all hosted `.hmod` files.
 
@@ -81,6 +82,12 @@ https://raw.githubusercontent.com/entitybrian69-bit/Rust-store-/main/releases/in
 https://raw.githubusercontent.com/entitybrian69-bit/Rust-store-/main/releases/dungeon_mobs_plus.hmod
 ```
 - **SHA-256:** `f331e42bdf7610f689e192e2ebcc175072d18f911bf2af35f35fe3beb23f00fb`
+
+### 6. Buzzing Apiary (`buzzing_apiary.hmod`)
+```text
+https://raw.githubusercontent.com/entitybrian69-bit/Rust-store-/main/releases/buzzing_apiary.hmod
+```
+- **SHA-256:** `fbab71ff01e781b316038d87c738b503d4f9a62ef8087afdce58e987c4712677`
 
 ---
 
@@ -150,6 +157,26 @@ Adds custom living mob types, frost projectiles, and harmful status effects:
   - `dungeon_mobs_plus:frost_orb` — Throwable Frost Orb item
   - `dungeon_mobs_plus:frostbite` — Harmful frost status effect (`/effect give @s dungeon_mobs_plus:frostbite 30`)
 - **Creative Tab:** *Dungeon Mobs+* (`dungeon_mobs_plus:dungeon_tab`)
+
+---
+
+### 🐝 6. Buzzing Apiary (`buzzing_apiary`)
+A cozy, non-combat beekeeping expansion that turns Honeycomb into a full building and farming loop:
+- **Blocks:**
+  - `buzzing_apiary:apiary_hive` — *Apiary Hive* (`hardness: 2.0`, `resistance: 3.0`, `light: 3`, wood sounds)
+  - `buzzing_apiary:beeswax_bricks` — *Beeswax Bricks* (`hardness: 1.2`, `resistance: 6.0`, decorative honeycomb-brick palette)
+  - `buzzing_apiary:honey_lamp` — *Honey Lamp* (`light: 15`, `hardness: 0.6`, full-bright honey lighting)
+- **Items:**
+  - `buzzing_apiary:beeswax` — Crafted from 2 Honeycomb; core material for every recipe in the mod
+  - `buzzing_apiary:honeyed_bread` — *Honeyed Bread* food item (`max_stack_size: 16`, `uncommon` tier)
+  - `buzzing_apiary:beekeeper_smoker` — Handheld utility tool (`max_damage: 128`) for calming hives
+- **Entity Type:**
+  - `buzzing_apiary:bee_swarm` — Tame living Bee variant (`10.0` Max Health, `0.3` movement speed — `/summon buzzing_apiary:bee_swarm`)
+- **Status Effect:**
+  - `buzzing_apiary:pollination` — Beneficial status effect, honey-gold `#FFC30F` particle color (`/effect give @s buzzing_apiary:pollination 30`)
+- **Menu:**
+  - `buzzing_apiary:apiary_extractor` — 27-slot Horizon `MenuType` (`slots: 27`, `data_slots: 3`, `results: [25, 26]`) for honey extraction
+- **Creative Tab:** *Buzzing Apiary* (`buzzing_apiary:apiary_tab`)
 
 ---
 

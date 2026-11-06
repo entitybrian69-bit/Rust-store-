@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "ITI",
+    " S "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "T": "minecraft:torch",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "buzzing_apiary:beekeeper_smoker",
+    "count": 1
+  }
+}

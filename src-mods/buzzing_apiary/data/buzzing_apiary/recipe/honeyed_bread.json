@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:bread",
+    "minecraft:honey_bottle"
+  ],
+  "result": {
+    "id": "buzzing_apiary:honeyed_bread",
+    "count": 1
+  }
+}

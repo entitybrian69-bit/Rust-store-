@@ -1,0 +1,7 @@
+{
+  "template": "minecraft:bread",
+  "components": {
+    "minecraft:max_stack_size": 16,
+    "minecraft:rarity": "uncommon"
+  }
+}

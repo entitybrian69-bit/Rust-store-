@@ -1,0 +1,13 @@
+{
+  "template": "minecraft:sea_lantern",
+  "properties": {
+    "hardness": 0.6,
+    "resistance": 0.6,
+    "light": 15,
+    "sounds": "minecraft:honey_block"
+  },
+  "item": true,
+  "components": {
+    "minecraft:rarity": "uncommon"
+  }
+}
