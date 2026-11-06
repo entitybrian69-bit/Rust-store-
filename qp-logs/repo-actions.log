@@ -1,0 +1,76 @@
+### repo + actions permissions
+Unknown JSON field: "visibility"
+Available fields:
+  assignableUsers
+  codeOfConduct
+  contactLinks
+  createdAt
+  defaultBranchRef
+  deleteBranchOnMerge
+  description
+  diskUsage
+  forkCount
+  fundingLinks
+  hasDiscussionsEnabled
+  hasIssuesEnabled
+  hasProjectsEnabled
+  hasWikiEnabled
+  homepageUrl
+  id
+  isArchived
+  isBlankIssuesEnabled
+  isEmpty
+  isFork
+  isInOrganization
+  isMirror
+  isPrivate
+  isSecurityPolicyEnabled
+  isTemplate
+  isUserConfigurationRepository
+  issueTemplates
+  issues
+  labels
+  languages
+  latestRelease
+  licenseInfo
+  mentionableUsers
+  mergeCommitAllowed
+  milestones
+  mirrorUrl
+  name
+  nameWithOwner
+  openGraphImageUrl
+  owner
+  parent
+  primaryLanguage
+  projects
+  pullRequestTemplates
+  pullRequests
+  pushedAt
+  rebaseMergeAllowed
+  repositoryTopics
+  securityPolicyUrl
+  squashMergeAllowed
+  sshUrl
+  stargazerCount
+  templateRepository
+  updatedAt
+  url
+  usesCustomOpenGraphImage
+  viewerCanAdminister
+  viewerDefaultCommitEmail
+  viewerDefaultMergeMethod
+  viewerHasStarred
+  viewerPermission
+  viewerPossibleCommitEmails
+  viewerSubscription
+  watchers
+
+{"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/actions/permissions#get-github-actions-permissions-for-a-repository","status":"403"}gh: Resource not accessible by integration (HTTP 403)
+
+### workflow runs so far
+completed	success	Add Buzzing Apiary .hmod content mod	Validate & Publish Horizon .hmod Packages	arena/5f02db8a-rust-store	pull_request	42214898658	9s	7m
+completed	success	Add legacy Quick Place preview prototype	Legacy Quick Place prototype CI	arena/47dabc30-rust-store	push	42206448892	4m28s	1h
+completed	success	Merge pull request #1 from entitybrian69-bit/arena/aba2fed9-rust-store	Validate & Publish Horizon .hmod Packages	main	push	42198665927	9s	2h
+completed	success	Add Horizon .hmod packages Block Placement Reborn, and store catalog	Validate & Publish Horizon .hmod Packages	arena/aba2fed9-rust-store	pull_request	42198615118	11s	2h
+completed	success	Create blank.yml	Validate & Publish Horizon .hmod Packages	main	push	42189261990	7s	3h

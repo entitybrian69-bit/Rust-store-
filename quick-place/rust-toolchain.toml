@@ -1,0 +1,5 @@
+[toolchain]
+# The toolchain the pinned legacy builder uses in CI (and the one the .hmod was built with).
+channel = "1.99.1"
+profile = "minimal"
+targets = ["wasm32-unknown-unknown"]

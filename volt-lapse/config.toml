@@ -1,0 +1,93 @@
+# Volt Lapse — shipped defaults. Compiled into the WASM at build time and
+# persisted through the mod's storage; /vl config <key> <value> edits the live copy.
+# Unknown keys, wrong types and out-of-range values are refused, naming the key.
+
+# ---- recording -------------------------------------------------
+[recording]
+enabled = true
+auto_start_on_join = false
+auto_start_on_world_load = false
+record_interval_ticks = 1
+record_chat = true
+record_player_inventory = true
+record_entity_metadata = false
+record_block_changes = true
+record_particles = false
+record_sounds = false
+record_weather = false
+record_time_of_day = false
+record_dimension_changes = true
+record_mob_ai = false
+record_item_drops = false
+record_projectiles = false
+chunk_radius = 8
+entity_tracking_radius = 64
+max_recording_size_mb = 2048
+max_recording_duration_min = 120
+buffer_flush_interval_sec = 5
+compression_level = 6
+keyframe_interval_ticks = 600
+capture_fps = 20
+
+# ---- playback --------------------------------------------------
+[playback]
+default_speed = 1.0
+speed_presets = [0.1, 0.25, 0.5, 1, 2, 4, 8]
+smooth_camera = true
+camera_interpolation = "catmull_rom"
+free_camera = false
+spectator_lock = false
+show_timeline = true
+show_keyframes = true
+show_path_preview = true
+playback_hud = true
+hide_hud_in_replay = false
+render_distance = 12
+time_control = false
+weather_control = false
+loop_playback = false
+skip_to_keyframe_on_load = true
+
+# ---- camera ----------------------------------------------------
+[camera]
+keyframe_snap_ticks = 1
+path_smoothing = 0.5
+path_tension = 0.5
+fov_override = 70.0
+camera_roll_enabled = false
+camera_collision = false
+auto_keyframe_on_teleport = true
+
+# ---- storage ---------------------------------------------------
+[storage]
+replay_folder = "replays"
+temp_folder = "replays/tmp"
+file_naming = "timestamp"
+auto_delete_after_days = 0
+max_replays_kept = 0
+write_chunk_size_kb = 1024
+atomic_write = true
+
+# ---- ui --------------------------------------------------------
+[ui]
+theme = "dark"
+language = "en"
+ui_scale = 1.0
+timeline_position = "bottom"
+
+# ---- keybinds --------------------------------------------------
+[keybinds]
+keybind_open_replay_menu = "F6"
+keybind_toggle_record = "F7"
+keybind_add_keyframe = "K"
+keybind_play_pause = "Space"
+keybind_speed_up = "ArrowUp"
+keybind_slow_down = "ArrowDown"
+
+# ---- advanced --------------------------------------------------
+[advanced]
+debug_logging = false
+log_level = "info"
+metrics_opt_in = false
+experimental_features = false
+safe_mode = true

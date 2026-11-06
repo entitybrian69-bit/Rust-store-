@@ -1,0 +1,11 @@
+{
+  "block.buzzing_apiary.apiary_hive": "Apiary Hive",
+  "block.buzzing_apiary.beeswax_bricks": "Beeswax Bricks",
+  "block.buzzing_apiary.honey_lamp": "Honey Lamp",
+  "item.buzzing_apiary.beeswax": "Beeswax",
+  "item.buzzing_apiary.honeyed_bread": "Honeyed Bread",
+  "item.buzzing_apiary.beekeeper_smoker": "Beekeeper's Smoker",
+  "entity.buzzing_apiary.bee_swarm": "Bee Swarm",
+  "effect.buzzing_apiary.pollination": "Pollination",
+  "itemGroup.buzzing_apiary.apiary_tab": "Buzzing Apiary"
+}

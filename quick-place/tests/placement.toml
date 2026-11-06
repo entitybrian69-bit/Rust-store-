@@ -1,0 +1,56 @@
+# Default config: pad mode, 4 blocks per sweep, air only.
+# The sandbox (cargo horizon-mod test) leaves every other block air and places the
+# block the script names, so the numbers below are the ones the sweep must reach.
+
+[[step]]
+join = "Alex"
+
+# The player places stone at the origin. The pad ring runs N, NE, E, SE, S, SW, W, NW
+# with -z as north. (0, 64, 1) already holds stone, so it is the fifth candidate and
+# is skipped; the four air candidates before it are filled with the placed state, and
+# the sweep stops at max_blocks_per_sweep = 4.
+[[step]]
+blocks = [{ x = 0, y = 64, z = 1, state = "minecraft:stone" }]
+place = { x = 0, y = 64, z = 0, state = "minecraft:stone" }
+expect.told = ["Alex: Quick Place: placed 4 block(s) with pad mode"]
+# The sandbox fires `place` as an event; it does not put the origin block in the
+# world, so only the sweep's own writes are asserted here.
+expect.blocks = [
+    { x = 0, y = 64, z = -1, state = "minecraft:stone" },
+    { x = 1, y = 64, z = -1, state = "minecraft:stone" },
+    { x = 1, y = 64, z = 0, state = "minecraft:stone" },
+    { x = 1, y = 64, z = 1, state = "minecraft:stone" },
+    { x = 0, y = 64, z = 1, state = "minecraft:stone" },
+    { x = -1, y = 64, z = 1, state = "minecraft:air" },
+    { x = -1, y = 64, z = 0, state = "minecraft:air" },
+    { x = -1, y = 64, z = -1, state = "minecraft:air" },
+]
+
+# The state copied is the one the player placed, properties included.
+[[step]]
+place = { x = 16, y = 64, z = 0, state = "minecraft:oak_log[axis=y]" }
+expect.told = ["Alex: Quick Place: placed 4 block(s) with pad mode"]
+expect.blocks = [
+    { x = 17, y = 64, z = 0, state = "minecraft:oak_log[axis=y]" },
+    { x = 16, y = 64, z = -1, state = "minecraft:oak_log[axis=y]" },
+]
+
+# Nothing free around it: no write, no message.
+[[step]]
+blocks = [
+    { x = 32, y = 64, z = 1, state = "minecraft:diamond_block" },
+    { x = 32, y = 64, z = -1, state = "minecraft:diamond_block" },
+    { x = 33, y = 64, z = 1, state = "minecraft:diamond_block" },
+    { x = 33, y = 64, z = -1, state = "minecraft:diamond_block" },
+    { x = 33, y = 64, z = 0, state = "minecraft:diamond_block" },
+    { x = 31, y = 64, z = 1, state = "minecraft:diamond_block" },
+    { x = 31, y = 64, z = -1, state = "minecraft:diamond_block" },
+    { x = 31, y = 64, z = 0, state = "minecraft:diamond_block" },
+]
+place = { x = 32, y = 64, z = 0, state = "minecraft:stone" }
+expect.told = []
+expect.blocks = [
+    { x = 32, y = 64, z = 1, state = "minecraft:diamond_block" },
+    { x = 33, y = 64, z = 0, state = "minecraft:diamond_block" },
+    { x = 32, y = 64, z = 0, state = "minecraft:air" },
+]

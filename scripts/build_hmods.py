@@ -93,6 +93,43 @@ def render_block_texture(
             elif pattern == "grate" and (x % 3 == 1 and y % 3 == 1):
                 pixels.append((0, 0, 0, 0))
                 continue
+            elif pattern == "bricks":
+                # Staggered brick courses separated by mortar joints
+                course = y // 4
+                offset = 4 if course % 2 else 0
+                if y % 4 == 0 or (x + offset) % 8 == 0:
+                    c = border
+                elif (x * 3 + y * 5) % 11 == 0:
+                    c = accent
+                else:
+                    c = base
+            elif pattern == "lamp":
+                # Framed lamp: heavy frame, glowing panel, bright molten core
+                if 3 <= x <= 12 and 3 <= y <= 12:
+                    if (x - 7.5) ** 2 + (y - 7.5) ** 2 <= 7.0:
+                        c = (255, 249, 216)
+                    elif (x + y) % 3 == 0:
+                        c = accent
+                    else:
+                        c = base
+                else:
+                    c = border
+            elif pattern == "hive":
+                # Vertical hive planks, two honey bands, and a dark entrance hole
+                if (x - 7.5) ** 2 + (y - 9.0) ** 2 <= 6.0:
+                    c = (46, 30, 14)
+                elif y in (4, 12):
+                    c = accent
+                elif x % 4 == 0:
+                    c = border
+                elif x % 4 == 1:
+                    c = (
+                        min(255, base[0] + 16),
+                        min(255, base[1] + 14),
+                        min(255, base[2] + 10),
+                    )
+                else:
+                    c = base
             elif (x + y) % 4 == 0:
                 c = (
                     min(255, base[0] + 10),
@@ -136,6 +173,36 @@ def render_item_texture(
                 if dist2 <= 18:
                     pixels.append((fg[0], fg[1], fg[2], 255))
                 elif dist2 <= 28:
+                    pixels.append((edge[0], edge[1], edge[2], 255))
+                else:
+                    pixels.append((0, 0, 0, 0))
+            elif shape == "canister":
+                # Rounded tin can with a short tapered nozzle on top
+                body = 4 <= x <= 11 and 5 <= y <= 13
+                nozzle = 6 <= x <= 9 and 2 <= y <= 4
+                if body or nozzle:
+                    is_outline = (
+                        x in (4, 11)
+                        or y in (5, 13)
+                        or (nozzle and (x in (6, 9) or y == 2))
+                    )
+                    if is_outline or y in (8, 9):
+                        pixels.append((edge[0], edge[1], edge[2], 255))
+                    else:
+                        pixels.append((fg[0], fg[1], fg[2], 255))
+                else:
+                    pixels.append((0, 0, 0, 0))
+            elif shape == "loaf":
+                # Rounded loaf with three score marks across the crust
+                dx = (x - 7.5) / 6.0
+                dy = (y - 8.0) / 4.0
+                dist2 = dx * dx + dy * dy
+                if dist2 <= 0.72:
+                    if x in (5, 8, 11) and 6 <= y <= 9:
+                        pixels.append((edge[0], edge[1], edge[2], 255))
+                    else:
+                        pixels.append((fg[0], fg[1], fg[2], 255))
+                elif dist2 <= 1.0:
                     pixels.append((edge[0], edge[1], edge[2], 255))
                 else:
                     pixels.append((0, 0, 0, 0))
@@ -241,7 +308,7 @@ def write_self_drop_loot_table(mod_dir: Path, mod_id: str, block_name: str) -> N
 
 
 def generate_all_mod_sources() -> None:
-    """Generate the 5 complete Horizon API 0.2 content mods under src-mods/."""
+    """Generate the complete set of Horizon API 0.2 content mods under src-mods/."""
     SRC_MODS_DIR.mkdir(parents=True, exist_ok=True)
 
     # =========================================================================
@@ -1212,6 +1279,265 @@ def generate_all_mod_sources() -> None:
             "block.block_placement_reborn.ghost_preview_frame": "Ghost Preview Frame",
             "item.block_placement_reborn.placement_wand": "Block Placement Reborn Wand",
             "itemGroup.block_placement_reborn.bpr_tab": "Block Placement Reborn",
+        },
+    )
+
+    # =========================================================================
+    # 7. buzzing_apiary — Beekeeping, Honey Lighting & Pollination (PC & Android)
+    # =========================================================================
+    m7 = SRC_MODS_DIR / "buzzing_apiary"
+    m7.mkdir(parents=True, exist_ok=True)
+    (m7 / "horizon-mod.toml").write_text(
+        'id = "buzzing_apiary"\n'
+        'name = "Buzzing Apiary"\n'
+        'version = "0.1.0"\n'
+        'description = "Cozy beekeeping expansion for Horizon 26.3: Apiary Hives, Beeswax Bricks, Honey Lamps, Beeswax, Honeyed Bread, a Beekeeper\'s Smoker, tame Bee Swarms, and a Pollination status effect."\n'
+        'authors = ["Rust-store-"]\n'
+        'api = "0.2"\n'
+        'side = "both"\n'
+        'capabilities = ["registries"]\n',
+        encoding="utf-8",
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "block" / "apiary_hive.json",
+        {
+            "template": "minecraft:beehive",
+            "properties": {
+                "hardness": 2.0,
+                "resistance": 3.0,
+                "light": 3,
+                "sounds": "minecraft:wood",
+            },
+            "item": True,
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "block" / "beeswax_bricks.json",
+        {
+            "template": "minecraft:honeycomb_block",
+            "properties": {
+                "hardness": 1.2,
+                "resistance": 6.0,
+                "sounds": "minecraft:honeycomb_block",
+            },
+            "item": True,
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "block" / "honey_lamp.json",
+        {
+            "template": "minecraft:sea_lantern",
+            "properties": {
+                "hardness": 0.6,
+                "resistance": 0.6,
+                "light": 15,
+                "sounds": "minecraft:honey_block",
+            },
+            "item": True,
+            "components": {
+                "minecraft:rarity": "uncommon",
+            },
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "item" / "beeswax.json",
+        {
+            "template": "minecraft:honeycomb",
+            "components": {
+                "minecraft:max_stack_size": 64,
+                "minecraft:rarity": "common",
+            },
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "item" / "honeyed_bread.json",
+        {
+            "template": "minecraft:bread",
+            "components": {
+                "minecraft:max_stack_size": 16,
+                "minecraft:rarity": "uncommon",
+            },
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "item" / "beekeeper_smoker.json",
+        {
+            "template": "minecraft:flint_and_steel",
+            "components": {
+                "minecraft:max_damage": 128,
+                "minecraft:rarity": "uncommon",
+            },
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "entity_type" / "bee_swarm.json",
+        {
+            "template": "minecraft:bee",
+            "attributes": {
+                "minecraft:max_health": 10.0,
+                "minecraft:movement_speed": 0.3,
+            },
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "mob_effect" / "pollination.json",
+        {
+            "category": "beneficial",
+            # 0xFFC30F — honey gold
+            "color": 16761615,
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "menu" / "apiary_extractor.json",
+        {
+            "slots": 27,
+            "data_slots": 3,
+            "results": [25, 26],
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "horizon" / "creative_tab" / "apiary_tab.json",
+        {
+            "title": "Buzzing Apiary",
+            "icon": "buzzing_apiary:beeswax",
+            "items": [
+                "buzzing_apiary:apiary_hive",
+                "buzzing_apiary:beeswax_bricks",
+                "buzzing_apiary:honey_lamp",
+                "buzzing_apiary:beeswax",
+                "buzzing_apiary:honeyed_bread",
+                "buzzing_apiary:beekeeper_smoker",
+            ],
+        },
+    )
+    write_block_assets(
+        m7,
+        "buzzing_apiary",
+        "apiary_hive",
+        render_block_texture((196, 150, 74), (128, 90, 44), (247, 199, 74), "hive"),
+    )
+    write_block_assets(
+        m7,
+        "buzzing_apiary",
+        "beeswax_bricks",
+        render_block_texture((224, 182, 96), (172, 128, 58), (250, 216, 140), "bricks"),
+    )
+    write_block_assets(
+        m7,
+        "buzzing_apiary",
+        "honey_lamp",
+        render_block_texture((250, 193, 74), (150, 96, 22), (255, 226, 140), "lamp"),
+    )
+    write_item_assets(
+        m7,
+        "buzzing_apiary",
+        "beeswax",
+        render_item_texture((242, 199, 92), (178, 134, 42), shape="gem"),
+    )
+    write_item_assets(
+        m7,
+        "buzzing_apiary",
+        "honeyed_bread",
+        render_item_texture((205, 152, 74), (146, 98, 44), shape="loaf"),
+    )
+    write_item_assets(
+        m7,
+        "buzzing_apiary",
+        "beekeeper_smoker",
+        render_item_texture((150, 142, 126), (88, 82, 70), shape="canister"),
+        handheld=True,
+    )
+    write_self_drop_loot_table(m7, "buzzing_apiary", "apiary_hive")
+    write_self_drop_loot_table(m7, "buzzing_apiary", "beeswax_bricks")
+    write_self_drop_loot_table(m7, "buzzing_apiary", "honey_lamp")
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "recipe" / "beeswax.json",
+        {
+            "type": "minecraft:crafting_shapeless",
+            "ingredients": ["minecraft:honeycomb", "minecraft:honeycomb"],
+            "result": {"id": "buzzing_apiary:beeswax", "count": 2},
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "recipe" / "beeswax_bricks.json",
+        {
+            "type": "minecraft:crafting_shaped",
+            "pattern": ["BB", "BB"],
+            "key": {"B": "buzzing_apiary:beeswax"},
+            "result": {"id": "buzzing_apiary:beeswax_bricks", "count": 4},
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "recipe" / "apiary_hive.json",
+        {
+            "type": "minecraft:crafting_shaped",
+            "pattern": ["BHB", "BBB", "BHB"],
+            "key": {
+                "B": "buzzing_apiary:beeswax",
+                "H": "minecraft:honeycomb",
+            },
+            "result": {"id": "buzzing_apiary:apiary_hive", "count": 1},
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "recipe" / "honey_lamp.json",
+        {
+            "type": "minecraft:crafting_shaped",
+            "pattern": [" B ", "BGB", " B "],
+            "key": {
+                "B": "buzzing_apiary:beeswax",
+                "G": "minecraft:glowstone_dust",
+            },
+            "result": {"id": "buzzing_apiary:honey_lamp", "count": 2},
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "recipe" / "honeyed_bread.json",
+        {
+            "type": "minecraft:crafting_shapeless",
+            "ingredients": ["minecraft:bread", "minecraft:honey_bottle"],
+            "result": {"id": "buzzing_apiary:honeyed_bread", "count": 1},
+        },
+    )
+    write_json(
+        m7 / "data" / "buzzing_apiary" / "recipe" / "beekeeper_smoker.json",
+        {
+            "type": "minecraft:crafting_shaped",
+            "pattern": [" I ", "ITI", " S "],
+            "key": {
+                "I": "minecraft:iron_ingot",
+                "T": "minecraft:torch",
+                "S": "minecraft:stick",
+            },
+            "result": {"id": "buzzing_apiary:beekeeper_smoker", "count": 1},
+        },
+    )
+    write_json(
+        m7 / "data" / "minecraft" / "tags" / "block" / "mineable" / "axe.json",
+        {
+            "replace": False,
+            "values": ["buzzing_apiary:apiary_hive"],
+        },
+    )
+    write_json(
+        m7 / "data" / "minecraft" / "tags" / "block" / "mineable" / "pickaxe.json",
+        {
+            "replace": False,
+            "values": ["buzzing_apiary:beeswax_bricks", "buzzing_apiary:honey_lamp"],
+        },
+    )
+    write_json(
+        m7 / "assets" / "buzzing_apiary" / "lang" / "en_us.json",
+        {
+            "block.buzzing_apiary.apiary_hive": "Apiary Hive",
+            "block.buzzing_apiary.beeswax_bricks": "Beeswax Bricks",
+            "block.buzzing_apiary.honey_lamp": "Honey Lamp",
+            "item.buzzing_apiary.beeswax": "Beeswax",
+            "item.buzzing_apiary.honeyed_bread": "Honeyed Bread",
+            "item.buzzing_apiary.beekeeper_smoker": "Beekeeper's Smoker",
+            "entity.buzzing_apiary.bee_swarm": "Bee Swarm",
+            "effect.buzzing_apiary.pollination": "Pollination",
+            "itemGroup.buzzing_apiary.apiary_tab": "Buzzing Apiary",
         },
     )
 

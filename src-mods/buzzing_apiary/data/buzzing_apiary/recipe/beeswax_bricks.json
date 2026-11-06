@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB",
+    "BB"
+  ],
+  "key": {
+    "B": "buzzing_apiary:beeswax"
+  },
+  "result": {
+    "id": "buzzing_apiary:beeswax_bricks",
+    "count": 4
+  }
+}

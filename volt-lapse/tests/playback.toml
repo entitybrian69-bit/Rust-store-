@@ -1,0 +1,78 @@
+# Playback: the recorded block changes go back into the world through
+# `world::set-blocks`, the chat lines are broadcast again, the timeline runs at
+# the requested speed, and the loop and speed settings behave.
+
+[[step]]
+join = "Alex"
+expect.commands = ["voltlapse", "vl"]
+
+[[step]]
+command = "vl record take1"
+expect.feedback = "recording as \"take1\" (every 1 ticks, keyframe every 600 ticks, 20 fps target)"
+
+[[step]]
+ticks = 2
+place = { x = 5, y = 64, z = 5, state = "minecraft:stone" }
+chat = "yo"
+
+[[step]]
+command = "vl stop"
+expect.feedback = "stopped after 2 ticks: saving take1 (1 chunk)"
+
+[[step]]
+ticks = 1
+
+[[step]]
+command = "vl play take1 8"
+expect.feedback = "playing \"take1\" at 8x: 1 ticks, 0 keyframes, 2 scheduled actions"
+
+# One tick at 8x covers the whole recording: the block change and the chat line
+# happen, then the replay ends.
+[[step]]
+ticks = 1
+expect.broadcast = ["<Alex> yo", "Volt Lapse: take1 finished"]
+expect.blocks = [{ x = 5, y = 64, z = 5, state = "minecraft:stone" }]
+
+# No name: the newest recording, at default_speed.
+[[step]]
+command = "vl play"
+expect.feedback = "playing \"take1\" at 1x: 1 ticks, 0 keyframes, 2 scheduled actions"
+
+[[step]]
+ticks = 3
+expect.broadcast = ["<Alex> yo", "Volt Lapse: take1 finished"]
+
+# A speed may be a preset slot (p1..p16 from speed_presets) or a number.
+[[step]]
+command = "vl play take1 p9"
+expect.error = "speed preset p9 is not in speed_presets"
+
+[[step]]
+command = "vl play take1 99"
+expect.error = "speed 99 is outside 0.1..=8"
+
+[[step]]
+command = "vl play take1 fast"
+expect.error = "speed \"fast\" is not a number, and not p1..p16"
+
+# loop_playback restarts the timeline instead of ending it.
+[[step]]
+command = "vl config loop_playback true"
+expect.feedback = "loop_playback = true"
+
+[[step]]
+command = "vl play take1 p7"
+expect.feedback = "playing \"take1\" at 8x: 1 ticks, 0 keyframes, 2 scheduled actions"
+
+[[step]]
+ticks = 1
+expect.broadcast = ["<Alex> yo", "Volt Lapse: replay looped"]
+
+# show_keyframes notes the camera keyframes while playing.
+[[step]]
+command = "vl config show_keyframes false"
+expect.feedback = "show_keyframes = false"
+
+[[step]]
+command = "vl config loop_playback false"
+expect.feedback = "loop_playback = false"

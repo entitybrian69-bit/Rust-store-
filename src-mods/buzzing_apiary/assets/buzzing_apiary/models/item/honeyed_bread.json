@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "buzzing_apiary:item/honeyed_bread"
+  }
+}

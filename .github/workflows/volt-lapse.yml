@@ -1,0 +1,152 @@
+name: Volt Lapse .hmod (pinned legacy WASM toolchain)
+
+# Builds volt-lapse/ with the real, pinned Horizon toolchain on a GitHub runner,
+# runs the host unit tests, the sandbox scripts in volt-lapse/tests/, the registry
+# check, then publishes and commits the resulting .hmod back to this branch.
+on:
+  push:
+    branches: ["arena/5f02db8a-rust-store"]
+    paths:
+      - "volt-lapse/src/**"
+      - "volt-lapse/tests/**"
+      - "volt-lapse/Cargo.toml"
+      - "volt-lapse/horizon-mod.toml"
+      - "volt-lapse/config.toml"
+      - "volt-lapse/build.sh"
+      - "volt-lapse/rust-toolchain.toml"
+      - ".github/workflows/volt-lapse.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  VERSION: "0.1.0"
+
+jobs:
+  build-and-publish:
+    name: build, test, check, publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show the toolchain the runner starts with
+        run: |
+          rustup --version || true
+          rustc --version || true
+          cargo --version || true
+
+      - name: Restore the registry, the pinned tool and the toolchain
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.rustup
+            ${{ runner.temp }}/vl-tool
+          key: vl-${{ runner.os }}-62a01db8-${{ hashFiles('volt-lapse/Cargo.toml', 'volt-lapse/rust-toolchain.toml') }}
+
+      - name: Build, test and check with the pinned legacy toolchain
+        working-directory: volt-lapse
+        env:
+          TOOL_DIR: ${{ runner.temp }}/vl-tool
+        run: bash ./build.sh
+
+      - name: Save the registry, the pinned tool and the toolchain (even on failure)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          key: vl-${{ runner.os }}-62a01db8-${{ hashFiles('volt-lapse/Cargo.toml', 'volt-lapse/rust-toolchain.toml') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.rustup
+            ${{ runner.temp }}/vl-tool
+
+      - name: Keep the build log on the branch (even when the build fails)
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          if [ -f volt-lapse/build.log ]; then cp volt-lapse/build.log dist/build.log; else echo "build.log missing" > dist/build.log; fi
+          echo "---- tail of build log ----"
+          tail -n 160 dist/build.log || true
+          git config user.name "volt-lapse-ci"
+          git config user.email "volt-lapse-ci@users.noreply.github.com"
+          git add -f dist/build.log
+          if git diff --cached --quiet; then echo "log unchanged"; else
+            git commit -m "ci: volt lapse build log [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}" || true
+          fi
+
+      - name: Collect the artifact, its base64 and its SHA-256
+        working-directory: volt-lapse
+        run: |
+          set -euo pipefail
+          mkdir -p ../dist
+          cp target/horizon-mod/volt_lapse.hmod ../dist/volt_lapse.hmod
+          cd ../dist
+          base64 -w 0 volt_lapse.hmod > volt_lapse.hmod.b64
+          sha256sum volt_lapse.hmod | cut -d' ' -f1 > volt_lapse.hmod.sha256
+          cat > RELEASE_NOTES.md <<EOF
+          # Volt Lapse ${VERSION} — legacy WebAssembly server mod
+
+          Built by \`.github/workflows/volt-lapse.yml\` run \`${GITHUB_RUN_ID}\` on commit
+          \`${GITHUB_SHA}\`, with the pinned Horizon toolchain at
+          \`62a01db8f006b422e6db24e34dcee05ad41760ba\` (the last main commit with the
+          WebAssembly server runtime) and Rust 1.99.1 / wasm32-unknown-unknown.
+
+          - \`volt_lapse.hmod\` — the mod (manifest + componentized \`mod.wasm\`)
+          - \`volt_lapse.hmod.b64\` — the same bytes, base64, for phones:
+            \`base64 -d volt_lapse.hmod.b64 > volt_lapse.hmod\`
+          - SHA-256: \`$(cat volt_lapse.hmod.sha256)\`
+
+          69 settings, \`/voltlapse\` and \`/vl\`, recordings in the mod's own storage.
+          Prototype: not compatible with current PC Horizon (its WebAssembly runtime was
+          removed); no registry publication; not tested in a game on PC or Android.
+          EOF
+          ls -l
+          echo "sha256: $(cat volt_lapse.hmod.sha256)"
+
+      - name: Upload as a workflow artifact too
+        uses: actions/upload-artifact@v4
+        with:
+          name: volt-lapse-hmod-${{ env.VERSION }}
+          if-no-files-found: error
+          path: |
+            dist/volt_lapse.hmod
+            dist/volt_lapse.hmod.b64
+            dist/volt_lapse.hmod.sha256
+
+      - name: Commit the built .hmod and its base64 back to this branch
+        run: |
+          set -euo pipefail
+          git config user.name "volt-lapse-ci"
+          git config user.email "volt-lapse-ci@users.noreply.github.com"
+          git add -f dist/volt_lapse.hmod dist/volt_lapse.hmod.b64 dist/volt_lapse.hmod.sha256
+          if git diff --cached --quiet; then
+            echo "already committed"
+          else
+            git commit -m "ci: volt_lapse.hmod ${VERSION} built by the pinned toolchain [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - name: Publish the release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="volt-lapse-v${VERSION}"
+          gh release view "$tag" >/dev/null 2>&1 || \
+            gh release create "$tag" \
+              --title "Volt Lapse ${VERSION} (.hmod)" \
+              --notes-file dist/RELEASE_NOTES.md
+          gh release upload "$tag" \
+            dist/volt_lapse.hmod \
+            dist/volt_lapse.hmod.b64 \
+            dist/volt_lapse.hmod.sha256 \
+            --clobber
+          echo "asset: https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/volt_lapse.hmod"

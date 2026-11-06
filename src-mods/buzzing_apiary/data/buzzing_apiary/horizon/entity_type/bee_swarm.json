@@ -1,0 +1,7 @@
+{
+  "template": "minecraft:bee",
+  "attributes": {
+    "minecraft:max_health": 10.0,
+    "minecraft:movement_speed": 0.3
+  }
+}

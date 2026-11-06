@@ -1,0 +1,35 @@
+# The command and a mode that needs no player rotation: pillar.
+# The legacy server `Player` has no yaw, so `line` derives its step from the player's
+# position; `pillar` and `pad` do not depend on it at all.
+
+[[step]]
+join = "Alex"
+
+[[step]]
+command = "quickplace status"
+expect.feedback = "Quick Place: enabled=true, mode=pad, limit=4, placed=0"
+
+[[step]]
+command = "quickplace pillar"
+expect.feedback = "Quick Place: mode pillar"
+
+[[step]]
+command = "quickplace diagonal"
+expect.error = "Quick Place: mode must be pad, line, pillar or cube"
+
+# reach = 3, so the pillar tries y+1..y+3: y+1 already holds planks and must survive,
+# y+2 and y+3 are air and are filled, and y+4 is out of reach and stays air.
+[[step]]
+blocks = [{ x = 8, y = 65, z = 0, state = "minecraft:oak_planks" }]
+place = { x = 8, y = 64, z = 0, state = "minecraft:stone" }
+expect.told = ["Alex: Quick Place: placed 2 block(s) with pillar mode"]
+expect.blocks = [
+    { x = 8, y = 65, z = 0, state = "minecraft:oak_planks" },
+    { x = 8, y = 66, z = 0, state = "minecraft:stone" },
+    { x = 8, y = 67, z = 0, state = "minecraft:stone" },
+    { x = 8, y = 68, z = 0, state = "minecraft:air" },
+]
+
+[[step]]
+command = "quickplace status"
+expect.feedback = "Quick Place: enabled=true, mode=pillar, limit=4, placed=2"

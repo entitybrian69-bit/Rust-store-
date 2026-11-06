@@ -15,6 +15,7 @@ All mods in this repository's [`releases/`](../releases/) directory are `.hmod` 
    - [`ruby_expansion.hmod`](../releases/ruby_expansion.hmod)
    - [`industrial_pipes.hmod`](../releases/industrial_pipes.hmod)
    - [`dungeon_mobs_plus.hmod`](../releases/dungeon_mobs_plus.hmod)
+   - [`buzzing_apiary.hmod`](../releases/buzzing_apiary.hmod)
 2. Locate your Horizon game directory (the folder containing `options.txt`).
 3. Create a folder named **`horizon-mods`** if it does not already exist:
    ```text
@@ -26,7 +27,8 @@ All mods in this repository's [`releases/`](../releases/) directory are `.hmod` 
        ├── glowing_amethyst.hmod
        ├── ruby_expansion.hmod
        ├── industrial_pipes.hmod
-       └── dungeon_mobs_plus.hmod
+       ├── dungeon_mobs_plus.hmod
+       └── buzzing_apiary.hmod
    ```
 4. Start Horizon, navigate to **Options → Mods**, and flip the switch **ON** next to each mod you want active.
    - Your enabled choices are saved in `horizon-mods.txt` as `mod.<id>:true` (for example, `mod.rust_scrap_armory:true`).

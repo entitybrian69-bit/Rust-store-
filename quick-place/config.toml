@@ -1,0 +1,7 @@
+# Quick Place configuration.
+# Compiled into the WASM at build time: `cargo horizon-mod build` embeds this file,
+# there is no runtime file read (the legacy WASM API has no filesystem).
+enabled = true
+max_blocks_per_sweep = 4
+require_sneaking = false
+placement_mode = "pad"

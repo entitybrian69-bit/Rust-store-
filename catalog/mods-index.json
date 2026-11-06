@@ -35,6 +35,34 @@
       }
     },
     {
+      "id": "buzzing_apiary",
+      "name": "Buzzing Apiary",
+      "version": "0.1.0",
+      "description": "Cozy beekeeping expansion for Horizon 26.3: Apiary Hives, Beeswax Bricks, Honey Lamps, Beeswax, Honeyed Bread, a Beekeeper's Smoker, tame Bee Swarms, and a Pollination status effect.",
+      "authors": [
+        "Rust-store-"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "buzzing_apiary.hmod",
+      "size_bytes": 11772,
+      "sha256": "fbab71ff01e781b316038d87c738b503d4f9a62ef8087afdce58e987c4712677",
+      "entry_count": 41,
+      "counts": {
+        "blocks": 3,
+        "items": 3,
+        "creative_tabs": 1,
+        "mob_effects": 1,
+        "entity_types": 1,
+        "menus": 1,
+        "recipes": 6,
+        "textures": 6
+      }
+    },
+    {
       "id": "dungeon_mobs_plus",
       "name": "Dungeon Mobs & Frost Magic",
       "version": "0.2.0",

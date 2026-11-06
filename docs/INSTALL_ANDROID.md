@@ -45,6 +45,10 @@ Horizon Android's built-in launcher lets you import `.hmod` packages directly vi
      ```text
      https://raw.githubusercontent.com/entitybrian69-bit/Rust-store-/main/releases/dungeon_mobs_plus.hmod
      ```
+   - **Buzzing Apiary (`buzzing_apiary.hmod`):**
+     ```text
+     https://raw.githubusercontent.com/entitybrian69-bit/Rust-store-/main/releases/buzzing_apiary.hmod
+     ```
 
 4. Tap **Import / Download**.
 5. Go to the **Installed** tab in the Launcher and toggle the mod **ON** (newly imported packages start disabled by default).

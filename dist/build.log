@@ -1,0 +1,125 @@
+info: syncing channel updates for 1.99.1-x86_64-unknown-linux-gnu
+info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+info: component rust-std for target wasm32-unknown-unknown is up to date
+
+  1.99.1-x86_64-unknown-linux-gnu unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+
+== reusing cargo-horizon-mod already in /home/runner/work/_temp/qp-tool ==
+== host unit tests (pure planner + config parser) ==
+    Updating git repository `https://github.com/horizon-rust/horizon`
+    Updating crates.io index
+     Locking 34 packages to highest compatible versions
+   Compiling serde_core v1.0.229
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.27
+   Compiling quote v1.0.47
+   Compiling foldhash v0.2.0
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.3
+   Compiling zmij v1.0.23
+   Compiling bitflags v2.13.2
+   Compiling semver v1.0.28
+   Compiling anyhow v1.0.104
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling syn v3.0.9
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling prettyplease v0.2.37
+   Compiling id-arena v2.3.0
+   Compiling leb128fmt v0.1.0
+   Compiling log v0.4.35
+   Compiling syn v2.0.119
+   Compiling wit-bindgen-rust v0.60.0
+   Compiling heck v0.5.0
+   Compiling wit-bindgen-rust-macro v0.60.0
+   Compiling wit-bindgen v0.60.0
+   Compiling indexmap v2.14.2
+   Compiling wasmparser v0.254.2
+   Compiling serde_derive v1.0.229
+   Compiling wit-parser v0.254.2
+   Compiling wasm-encoder v0.254.2
+   Compiling wasm-metadata v0.254.2
+   Compiling wit-component v0.254.2
+   Compiling wit-bindgen-core v0.60.0
+   Compiling horizon-mod-sdk v0.1.0 (https://github.com/horizon-rust/horizon?rev=62a01db8f006b422e6db24e34dcee05ad41760ba#62a01db8)
+   Compiling quick_place v0.2.0 (/home/runner/work/Rust-store-/Rust-store-/quick-place)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.39s
+     Running unittests src/lib.rs (target/debug/deps/quick_place-e00c3b6715902dd4)
+
+running 12 tests
+test config::tests::comments_and_blank_lines_are_ignored ... ok
+test config::tests::the_shipped_config_parses_and_matches_its_documented_defaults ... ok
+test config::tests::bad_settings_fail_closed ... ok
+test planner::tests::candidates_are_capped_and_never_overflow ... ok
+test planner::tests::cube_is_the_twenty_six_neighbours_without_the_origin ... ok
+test planner::tests::line_runs_away_from_the_player ... ok
+test planner::tests::modes_round_trip_through_their_names ... ok
+test planner::tests::pad_respects_the_limit_and_never_returns_the_origin ... ok
+test tests::a_pad_sweep_over_air_stops_at_the_limit ... ok
+test planner::tests::line_and_pillar_stop_at_reach ... ok
+test planner::tests::pad_is_the_eight_neighbours_in_a_fixed_order ... ok
+test tests::the_shipped_config_is_the_one_that_loads ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests quick_place
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+== build the .hmod (wasm32 component, packed by horizon-mods) ==
+   Compiling serde_core v1.0.229
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling foldhash v0.2.0
+   Compiling equivalent v1.0.3
+   Compiling hashbrown v0.17.1
+   Compiling zmij v1.0.23
+   Compiling bitflags v2.13.2
+   Compiling semver v1.0.28
+   Compiling anyhow v1.0.104
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling syn v3.0.9
+   Compiling prettyplease v0.2.37
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling leb128fmt v0.1.0
+   Compiling id-arena v2.3.0
+   Compiling log v0.4.35
+   Compiling syn v2.0.119
+   Compiling wit-bindgen-rust v0.60.0
+   Compiling heck v0.5.0
+   Compiling wit-bindgen-rust-macro v0.60.0
+   Compiling wit-bindgen v0.60.0
+   Compiling indexmap v2.14.2
+   Compiling wasmparser v0.254.2
+   Compiling serde_derive v1.0.229
+   Compiling wit-parser v0.254.2
+   Compiling wasm-encoder v0.254.2
+   Compiling wasm-metadata v0.254.2
+   Compiling wit-component v0.254.2
+   Compiling wit-bindgen-core v0.60.0
+   Compiling horizon-mod-sdk v0.1.0 (https://github.com/horizon-rust/horizon?rev=62a01db8f006b422e6db24e34dcee05ad41760ba#62a01db8)
+   Compiling quick_place v0.2.0 (/home/runner/work/Rust-store-/Rust-store-/quick-place)
+    Finished `release` profile [optimized] target(s) in 12.07s
+Built /home/runner/work/Rust-store-/Rust-store-/quick-place/target/horizon-mod/quick_place.hmod
+== legacy sandbox scripts (tests/*.toml) against the built .hmod ==
+running 2 scripts against target/horizon-mod/quick_place.hmod
+test tests/command.toml ... ok (6 steps)
+test tests/placement.toml ... ok (4 steps)
+test result: ok. 2 passed
+== registry check ==
+quick_place 0.2.0 (mod, API 0.3, server)
+  27914 bytes, SHA-256 7e7c528a31e19f284d83bb70223689bf8d2d1367a21e5c35489b817e24347e06, unsigned
+  needs mod API level 4 or newer
+  may read and change the world's blocks
+  may see who is on the server and message them
+  trial run: started, 40 ticks, 120 frames, a chat line, /quickplace: ok
+
+Built and tested: target/horizon-mod/quick_place.hmod
+7e7c528a31e19f284d83bb70223689bf8d2d1367a21e5c35489b817e24347e06  target/horizon-mod/quick_place.hmod
+27914

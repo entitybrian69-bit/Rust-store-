@@ -1,0 +1,69 @@
+# A recording from start to finish: the frames the tick hook samples, an
+# automatic keyframe with its block snapshot, recorded chat and a block change,
+# the save through the mod's storage, `/vl list`, `/vl path`, and the errors.
+
+[[step]]
+join = "Alex"
+expect.commands = ["voltlapse", "vl"]
+
+# A keyframe every two ticks, so the ticks below produce exactly one.
+[[step]]
+command = "vl config keyframe_interval_ticks 2"
+expect.feedback = "keyframe_interval_ticks = 2"
+
+[[step]]
+command = "vl record run1"
+expect.feedback = "recording as \"run1\" (every 1 ticks, keyframe every 2 ticks, 20 fps target)"
+
+[[step]]
+command = "vl status"
+expect.feedback = "Volt Lapse: recording \"run1\" (0 frames, 0 ticks); not playing"
+
+# Three ticks of frames (1, 2, 3); the keyframe at tick 2 snapshots the blocks
+# around the player (safe_mode caps chunk_radius at 4, so the 64-cell budget is
+# what limits the snapshot, not the radius).
+[[step]]
+ticks = 3
+chat = "hello there"
+place = { x = 5, y = 64, z = 5, state = "minecraft:stone" }
+
+[[step]]
+command = "vl status"
+expect.feedback = "Volt Lapse: recording \"run1\" (3 frames, 3 ticks); not playing"
+
+[[step]]
+command = "vl stop"
+expect.feedback = "stopped after 3 ticks: saving run1 (1 chunk)"
+
+# The save is queued and written on the following ticks, inside the host's 1 MiB
+# per-call storage budget.
+[[step]]
+ticks = 1
+command = "vl list"
+expect.feedback = "Volt Lapse: 1 recording(s): run1: 3 frames, 1 chat, 1 block changes, 1 keyframes, 64 cells, 2 ticks"
+
+[[step]]
+command = "vl path run1"
+expect.feedback = "Volt Lapse: 1 keyframes, 2 ticks, 3 catmull_rom samples; from (0.5, 64.0, 0.5) to (0.5, 64.0, 0.5)"
+
+# The recording is in storage, not in memory: it survives a reload.
+[[step]]
+reload = true
+command = "vl list"
+expect.feedback = "Volt Lapse: 1 recording(s): run1: 3 frames, 1 chat, 1 block changes, 1 keyframes, 64 cells, 2 ticks"
+
+[[step]]
+command = "vl stop"
+expect.error = "not recording (use /vl record)"
+
+[[step]]
+command = "vl play nosuch"
+expect.error = "no recording called \"nosuch\" (try /vl list)"
+
+[[step]]
+command = "vl keyframe"
+expect.error = "keyframes go into a recording: /vl record first"
+
+[[step]]
+command = "vl path nosuch"
+expect.error = "no recording called \"nosuch\" (try /vl list)"

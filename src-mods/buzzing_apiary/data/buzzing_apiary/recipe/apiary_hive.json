@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BHB",
+    "BBB",
+    "BHB"
+  ],
+  "key": {
+    "B": "buzzing_apiary:beeswax",
+    "H": "minecraft:honeycomb"
+  },
+  "result": {
+    "id": "buzzing_apiary:apiary_hive",
+    "count": 1
+  }
+}

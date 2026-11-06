@@ -1,0 +1,21 @@
+[package]
+name = "quick_place"
+version = "0.2.0"
+edition = "2021"
+publish = false
+description = "Quick Place: air-only neighbour placement, as a legacy Horizon WebAssembly server mod"
+
+[lib]
+# cdylib: the wasm32 core module `cargo horizon-mod build` componentizes and packs.
+# rlib: lets `cargo test` build the pure planner and config parser on the host.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# The SDK is pinned to the exact Horizon revision that still had the WebAssembly
+# server runtime (below the commit that removed it). Nothing else is needed: the
+# planner and the config parser are plain Rust with no dependencies.
+horizon-mod-sdk = { git = "https://github.com/horizon-rust/horizon", rev = "62a01db8f006b422e6db24e34dcee05ad41760ba" }
+
+[profile.release]
+opt-level = "s"
+lto = true

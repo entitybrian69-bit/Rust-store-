@@ -1,0 +1,16 @@
+[package]
+name = "volt_lapse"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Volt Lapse: server-side replay recorder/replayer for Horizon (legacy WebAssembly mod)"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+horizon-mod-sdk = { git = "https://github.com/horizon-rust/horizon", rev = "62a01db8f006b422e6db24e34dcee05ad41760ba" }
+
+[profile.release]
+opt-level = "s"
+lto = true
