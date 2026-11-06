@@ -302,9 +302,20 @@ mod tests {
         req.limit = 5;
         assert_eq!(plan(&req).len(), 5);
         assert!(plan(&req).len() <= MAX_CANDIDATES as usize);
+        // At the top of the i32 range only the offsets that do not add can exist:
+        // the pad keeps its north, west and north-west neighbours, and the pillar
+        // has nowhere to go.
+        req.limit = 64;
         req.origin = Pos::new(i32::MAX, i32::MAX, i32::MAX);
         req.mode = Mode::Pad;
-        assert!(plan(&req).is_empty());
+        assert_eq!(
+            plan(&req),
+            vec![
+                Pos::new(i32::MAX, i32::MAX, i32::MAX - 1),
+                Pos::new(i32::MAX - 1, i32::MAX, i32::MAX),
+                Pos::new(i32::MAX - 1, i32::MAX, i32::MAX - 1),
+            ]
+        );
         req.mode = Mode::Pillar;
         assert!(plan(&req).is_empty());
     }

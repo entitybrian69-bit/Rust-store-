@@ -33,8 +33,8 @@ jobs:
           rustc --version || true
           cargo --version || true
 
-      - name: Cache the registry, the pinned tool and the toolchain
-        uses: actions/cache@v4
+      - name: Restore the registry, the pinned tool and the toolchain
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cargo/registry
@@ -48,6 +48,17 @@ jobs:
         env:
           TOOL_DIR: ${{ runner.temp }}/qp-tool
         run: bash ./build.sh
+
+      - name: Save the registry, the pinned tool and the toolchain (even on failure)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          key: qp-${{ runner.os }}-62a01db8-${{ hashFiles('quick-place/Cargo.toml', 'quick-place/rust-toolchain.toml') }}
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.rustup
+            ${{ runner.temp }}/qp-tool
 
       - name: Keep the build log on the branch (even when the build fails)
         if: always()
