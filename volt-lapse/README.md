@@ -274,12 +274,12 @@ and commits the built artifact back to the branch.
 
 | Test | Covers |
 | --- | --- |
-| `src/settings.rs` (6) | every default parses and round-trips, the shipped `config.toml` equals the defaults, types and ranges, normalisation, the file parser |
+| `src/settings.rs` (5) | every default parses and round-trips, the shipped `config.toml` equals the defaults, types and ranges, normalisation, the file parser |
 | `src/recording.rs` (5) | `VL1` round-trip with spaces and escapes, span/summary, malformed input, run compression |
 | `src/path.rs` (6) | linear/Catmull-Rom/Bézier sampling, exact ends, clamping, bounded previews |
 | `src/lib.rs` (6) | schedule batching and keyframe skipping, storage-safe names, `file_naming`, UTF-8 chunking, the 69-key invariants, the *No API* table |
-| `tests/settings.toml` (24 steps) | read/write/validate/persist/reset through `/vl config` |
-| `tests/recording.toml` (13 steps) | record → keyframe → save → list → path, persistence across a reload, the error paths |
+| `tests/settings.toml` (23 steps) | read/write/validate/persist/reset through `/vl config` |
+| `tests/recording.toml` (14 steps) | record → keyframe → save → list → path, persistence across a reload, the error paths |
 | `tests/playback.toml` (17 steps) | replay writes blocks back, chat, speed, presets, looping |
 
 ## Licence

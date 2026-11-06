@@ -433,7 +433,7 @@ impl Config {
             .iter()
             .zip(&self.values)
             .zip(&defaults.values)
-            .filter(|((_, value), (_, default))| value != default)
+            .filter(|((_, value), default)| value != default)
             .map(|((spec, value), _)| format!("{} = {}", spec.key, value.render()))
             .collect()
     }

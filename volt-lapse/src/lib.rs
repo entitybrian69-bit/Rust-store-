@@ -790,7 +790,7 @@ impl VoltLapse {
         let name = recording_name(&name);
         self.session = Some(Session {
             recording: Recording::new(name.clone(), tick),
-            name,
+            name: name.clone(),
             started: tick,
             last_frame: tick,
             last_keyframe: tick,
@@ -1171,7 +1171,7 @@ impl VoltLapse {
 impl ServerMod for VoltLapse {
     fn init() -> Result<(Self, Registration), String> {
         let config = Self::load_config();
-        let mut mod_state = Self {
+        let mod_state = Self {
             config,
             session: None,
             playback: None,
