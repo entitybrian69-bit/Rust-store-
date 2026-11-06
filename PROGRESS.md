@@ -4,6 +4,18 @@ Last updated: 2026-11-06 (session working branch `arena/5f02db8a-rust-store`).
 Goal: deliver a real, toolchain-built `quick_place.hmod` (Rust/WASM), with download URL and
 base64 for the phone.
 
+## DELIVERED (2026-11-06)
+
+- Artifact: `dist/quick_place.hmod` — **27,914 bytes**, SHA-256
+  `7e7c528a31e19f284d83bb70223689bf8d2d1367a21e5c35489b817e24347e06`.
+- Built by CI run `42219681280` (commit `11a56f4`) with Horizon
+  `62a01db8f006b422e6db24e34dcee05ad41760ba` + Rust 1.99.1 + wasm32-unknown-unknown.
+- Verified: 12 host unit tests ✓, `cargo horizon-mod build` ✓, sandbox scripts
+  `tests/placement.toml` (4 steps) + `tests/command.toml` (6 steps) ✓,
+  `cargo horizon-mod check` ✓ (27,914 B, "trial run ... ok").
+- Release: `quick-place-v0.2.0` with `quick_place.hmod`, `.hmod.b64`, `.hmod.sha256`.
+- Full build output: `dist/build.log` (committed by CI on every run, pass or fail).
+
 ## Where things stand
 
 - Mod source written: `quick-place/` (manifest, `config.toml`, `src/{lib,planner,config}.rs`,
