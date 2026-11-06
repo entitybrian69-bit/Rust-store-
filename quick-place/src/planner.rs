@@ -295,8 +295,13 @@ mod tests {
 
     #[test]
     fn candidates_are_capped_and_never_overflow() {
+        // Every mode is bounded by its own shape; cube is the largest at 26, so the
+        // 64-candidate ceiling is a guard, not something a mode can reach.
         let mut req = request(Mode::Cube, u32::MAX);
-        assert_eq!(plan(&req).len(), MAX_CANDIDATES as usize);
+        assert_eq!(plan(&req).len(), 26);
+        req.limit = 5;
+        assert_eq!(plan(&req).len(), 5);
+        assert!(plan(&req).len() <= MAX_CANDIDATES as usize);
         req.origin = Pos::new(i32::MAX, i32::MAX, i32::MAX);
         req.mode = Mode::Pad;
         assert!(plan(&req).is_empty());
