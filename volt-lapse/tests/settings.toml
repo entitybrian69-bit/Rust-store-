@@ -1,0 +1,104 @@
+# The 69 settings through the command line: reading one, writing one, the
+# validation errors, persistence (storage survives a reload), the listing, reset.
+#
+# `sandbox` (cargo horizon-mod test) parses commands exactly as the server does:
+# `vl config replay_folder my replays` arrives as the text "config replay_folder
+# my replays", so free text after the key keeps its spaces.
+
+[[step]]
+join = "Alex"
+expect.commands = ["voltlapse", "vl"]
+
+[[step]]
+command = "vl config capture_fps"
+expect.feedback = "capture_fps = 20 (int)"
+
+[[step]]
+command = "vl config capture_fps 30"
+expect.feedback = "capture_fps = 30"
+
+# Only the settings that differ from the shipped defaults are listed.
+[[step]]
+command = "vl config"
+expect.feedback = "Volt Lapse: 1 of 69 settings changed: capture_fps = 30"
+
+# The value lives in the mod's own storage: a reload reads it back.
+[[step]]
+reload = true
+command = "vl config capture_fps"
+expect.feedback = "capture_fps = 30 (int)"
+
+[[step]]
+command = "vl config reset"
+expect.feedback = "Volt Lapse: all 69 settings reset to their defaults"
+
+[[step]]
+command = "vl config"
+expect.feedback = "Volt Lapse: all 69 settings are at their defaults (use /vl config <key>)"
+
+# Types and ranges: every error names the key and what it wanted.
+[[step]]
+command = "vl config capture_fps 61"
+expect.error = "capture_fps: 61 is outside 1..=60 (expected a whole number 1..=60)"
+
+[[step]]
+command = "vl config record_interval_ticks fast"
+expect.error = "record_interval_ticks: expected a whole number 1..=20, not \"fast\" (expected a whole number 1..=20)"
+
+[[step]]
+command = "vl config enabled maybe"
+expect.error = "enabled: expected true or false, not \"maybe\" (expected true or false)"
+
+[[step]]
+command = "vl config camera_interpolation spline"
+expect.error = "camera_interpolation: \"spline\" is not one of linear|catmull_rom|bezier (expected one of linear|catmull_rom|bezier)"
+
+[[step]]
+command = "vl config speed_presets [1, 9]"
+expect.error = "speed_presets: 9 is outside 0.1..=8 (expected a list of at most 16 numbers 0.1..=8, like [0.5, 1, 2])"
+
+[[step]]
+command = "vl config unknown_key 1"
+expect.error = "unknown setting \"unknown_key\" (see /vl config)"
+
+# Every kind of value: text with spaces, a float, a list.
+[[step]]
+command = "vl config replay_folder my replays"
+expect.feedback = "replay_folder = \"my replays\""
+
+[[step]]
+command = "vl config replay_folder"
+expect.feedback = "replay_folder = \"my replays\" (string)"
+
+[[step]]
+command = "vl config default_speed 2.5"
+expect.feedback = "default_speed = 2.5"
+
+[[step]]
+command = "vl config speed_presets [0.5, 1, 2]"
+expect.feedback = "speed_presets = [0.5, 1.0, 2.0]"
+
+# Settings that gate the recorder really do gate it.
+[[step]]
+command = "vl config enabled false"
+expect.feedback = "enabled = false"
+
+[[step]]
+command = "vl record anything"
+expect.error = "recording is off (enabled = false); turn it on with /vl config enabled true"
+
+[[step]]
+command = "vl config enabled true"
+expect.feedback = "enabled = true"
+
+[[step]]
+command = "vl config file_naming manual"
+expect.feedback = "file_naming = \"manual\""
+
+[[step]]
+command = "vl record"
+expect.error = "file_naming = manual needs a name: /vl record <name>"
+
+[[step]]
+command = "vl nonsense"
+expect.error = "unknown subcommand \"nonsense\"; /vl record [name] | /vl stop | /vl play [name] [speed|p<n>] | /vl list | /vl config [key] [value] | /vl config reset | /vl keyframe | /vl path [name] | /vl help"

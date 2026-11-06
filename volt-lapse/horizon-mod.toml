@@ -1,0 +1,10 @@
+id = "volt_lapse"
+name = "Volt Lapse"
+version = "0.1.0"
+description = "Replay-style recorder and replayer for Horizon: records server-observable world, player and block state, keyframes and camera paths, then replays them."
+authors = ["Rust-store-"]
+# API 0.3 is the WebAssembly server-mod line (side = "server").
+api = "0.3"
+side = "server"
+# world: read/write blocks. players: who is online, positions, chat output. storage: persist config and recordings.
+capabilities = ["world", "players", "storage"]
