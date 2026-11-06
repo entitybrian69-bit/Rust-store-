@@ -90,7 +90,7 @@ fn integer(key: &str, value: &Value) -> Result<u32, String> {
         .map_err(|_| format!("config.toml line {}: {key}: expected a whole number", value.line))
 }
 
-fn string(key: &str, value: &Value) -> Result<&str, String> {
+fn string<'a>(key: &str, value: &'a Value) -> Result<&'a str, String> {
     let text = value.text.as_str();
     text.strip_prefix('"')
         .and_then(|rest| rest.strip_suffix('"'))

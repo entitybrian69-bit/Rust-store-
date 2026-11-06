@@ -16,11 +16,18 @@ export RUSTUP_TOOLCHAIN="$TOOLCHAIN"
 
 artifact=target/horizon-mod/quick_place.hmod
 rm -f "$artifact"
-tool_dir=${TOOL_DIR:-$(mktemp -d)}
+made_tmp=0
+if [ -n "${TOOL_DIR:-}" ]; then
+    tool_dir=$TOOL_DIR
+    mkdir -p "$tool_dir"
+else
+    tool_dir=$(mktemp -d)
+    made_tmp=1
+fi
 passed=0
 cleanup() {
     if [ "$passed" -ne 1 ]; then rm -f "$artifact"; fi
-    rm -rf "$tool_dir"
+    if [ "$made_tmp" -eq 1 ]; then rm -rf "$tool_dir"; fi
 }
 trap cleanup EXIT
 trap 'exit 1' HUP INT TERM
@@ -28,9 +35,13 @@ trap 'exit 1' HUP INT TERM
 rustup toolchain install "$TOOLCHAIN" --profile minimal --target wasm32-unknown-unknown
 
 # The tool is pinned to the same revision as the SDK, so the packer and the ABI are
-# the ones this mod was written for.
-cargo install --git https://github.com/horizon-rust/horizon --rev "$REV" --locked \
-    --root "$tool_dir" cargo-horizon-mod
+# the ones this mod was written for. TOOL_DIR lets CI cache the built binary.
+if [ -x "$tool_dir/bin/cargo-horizon-mod" ]; then
+    echo "== reusing cargo-horizon-mod already in $tool_dir =="
+else
+    cargo install --git https://github.com/horizon-rust/horizon --rev "$REV" --locked \
+        --root "$tool_dir" cargo-horizon-mod
+fi
 PATH="$tool_dir/bin:$PATH"
 export PATH
 

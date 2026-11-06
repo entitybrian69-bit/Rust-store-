@@ -33,8 +33,20 @@ jobs:
           rustc --version || true
           cargo --version || true
 
+      - name: Cache the registry, the pinned tool and the toolchain
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.rustup
+            ${{ runner.temp }}/qp-tool
+          key: qp-${{ runner.os }}-62a01db8-${{ hashFiles('quick-place/Cargo.toml', 'quick-place/rust-toolchain.toml') }}
+
       - name: Build, test and check with the pinned legacy toolchain
         working-directory: quick-place
+        env:
+          TOOL_DIR: ${{ runner.temp }}/qp-tool
         run: sh ./build.sh
 
       - name: Collect the artifact, its base64 and its SHA-256

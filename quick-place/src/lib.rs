@@ -139,7 +139,7 @@ impl ServerMod for QuickPlace {
         // TODO(api): `set-blocks` queues writes that the host applies later, so the
         // air check above is best-effort, not atomic. The API offers no compare-and-set
         // or air-only placement. See README "API gaps".
-        match world::set_blocks(&player.dimension, changes) {
+        match world::set_blocks(&player.dimension, &changes) {
             Ok(()) => {
                 self.placed += count as u64;
                 let _ = players::tell(
