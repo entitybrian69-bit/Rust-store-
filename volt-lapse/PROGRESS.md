@@ -59,7 +59,7 @@ phone and this file, in one continuous run.
   refuses a write.
 - **`safe_mode`** is a real clamp, not a label: `chunk_radius` ≤ 4, chunk ≤ 256 KiB,
   recording ≤ 900 KiB, speed ≤ 4x.
-- **31 of the 69 settings need interfaces API 0.3 does not have.** They are
+- **32 of the 69 settings need interfaces API 0.3 does not have.** They are
   validated, persisted, listed in a start-up warning, and documented with a
   `TODO(api)` and a citation per row; the table lives in `NO_API` in
   `src/lib.rs` and in the README's "API gaps" section. Nothing is a stub that

@@ -440,15 +440,6 @@ impl Config {
 }
 
 /// One line per setting: `key = value` plus its type.
-pub fn summary(config: &Config) -> Vec<String> {
-    SPECS
-        .iter()
-        .zip(&config.values)
-        .map(|(spec, value)| {
-            format!("{} = {} ({})", spec.key, value.render(), value.type_name())
-        })
-        .collect()
-}
 
 #[cfg(test)]
 mod tests {
