@@ -28,13 +28,20 @@ jobs:
       - name: Validate all releases/*.hmod packages and catalog index
         run: python3 scripts/build_hmods.py --check-only
 
+      - name: Test and verify the Volt Lapse native packages
+        run: |
+          python3 -m unittest discover -s src-native/voltlapse/tests -v
+          python3 src-native/voltlapse/tools/build.py --check
+
       - name: Upload .hmod packages as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: horizon-hmod-packages
           path: |
             releases/*.hmod
+            releases/*.hnmod
             catalog/mods-index.json
+            src-native/voltlapse/compatibility.json
 
       - name: Publish .hmod assets to GitHub Release (on v* tag)
         if: startsWith(github.ref, 'refs/tags/v')
@@ -45,4 +52,4 @@ jobs:
             gh release create "${GITHUB_REF_NAME}" \
               --title "Horizon .hmod Store Release ${GITHUB_REF_NAME}" \
               --generate-notes
-          gh release upload "${GITHUB_REF_NAME}" releases/*.hmod catalog/mods-index.json --clobber
+          gh release upload "${GITHUB_REF_NAME}" releases/*.hmod releases/*.hnmod catalog/mods-index.json --clobber

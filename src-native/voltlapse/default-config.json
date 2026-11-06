@@ -1,0 +1,136 @@
+{
+  "format": "voltlapse-config",
+  "version": 3,
+  "profile": "default",
+  "recording": {
+    "tick_rate": 20,
+    "block_ticks": 200,
+    "max_block_bytes": 262144,
+    "compress": true,
+    "auto_save_ticks": 1200,
+    "memory_budget_bytes": 8388608,
+    "capture_raw_packets": true
+  },
+  "playback": {
+    "default_speed": 1.0,
+    "auto_play": true,
+    "loop": false,
+    "hud_hidden": false,
+    "resolution_override": null,
+    "render_distance": 12,
+    "interpolate": true,
+    "remember_camera": true
+  },
+  "rendering": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "format": "mp4",
+    "codec": "",
+    "bitrate": 0,
+    "anti_aliasing": "msaa4",
+    "motion_blur": {
+      "enabled": false,
+      "samples": 8,
+      "intensity": 0.5
+    },
+    "depth_of_field": {
+      "enabled": false,
+      "focal_distance": 12.0,
+      "aperture": 0.35,
+      "max_blur": 8.0
+    },
+    "tilt_shift": {
+      "enabled": false,
+      "center": 0.5,
+      "band": 0.25,
+      "strength": 0.6
+    },
+    "grade": {
+      "lut": "",
+      "lut_strength": 1.0,
+      "vignette": 0.0,
+      "vignette_softness": 0.5,
+      "saturation": 1.0,
+      "contrast": 1.0,
+      "brightness": 1.0
+    },
+    "letterbox": 0.0,
+    "alpha": false,
+    "projection": "perspective",
+    "multi_pass": false,
+    "render_distance": 12,
+    "output": "voltlapse-render.mp4"
+  },
+  "camera": {
+    "mode": "free",
+    "fov": 70.0,
+    "shake": {
+      "enabled": true,
+      "intensity": 1.0,
+      "frequency": 0.9
+    },
+    "smoothing": true,
+    "snap_ticks": 10,
+    "show_path": true,
+    "default_interpolation": "linear",
+    "third_person_distance": 4.0
+  },
+  "hud": {
+    "health": true,
+    "hunger": true,
+    "crosshair": true,
+    "debug": false,
+    "player_names": true,
+    "entity_names": false,
+    "timer": false,
+    "transport": true,
+    "recording_indicator": true,
+    "indicator_anchor": "top_right",
+    "indicator_color": 4294916912,
+    "master_visible": true
+  },
+  "keybinds": {
+    "start_stop_recording": "key.keyboard.f6",
+    "pause_resume_recording": "key.keyboard.f7",
+    "open_viewer": "key.keyboard.f8",
+    "open_camera_editor": "key.keyboard.f9",
+    "toggle_free_cam": "key.keyboard.f10",
+    "add_keyframe": "key.keyboard.k",
+    "screenshot": "key.keyboard.f2",
+    "toggle_hud": "key.keyboard.f1",
+    "speed_up": "key.keyboard.equal",
+    "speed_down": "key.keyboard.minus",
+    "play_pause": "key.keyboard.space",
+    "seek_forward": "key.keyboard.right",
+    "seek_backward": "key.keyboard.left",
+    "toggle_loop": "key.keyboard.l",
+    "render_last_path": "key.keyboard.f11"
+  },
+  "storage": {
+    "directory": "voltlapse/replays",
+    "auto_save_ticks": 1200,
+    "max_replays": 0,
+    "keep_days": 0,
+    "thumbnails": true,
+    "keep_recovered": true
+  },
+  "performance": {
+    "capture_threads": 0,
+    "render_threads": 0,
+    "buffer_mb": 32,
+    "low_memory": false,
+    "chunk_cache_mb": 128,
+    "lod": true,
+    "lod_start_chunks": 8,
+    "drop_transients_under_pressure": true
+  },
+  "ui": {
+    "theme": "dark",
+    "language": "",
+    "onboarding_done": false,
+    "toast_anchor": "top_right",
+    "toasts": true,
+    "grid_browser": true
+  }
+}

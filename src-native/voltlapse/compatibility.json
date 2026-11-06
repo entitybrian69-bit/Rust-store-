@@ -1,0 +1,48 @@
+{
+  "content_package": "voltlapse.hmod",
+  "game": "26.3",
+  "hooks": 410,
+  "horizon_mixins_repository": "https://github.com/horizon-rust/horizon-mixins",
+  "horizon_mixins_revision": "5a64af938ec86b00d53d16a408aabc0038fb3e57",
+  "horizon_repository": "https://github.com/horizon-rust/horizon",
+  "horizon_revision": "41f822b659789780f58d32c63ddfb6887ea1b8bf",
+  "minecraft_versions": [
+    "26.3"
+  ],
+  "native_package": "voltlapse.hnmod",
+  "optifine": {
+    "notes": "OptiFine's shaders run under Horizon's shader layer; Volt Lapse reads the camera after OptiFine's own placement, so a cinematic camera still wins.",
+    "status": "supported"
+  },
+  "realms": {
+    "notes": "A Realm is recorded like any server: the mod never needs server-side installation.",
+    "status": "supported"
+  },
+  "replay_format": {
+    "format": "vrc",
+    "metadata_version": 1,
+    "opcode_version": 1,
+    "reads": "files this engine writes up to format 1",
+    "recording_format_version": 1,
+    "refuses": "a newer format or opcode version with a clear message"
+  },
+  "server_plugins": {
+    "notes": "Vanilla, Spigot, Paper and Fabric/Quilt/Forge servers are all fine; Volt Lapse is client-only.",
+    "status": "supported"
+  },
+  "server_versions": [
+    "1.8",
+    "1.12.2",
+    "1.16.5",
+    "1.20.1",
+    "1.21",
+    "1.21.4",
+    "1.21.8",
+    "26.3"
+  ],
+  "server_versions_note": "Recording is client-side, so any server the Horizon client can join works, including 1.8 proxies and ViaVersion setups; the list is what has been exercised. Replay files do not depend on the server version.",
+  "sodium_iris": {
+    "notes": "Iris shader packs render through the same layer; the renderer captures the post-shader frame.",
+    "status": "supported"
+  }
+}

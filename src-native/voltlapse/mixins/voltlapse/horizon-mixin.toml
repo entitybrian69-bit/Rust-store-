@@ -1,0 +1,301 @@
+# Volt Lapse: replay recording, playback, a cinematic camera and offline
+# rendering for Horizon, on PC and Android.
+#
+# The durable logic lives in the `engine` crate. `runtime.rs` is the support
+# module the stage copies into `crates/horizon-client/src/game.rs`, and every
+# helper here is a two-line adapter that calls into it. The engine crate is
+# staged as a workspace member and horizon-client depends on it, so the helpers
+# can name `voltlapse_engine` directly.
+
+[mod]
+id = "voltlapse"
+version = "1.0.0"
+priority = 100
+
+# The horizon revision the bundle was tested against; it uses only the native
+# hook points, so the launcher builds it on any Horizon that has them.
+[compatibility]
+horizon_revision = "41f822b659789780f58d32c63ddfb6887ea1b8bf"
+
+[[crate]]
+id = "engine"
+path = "engine"
+dependent = "horizon-client"
+
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "voltlapse"
+source = "runtime.rs"
+
+[[injection]]
+id = "tick"
+hook = "tick"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_tick.rs"
+bindings = [{ name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" }]
+
+[[injection]]
+id = "frame"
+hook = "frame"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_frame.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "elapsed", ty = "std::time::Duration", value = "elapsed" },
+]
+
+[[injection]]
+id = "hud"
+hook = "hud"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_hud.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "batch", ty = "&mut horizon_client::hud::HudBatch", value = "&mut *batch" },
+  { name = "corners", ty = "&mut horizon_client::extras_hud::Corners", value = "&mut *corners" },
+]
+
+[[injection]]
+id = "gui"
+hook = "gui_render_post"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_gui.rs"
+bindings = [
+  { name = "game", ty = "&crate::game::Game<'_>", value = "&*self" },
+  { name = "batch", ty = "&mut horizon_client::hud::HudBatch", value = "&mut *batch" },
+  { name = "gui_hidden", ty = "bool", value = "gui_hidden" },
+  { name = "focused", ty = "bool", value = "focused" },
+]
+
+[[injection]]
+id = "key"
+hook = "key"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_key.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "key", ty = "&str", value = "key" },
+  { name = "pressed", ty = "bool", value = "pressed" },
+]
+
+[[injection]]
+id = "mouse"
+hook = "mouse_button_pre"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_mouse.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "button", ty = "i32", value = "button" },
+  { name = "pressed", ty = "bool", value = "pressed" },
+  { name = "modifiers", ty = "u32", value = "modifiers" },
+  { name = "canceled", ty = "&mut bool", value = "&mut *canceled" },
+]
+
+[[injection]]
+id = "wheel"
+hook = "wheel"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_wheel.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "steps", ty = "f32", value = "steps" },
+  { name = "claimed", ty = "&mut bool", value = "&mut *claimed" },
+]
+
+[[injection]]
+id = "command"
+hook = "command"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_command.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "&mut *ran" },
+]
+
+[[injection]]
+id = "commands"
+hook = "commands"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_commands.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "commands", ty = "&mut Vec<&'static str>", value = "&mut *commands" },
+]
+
+[[injection]]
+id = "packet"
+hook = "client_packet"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_packet.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "packet", ty = "&crate::mod_api::ClientboundPlayPacket", value = "packet" },
+]
+
+[[injection]]
+id = "chat"
+hook = "client_chat_received"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_chat.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "system", ty = "bool", value = "system" },
+  { name = "overlay", ty = "bool", value = "overlay" },
+  { name = "sender", ty = "u128", value = "sender" },
+  { name = "chat_type", ty = "Option<&str>", value = "chat_type" },
+  { name = "message", ty = "&mut horizon_client::text::Text", value = "message" },
+  { name = "cancel", ty = "&mut bool", value = "&mut *cancel" },
+]
+
+[[injection]]
+id = "block"
+hook = "block_changed"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_block.rs"
+bindings = [
+  { name = "dimension", ty = "crate::game::LevelDimension", value = "dimension" },
+  { name = "pos", ty = "horizon_core::position::BlockPos", value = "pos" },
+  { name = "old", ty = "horizon_world::registry::BlockStateId", value = "old" },
+  { name = "new", ty = "horizon_world::registry::BlockStateId", value = "new" },
+]
+
+[[injection]]
+id = "join"
+hook = "entity_join_level"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_join.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "dimension", ty = "&str", value = "dimension" },
+  { name = "entity", ty = "u32", value = "entity" },
+  { name = "kind", ty = "&str", value = "kind" },
+  { name = "pos", ty = "[f64; 3]", value = "pos" },
+  { name = "loaded_from_disk", ty = "bool", value = "loaded_from_disk" },
+  { name = "canceled", ty = "&mut bool", value = "&mut *canceled" },
+]
+
+[[injection]]
+id = "leave"
+hook = "entity_leave_level"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_leave.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "dimension", ty = "&str", value = "dimension" },
+  { name = "entity", ty = "u32", value = "entity" },
+  { name = "kind", ty = "&str", value = "kind" },
+]
+
+[[injection]]
+id = "weather"
+hook = "weather_change"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_weather.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "dimension", ty = "&str", value = "dimension" },
+  { name = "raining", ty = "bool", value = "raining" },
+  { name = "thundering", ty = "bool", value = "thundering" },
+  { name = "cancel", ty = "&mut bool", value = "&mut *cancel" },
+]
+
+[[injection]]
+id = "difficulty"
+hook = "difficulty_changed"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_difficulty.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "from", ty = "&str", value = "from" },
+  { name = "to", ty = "&str", value = "to" },
+]
+
+[[injection]]
+id = "lifecycle"
+hook = "world_lifecycle"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_lifecycle.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "context", ty = "&crate::mod_api::NativeLifecycleContext", value = "context" },
+  { name = "phase", ty = "crate::game::native_lifecycle::WorldPhase", value = "phase" },
+  { name = "error_text", ty = "&str", value = "error_text" },
+]
+
+[[injection]]
+id = "camera"
+hook = "camera_pose"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_camera.rs"
+bindings = [
+  { name = "game", ty = "&crate::game::Game<'_>", value = "&*self" },
+  { name = "partial", ty = "f32", value = "partial" },
+  { name = "position", ty = "&mut [f64; 3]", value = "position" },
+  { name = "yaw", ty = "&mut f32", value = "yaw" },
+  { name = "pitch", ty = "&mut f32", value = "pitch" },
+]
+
+[[injection]]
+id = "fov"
+hook = "compute_fov"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_fov.rs"
+bindings = [
+  { name = "game", ty = "&crate::game::Game<'_>", value = "&*self" },
+  { name = "partial", ty = "f32", value = "partial" },
+  { name = "camera", ty = "[f64; 3]", value = "camera" },
+  { name = "degrees", ty = "&mut f32", value = "&mut *degrees" },
+]
+
+[[injection]]
+id = "mods"
+hook = "mods"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_mods.rs"
+bindings = [{ name = "mods", ty = "&mut Vec<crate::mod_api::NativeMod>", value = "&mut *mods" }]
+
+[[injection]]
+id = "settings"
+hook = "settings"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_settings.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "buttons", ty = "&mut Vec<String>", value = "&mut *buttons" },
+]
+
+[[injection]]
+id = "settings_click"
+hook = "settings_click"
+hook_version = 1
+kind = "HEAD"
+helper = "hook_settings_click.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "button", ty = "usize", value = "button" },
+]

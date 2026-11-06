@@ -1,0 +1,16 @@
+[package]
+name = "voltlapse_engine"
+version = "1.0.0"
+edition = "2021"
+license = "LGPL-3.0-or-later"
+publish = false
+description = "Volt Lapse engine: replay container, recorder, playback, camera paths, render planning, config. No dependencies, no game types, so it builds inside Horizon's locked workspace."
+
+[lib]
+name = "voltlapse_engine"
+path = "src/lib.rs"
+
+# Nothing here: horizon-mixins stages bundle crates into Horizon's workspace, whose
+# Cargo.lock is the only allow list. Staying dependency-free means the crate always
+# resolves offline and the whole engine is testable with `cargo test`.
+[dependencies]

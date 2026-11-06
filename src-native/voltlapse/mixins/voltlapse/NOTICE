@@ -1,0 +1,30 @@
+Volt Lapse — replay recording, playback, cinematic camera paths and offline
+rendering for the Horizon client (PC and Android).
+
+Copyright (C) 2026 the Volt Lapse contributors.
+
+This mod is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version. It is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+(beside this file) for more details.
+
+Feature design and behaviour follow Replay Mod, the original replay mod for
+Minecraft:
+
+    Replay Mod — Copyright (C) 2014-2026 Replay Mod authors, Johni0702 et al.
+    https://github.com/ReplayMod/ReplayMod
+    Licensed under the GNU Lesser General Public License, version 3.
+
+Volt Lapse is an independent implementation for Horizon and shares no code with
+Replay Mod. Its `.vrc` replay container follows the shape of Replay Mod's
+`.mcpr` package (a zip of `metaData.json` and `recording.tmc`) so that tools
+written for one can inspect the other, and its `metaData.json` keeps the
+`fileFormat "MCPR"`/`fileFormatVersion 14` identifiers those tools look for.
+The recorded packet stream itself is Volt Lapse's own opcode table and is not
+a Replay Mod recording.
+
+Horizon is Copyright (C) the Horizon contributors, MIT licensed:
+    https://github.com/horizon-rust/horizon
