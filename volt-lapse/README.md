@@ -16,6 +16,18 @@ mod does not pretend: every setting that needs one of those interfaces is still
 parsed, validated, persisted and editable, is listed in the start-up warning, and
 is documented below as *No API* with a `TODO(api)` in the code.
 
+## The built artifact
+
+| | |
+| --- | --- |
+| File | `volt_lapse.hmod` — **93,508 bytes** |
+| SHA-256 | `dd076e29f8d67b1d104c8289d9d020f6204202dd4106161d112e468ecc6b89d4` |
+| Download | [release `volt-lapse-v0.1.0`](https://github.com/entitybrian69-bit/Rust-store-/releases/download/volt-lapse-v0.1.0/volt_lapse.hmod) · base64: [`volt_lapse.hmod.b64`](https://github.com/entitybrian69-bit/Rust-store-/releases/download/volt-lapse-v0.1.0/volt_lapse.hmod.b64) |
+| In this repository | `dist/volt_lapse.hmod`, `dist/volt_lapse.hmod.b64`, `dist/volt_lapse.hmod.sha256` |
+| Built by | CI run `42239960611` on commit `7c7e0bb`, Horizon `62a01db8…`, Rust `1.99.1`, `wasm32-unknown-unknown` |
+| Verified | 22 host unit tests, 54 sandbox steps in 3 scripts, `cargo horizon-mod check` (trial run ok); archive = `horizon-mod.toml` + a 255,290-byte WebAssembly **component**; the base64 decodes to the same 93,508 bytes |
+| Phone | `base64 -d volt_lapse.hmod.b64 > volt_lapse.hmod` (Termux) or `openssl base64 -d -in volt_lapse.hmod.b64 -out volt_lapse.hmod` |
+
 ## What it records, and what it cannot
 
 | Recorded | How |

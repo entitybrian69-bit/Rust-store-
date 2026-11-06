@@ -19,8 +19,8 @@ phone and this file, in one continuous run.
 | `src/lib.rs` — commands, recording engine, storage, playback | done (6 unit tests) |
 | `tests/*.toml` — sandbox scripts | done: settings (24 steps), recording (13), playback (17) |
 | `.github/workflows/volt-lapse.yml` | done: pinned build, tests, check, release upload, artifact committed back |
-| CI green | **in progress** — see the run table below |
-| Artifact delivered | **not yet** |
+| CI green | **yes**: run `42239960611` (commit `7c7e0bb`) |
+| Artifact delivered | **yes**: 93,508 B, SHA-256 `dd076e29f8d67b1d104c8289d9d020f6204202dd4106161d112e468ecc6b89d4` |
 
 ## How to resume
 
@@ -44,10 +44,15 @@ phone and this file, in one continuous run.
 | What | Value |
 | --- | --- |
 | Toolchain pin | `62a01db8f006b422e6db24e34dcee05ad41760ba`, Rust `1.99.1`, `wasm32-unknown-unknown` |
-| Release tag | `volt-lapse-v0.1.0` |
-| Artifact | `dist/volt_lapse.hmod` (committed by CI once the build passes) |
-| SHA-256 | filled in after the green run |
-| CI runs | first: `42235177030` (commit `6e0ce3f`) |
+| Release tag | `volt-lapse-v0.1.0` — `volt_lapse.hmod`, `volt_lapse.hmod.b64`, `volt_lapse.hmod.sha256` |
+| Artifact | `dist/volt_lapse.hmod` — **93,508 bytes** |
+| SHA-256 | `dd076e29f8d67b1d104c8289d9d020f6204202dd4106161d112e468ecc6b89d4` |
+| Inside the `.hmod` | `horizon-mod.toml` (505 B) + `mod.wasm` (255,290 B, WebAssembly **component**, version `0d 00 01 00`) |
+| Host unit tests | 22 passed, 0 failed |
+| Sandbox scripts | 3 passed, 54 steps (settings 23, recording 14, playback 17) |
+| Registry check | `cargo horizon-mod check`: API 0.3 server, `world`+`players`+`storage`, trial run ok, `/voltlapse` and `/vl` registered |
+| CI runs | `42235177030` (2 compile errors), `42238307655` (4 path tests), `42238860098` (playback 8x vs safe_mode 4x), **green: `42239518930`**, **green + warning-free: `42239960611`** (identical bytes) |
+| Release assets reachable from the sandbox? | no — `release-assets.githubusercontent.com` is not on the allowlist; the artifact was read back from `dist/` on the branch instead |
 
 ## Design notes worth keeping
 
