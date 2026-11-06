@@ -22,11 +22,13 @@ expect.feedback = "stopped after 2 ticks: saving take1 (1 chunk)"
 [[step]]
 ticks = 1
 
+# safe_mode (on by default) clamps playback speed at 4x, so asking for 8x plays
+# at 4x — one tick still covers the whole one-tick recording.
 [[step]]
 command = "vl play take1 8"
-expect.feedback = "playing \"take1\" at 8x: 1 ticks, 0 keyframes, 2 scheduled actions"
+expect.feedback = "playing \"take1\" at 4x: 1 ticks, 0 keyframes, 2 scheduled actions"
 
-# One tick at 8x covers the whole recording: the block change and the chat line
+# One tick at 4x covers the whole recording: the block change and the chat line
 # happen, then the replay ends.
 [[step]]
 ticks = 1
@@ -55,14 +57,15 @@ expect.error = "speed 99 is outside 0.1..=8"
 command = "vl play take1 fast"
 expect.error = "speed \"fast\" is not a number, and not p1..p16"
 
-# loop_playback restarts the timeline instead of ending it.
+# loop_playback restarts the timeline instead of ending it. p7 is 8 in
+# speed_presets, clamped to 4x by safe_mode.
 [[step]]
 command = "vl config loop_playback true"
 expect.feedback = "loop_playback = true"
 
 [[step]]
 command = "vl play take1 p7"
-expect.feedback = "playing \"take1\" at 8x: 1 ticks, 0 keyframes, 2 scheduled actions"
+expect.feedback = "playing \"take1\" at 4x: 1 ticks, 0 keyframes, 2 scheduled actions"
 
 [[step]]
 ticks = 1
