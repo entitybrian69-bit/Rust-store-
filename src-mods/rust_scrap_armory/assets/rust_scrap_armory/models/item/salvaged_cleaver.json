@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "rust_scrap_armory:item/salvaged_cleaver"
+  }
+}

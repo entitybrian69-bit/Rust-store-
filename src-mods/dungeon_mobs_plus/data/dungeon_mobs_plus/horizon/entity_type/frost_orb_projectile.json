@@ -1,0 +1,5 @@
+{
+  "template": "minecraft:snowball",
+  "item": "dungeon_mobs_plus:frost_orb",
+  "damage": 3.5
+}

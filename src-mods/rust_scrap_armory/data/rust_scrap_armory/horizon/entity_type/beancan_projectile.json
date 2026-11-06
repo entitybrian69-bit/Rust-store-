@@ -1,0 +1,5 @@
+{
+  "template": "minecraft:snowball",
+  "item": "rust_scrap_armory:beancan_grenade",
+  "damage": 6.0
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS",
+    "S ",
+    "R "
+  ],
+  "key": {
+    "S": "rust_scrap_armory:scrap_metal",
+    "R": "minecraft:stick"
+  },
+  "result": {
+    "id": "rust_scrap_armory:salvaged_cleaver",
+    "count": 1
+  }
+}

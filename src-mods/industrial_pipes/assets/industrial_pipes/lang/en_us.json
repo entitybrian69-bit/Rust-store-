@@ -1,0 +1,7 @@
+{
+  "block.industrial_pipes.copper_pipe": "Copper Logistics Pipe",
+  "block.industrial_pipes.steel_duct": "Heavy Steel Duct",
+  "block.industrial_pipes.factory_grate": "Factory Floor Grate",
+  "item.industrial_pipes.pipe_wrench": "Pipe Wrench",
+  "itemGroup.industrial_pipes.logistics_tab": "Industrial Pipes"
+}

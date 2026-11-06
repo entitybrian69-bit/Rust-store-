@@ -1,0 +1,10 @@
+{
+  "template": "minecraft:chiseled_stone_bricks",
+  "properties": {
+    "hardness": 4.0,
+    "resistance": 10.0,
+    "light": 10,
+    "sounds": "minecraft:deepslate_bricks"
+  },
+  "item": true
+}

@@ -1,0 +1,8 @@
+id = "industrial_pipes"
+name = "Industrial Pipes & Grates"
+version = "0.2.0"
+description = "Adds 6-way connecting Copper & Steel Logistics Pipes, non-occluding Factory Floor Grates, and Industrial Sorter menu definitions."
+authors = ["Rust-store-"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

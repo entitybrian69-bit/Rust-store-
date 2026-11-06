@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:amethyst_shard",
+    "minecraft:glowstone_dust"
+  ],
+  "result": {
+    "id": "glowing_amethyst:radiant_shard",
+    "count": 2
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "template": "minecraft:amethyst_block",
+  "properties": {
+    "hardness": 1.8,
+    "resistance": 4.0,
+    "light": 15,
+    "sounds": "minecraft:amethyst_block"
+  },
+  "item": true
+}

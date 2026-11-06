@@ -1,0 +1,9 @@
+{
+  "block.dungeon_mobs_plus.runic_totem": "Runic Frost Totem",
+  "item.dungeon_mobs_plus.frost_orb": "Frost Orb",
+  "entity.dungeon_mobs_plus.frost_orb_projectile": "Frost Orb",
+  "entity.dungeon_mobs_plus.armored_brute": "Armored Dungeon Brute",
+  "entity.dungeon_mobs_plus.outpost_guard": "Outpost Guard",
+  "effect.dungeon_mobs_plus.frostbite": "Frostbite",
+  "itemGroup.dungeon_mobs_plus.dungeon_tab": "Dungeon Mobs+"
+}

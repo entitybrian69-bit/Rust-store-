@@ -1,0 +1,18 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Block Placement Reborn (Resource Pack)",
+    "description": "Ghost-block wireframe preview textures and placement grid visuals for Bedrock & Android.",
+    "uuid": "bf87a5e7-ae44-4d26-cd12-445566778899",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 21, 0]
+  },
+  "modules": [
+    {
+      "description": "Block Placement Reborn Textures & Models",
+      "type": "resources",
+      "uuid": "c098b6f8-bf55-4e37-de23-556677889900",
+      "version": [1, 0, 0]
+    }
+  ]
+}

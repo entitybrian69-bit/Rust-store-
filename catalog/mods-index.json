@@ -1,0 +1,178 @@
+{
+  "engine": "Horizon (Rust Engine for Minecraft: Java Edition 26.3)",
+  "targets": [
+    "PC (Linux, macOS, Windows \u2014 horizon-rust/horizon)",
+    "Android 9+ 64-bit (arm64-v8a, x86_64 \u2014 Vasysik/horizon-android)"
+  ],
+  "format_spec": "https://github.com/horizon-rust/horizon/blob/main/docs/api/mod-files.md",
+  "mods": [
+    {
+      "id": "block_placement_reborn",
+      "name": "Block Placement Reborn",
+      "version": "1.0.0",
+      "description": "Precision block placement blocks and tools: Alignment Grid Block, Non-Occluding Ghost Preview Frame, Blueprint Placement Wand, and Rotator.",
+      "authors": [
+        "AI Modding Specialist"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "block_placement_reborn.hmod",
+      "size_bytes": 6457,
+      "sha256": "b18242e470da87c0af0ad9285804c3d6ca3a9e73898f291e9b6cdf1c594685a4",
+      "entry_count": 20,
+      "counts": {
+        "blocks": 2,
+        "items": 1,
+        "creative_tabs": 1,
+        "mob_effects": 0,
+        "entity_types": 0,
+        "menus": 0,
+        "recipes": 2,
+        "textures": 3
+      }
+    },
+    {
+      "id": "dungeon_mobs_plus",
+      "name": "Dungeon Mobs & Frost Magic",
+      "version": "0.2.0",
+      "description": "Adds Armored Dungeon Brute and Outpost Guard living entity types, Frost Orb projectiles, Frostbite mob effect, and Runic Totem blocks.",
+      "authors": [
+        "Rust-store-"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "dungeon_mobs_plus.hmod",
+      "size_bytes": 5391,
+      "sha256": "f331e42bdf7610f689e192e2ebcc175072d18f911bf2af35f35fe3beb23f00fb",
+      "entry_count": 18,
+      "counts": {
+        "blocks": 1,
+        "items": 1,
+        "creative_tabs": 1,
+        "mob_effects": 1,
+        "entity_types": 3,
+        "menus": 0,
+        "recipes": 2,
+        "textures": 2
+      }
+    },
+    {
+      "id": "glowing_amethyst",
+      "name": "Glowing Amethyst",
+      "version": "0.2.0",
+      "description": "Adds luminous Glowing Amethyst blocks, Chiseled Amethyst Lamps, and Radiant Shards with light level 15 for caves and bases.",
+      "authors": [
+        "Rust-store-"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "glowing_amethyst.hmod",
+      "size_bytes": 6655,
+      "sha256": "4fd4efb7504c5ed74b17234023ef7603deb4a2ae3afae5f6797813d79c24d8a5",
+      "entry_count": 22,
+      "counts": {
+        "blocks": 2,
+        "items": 1,
+        "creative_tabs": 1,
+        "mob_effects": 0,
+        "entity_types": 0,
+        "menus": 0,
+        "recipes": 3,
+        "textures": 3
+      }
+    },
+    {
+      "id": "industrial_pipes",
+      "name": "Industrial Pipes & Grates",
+      "version": "0.2.0",
+      "description": "Adds 6-way connecting Copper & Steel Logistics Pipes, non-occluding Factory Floor Grates, and Industrial Sorter menu definitions.",
+      "authors": [
+        "Rust-store-"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "industrial_pipes.hmod",
+      "size_bytes": 8852,
+      "sha256": "c8beb67dbb1f78a79eb7b0f4512041ebfaad55b03d78588175c0ff135552ec6e",
+      "entry_count": 30,
+      "counts": {
+        "blocks": 3,
+        "items": 1,
+        "creative_tabs": 1,
+        "mob_effects": 0,
+        "entity_types": 0,
+        "menus": 1,
+        "recipes": 4,
+        "textures": 4
+      }
+    },
+    {
+      "id": "ruby_expansion",
+      "name": "Ruby Expansion",
+      "version": "0.2.1",
+      "description": "Classic Minecraft Ruby Ore, Ruby Block, Crimson Ruby Blade, and Ruby Vitality status effect for Horizon 26.3.",
+      "authors": [
+        "Rust-store-"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "ruby_expansion.hmod",
+      "size_bytes": 7319,
+      "sha256": "f2bb8de7c9dca0e297e5ee1aad5da239dc89d14d7efcbfa37e563cbe31b93531",
+      "entry_count": 26,
+      "counts": {
+        "blocks": 2,
+        "items": 2,
+        "creative_tabs": 1,
+        "mob_effects": 1,
+        "entity_types": 0,
+        "menus": 0,
+        "recipes": 3,
+        "textures": 4
+      }
+    },
+    {
+      "id": "rust_scrap_armory",
+      "name": "Rust Scrap & Base Armory",
+      "version": "0.3.0",
+      "description": "Rust-inspired survival expansion for Horizon 26.3: Sheet Metal & Armored Base Blocks, Scrap Metal, Salvaged Cleaver, Bean Can Grenade projectile, and Med-Syringe.",
+      "authors": [
+        "Rust-store-"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "rust_scrap_armory.hmod",
+      "size_bytes": 9592,
+      "sha256": "90bd06844c733ce3327bb44d98a7fe03b4fa942f7686082e517c839c50d05a1f",
+      "entry_count": 31,
+      "counts": {
+        "blocks": 2,
+        "items": 3,
+        "creative_tabs": 1,
+        "mob_effects": 0,
+        "entity_types": 1,
+        "menus": 0,
+        "recipes": 5,
+        "textures": 5
+      }
+    }
+  ]
+}

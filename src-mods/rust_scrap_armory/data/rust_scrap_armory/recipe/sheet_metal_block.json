@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "key": {
+    "S": "rust_scrap_armory:scrap_metal"
+  },
+  "result": {
+    "id": "rust_scrap_armory:sheet_metal_block",
+    "count": 2
+  }
+}

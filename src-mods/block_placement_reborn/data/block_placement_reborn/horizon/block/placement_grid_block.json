@@ -1,0 +1,10 @@
+{
+  "template": "minecraft:iron_block",
+  "properties": {
+    "hardness": 1.5,
+    "resistance": 10.0,
+    "light": 7,
+    "sounds": "minecraft:amethyst_block"
+  },
+  "item": true
+}

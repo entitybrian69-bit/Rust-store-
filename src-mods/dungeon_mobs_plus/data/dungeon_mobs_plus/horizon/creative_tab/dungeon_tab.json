@@ -1,0 +1,8 @@
+{
+  "title": "Dungeon Mobs+",
+  "icon": "dungeon_mobs_plus:frost_orb",
+  "items": [
+    "dungeon_mobs_plus:runic_totem",
+    "dungeon_mobs_plus:frost_orb"
+  ]
+}

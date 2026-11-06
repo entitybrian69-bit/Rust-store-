@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dungeon_mobs_plus:item/frost_orb"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  A",
+    " S ",
+    "S  "
+  ],
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "S": "minecraft:copper_ingot"
+  },
+  "result": {
+    "id": "block_placement_reborn:placement_wand",
+    "count": 1
+  }
+}

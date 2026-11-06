@@ -1,0 +1,8 @@
+id = "rust_scrap_armory"
+name = "Rust Scrap & Base Armory"
+version = "0.3.0"
+description = "Rust-inspired survival expansion for Horizon 26.3: Sheet Metal & Armored Base Blocks, Scrap Metal, Salvaged Cleaver, Bean Can Grenade projectile, and Med-Syringe."
+authors = ["Rust-store-"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

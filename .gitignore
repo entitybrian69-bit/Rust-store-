@@ -1,0 +1,12 @@
+# Python & OS scratch files
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+
+# Rust / cargo-horizon-mod local build caches
+target/
+
+# Keep packaged releases/*.hmod tracked in git so Android & PC users
+# can download them directly via raw.githubusercontent.com at $0 cost!
+!releases/*.hmod

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "block_placement_reborn:item/placement_wand"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "key": {
+    "S": "glowing_amethyst:radiant_shard"
+  },
+  "result": {
+    "id": "glowing_amethyst:glowing_amethyst_block",
+    "count": 1
+  }
+}

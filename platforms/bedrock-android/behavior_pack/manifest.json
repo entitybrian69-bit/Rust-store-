@@ -1,0 +1,36 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Block Placement Reborn (Behavior Pack)",
+    "description": "Intelligent raycasting, grid snapping, multi-block rotation/mirroring, and undo/redo placement for Bedrock & Android.",
+    "uuid": "8c54d2b4-7b11-4a93-9a8e-112233445566",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 21, 0]
+  },
+  "modules": [
+    {
+      "description": "Block Placement Reborn Behavior Data",
+      "type": "data",
+      "uuid": "9d65e3c5-8c22-4b04-ab9f-223344556677",
+      "version": [1, 0, 0]
+    },
+    {
+      "description": "Block Placement Reborn Script API Module",
+      "type": "script",
+      "language": "javascript",
+      "uuid": "ae76f4d6-9d33-4c15-bc01-334455667788",
+      "version": [1, 0, 0],
+      "entry": "scripts/main.js"
+    }
+  ],
+  "dependencies": [
+    {
+      "module_name": "@minecraft/server",
+      "version": "1.14.0"
+    },
+    {
+      "uuid": "bf87a5e7-ae44-4d26-cd12-445566778899",
+      "version": [1, 0, 0]
+    }
+  ]
+}

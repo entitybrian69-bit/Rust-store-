@@ -1,0 +1,11 @@
+{
+  "template": "minecraft:chorus_plant",
+  "connects_to": "#industrial_pipes:connectable_pipes",
+  "thickness": 6,
+  "properties": {
+    "hardness": 2.0,
+    "resistance": 4.0,
+    "sounds": "minecraft:copper"
+  },
+  "item": true
+}

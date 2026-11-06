@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "block_placement_reborn:block/placement_grid_block"
+  }
+}

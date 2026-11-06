@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:snowball",
+    "minecraft:blue_ice"
+  ],
+  "result": {
+    "id": "dungeon_mobs_plus:frost_orb",
+    "count": 4
+  }
+}

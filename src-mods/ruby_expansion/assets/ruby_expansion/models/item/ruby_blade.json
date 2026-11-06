@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "ruby_expansion:item/ruby_blade"
+  }
+}
