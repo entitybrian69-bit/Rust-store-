@@ -35,7 +35,7 @@ jobs:
 
       - name: Build, test and check with the pinned legacy toolchain
         working-directory: quick-place
-        run: ./build.sh
+        run: sh ./build.sh
 
       - name: Collect the artifact, its base64 and its SHA-256
         working-directory: quick-place
