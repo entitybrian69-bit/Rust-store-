@@ -1,0 +1,9 @@
+{
+  "block.rust_scrap_armory.sheet_metal_block": "Reinforced Sheet Metal Block",
+  "block.rust_scrap_armory.hq_armored_wall": "High-Quality Armored Wall",
+  "item.rust_scrap_armory.scrap_metal": "Scrap Metal",
+  "item.rust_scrap_armory.salvaged_cleaver": "Salvaged Cleaver",
+  "item.rust_scrap_armory.beancan_grenade": "Bean Can Grenade",
+  "entity.rust_scrap_armory.beancan_projectile": "Bean Can Grenade",
+  "itemGroup.rust_scrap_armory.rust_armory": "Rust Scrap Armory"
+}

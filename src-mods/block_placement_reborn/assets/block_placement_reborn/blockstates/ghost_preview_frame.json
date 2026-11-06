@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "block_placement_reborn:block/ghost_preview_frame"
+    }
+  }
+}

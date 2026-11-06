@@ -1,0 +1,43 @@
+{
+  "format_version": "1.21.0",
+  "minecraft:block": {
+    "description": {
+      "identifier": "bpr:placement_grid_block",
+      "menu_category": {
+        "category": "construction"
+      },
+      "traits": {
+        "minecraft:placement_direction": {
+          "enabled_states": [
+            "minecraft:cardinal_direction",
+            "minecraft:facing_direction"
+          ]
+        },
+        "minecraft:placement_position": {
+          "enabled_states": [
+            "minecraft:block_face",
+            "minecraft:vertical_half"
+          ]
+        }
+      }
+    },
+    "components": {
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1.5
+      },
+      "minecraft:destructible_by_explosion": {
+        "explosion_resistance": 10.0
+      },
+      "minecraft:light_emission": 7,
+      "minecraft:map_color": "#38bdf8",
+      "minecraft:collision_box": {
+        "origin": [-8, 0, -8],
+        "size": [16, 16, 16]
+      },
+      "minecraft:selection_box": {
+        "origin": [-8, 0, -8],
+        "size": [16, 16, 16]
+      }
+    }
+  }
+}

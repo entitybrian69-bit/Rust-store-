@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "R",
+    "R",
+    "S"
+  ],
+  "key": {
+    "R": "ruby_expansion:ruby",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "ruby_expansion:ruby_blade",
+    "count": 1
+  }
+}

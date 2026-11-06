@@ -1,0 +1,9 @@
+{
+  "title": "Block Placement Reborn",
+  "icon": "block_placement_reborn:placement_wand",
+  "items": [
+    "block_placement_reborn:placement_wand",
+    "block_placement_reborn:placement_grid_block",
+    "block_placement_reborn:ghost_preview_frame"
+  ]
+}

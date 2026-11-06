@@ -1,0 +1,16 @@
+{
+  "template": "minecraft:iron_sword",
+  "components": {
+    "minecraft:max_damage": 650,
+    "minecraft:rarity": "uncommon",
+    "minecraft:attribute_modifiers": [
+      {
+        "type": "minecraft:attack_damage",
+        "id": "minecraft:base_attack_damage",
+        "amount": 8.5,
+        "operation": "add_value",
+        "slot": "mainhand"
+      }
+    ]
+  }
+}

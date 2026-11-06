@@ -1,0 +1,10 @@
+{
+  "title": "Ruby Expansion",
+  "icon": "ruby_expansion:ruby",
+  "items": [
+    "ruby_expansion:ruby",
+    "ruby_expansion:ruby_ore",
+    "ruby_expansion:ruby_block",
+    "ruby_expansion:ruby_blade"
+  ]
+}

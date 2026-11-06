@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "SGS",
+    " S "
+  ],
+  "key": {
+    "S": "rust_scrap_armory:scrap_metal",
+    "G": "minecraft:gunpowder"
+  },
+  "result": {
+    "id": "rust_scrap_armory:beancan_grenade",
+    "count": 4
+  }
+}

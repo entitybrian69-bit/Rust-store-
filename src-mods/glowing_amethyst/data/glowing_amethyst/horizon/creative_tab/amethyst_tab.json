@@ -1,0 +1,9 @@
+{
+  "title": "Glowing Amethyst",
+  "icon": "glowing_amethyst:glowing_amethyst_block",
+  "items": [
+    "glowing_amethyst:glowing_amethyst_block",
+    "glowing_amethyst:amethyst_lamp",
+    "glowing_amethyst:radiant_shard"
+  ]
+}

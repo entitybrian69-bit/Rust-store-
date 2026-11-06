@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "industrial_pipes:copper_pipe",
+    "industrial_pipes:steel_duct",
+    "minecraft:chest",
+    "minecraft:barrel",
+    "minecraft:hopper"
+  ]
+}

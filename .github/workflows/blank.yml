@@ -1,36 +1,48 @@
-# This is a basic workflow to help you get started with Actions
+name: Validate & Publish Horizon .hmod Packages
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+permissions:
+  contents: write
+
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  validate-hmods:
+    name: Validate .hmod Packages (Horizon API 0.2 Spec)
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Validate all releases/*.hmod packages and catalog index
+        run: python3 scripts/build_hmods.py --check-only
+
+      - name: Upload .hmod packages as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: horizon-hmod-packages
+          path: |
+            releases/*.hmod
+            catalog/mods-index.json
+
+      - name: Publish .hmod assets to GitHub Release (on v* tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1 || \
+            gh release create "${GITHUB_REF_NAME}" \
+              --title "Horizon .hmod Store Release ${GITHUB_REF_NAME}" \
+              --generate-notes
+          gh release upload "${GITHUB_REF_NAME}" releases/*.hmod catalog/mods-index.json --clobber

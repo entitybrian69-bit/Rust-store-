@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C C",
+    " C ",
+    " I "
+  ],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "industrial_pipes:pipe_wrench",
+    "count": 1
+  }
+}

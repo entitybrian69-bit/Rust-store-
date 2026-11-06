@@ -1,0 +1,8 @@
+id = "block_placement_reborn"
+name = "Block Placement Reborn"
+version = "1.0.0"
+description = "Precision block placement blocks and tools: Alignment Grid Block, Non-Occluding Ghost Preview Frame, Blueprint Placement Wand, and Rotator."
+authors = ["AI Modding Specialist"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

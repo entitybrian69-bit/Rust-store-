@@ -1,0 +1,10 @@
+[package]
+name = "block-placement-reborn-core"
+version = "1.0.0"
+edition = "2021"
+description = "High-performance Rust engine for voxel DDA raycasting, sub-grid snapping, multi-block rotation/mirroring, AABB collision checking, and undo/redo state management."
+license = "MIT"
+
+[lib]
+name = "block_placement_reborn_core"
+path = "src/lib.rs"

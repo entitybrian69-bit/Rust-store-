@@ -1,0 +1,12 @@
+{
+  "template": "minecraft:obsidian",
+  "properties": {
+    "hardness": 25.0,
+    "resistance": 600.0,
+    "sounds": "minecraft:netherite_block"
+  },
+  "item": true,
+  "components": {
+    "minecraft:rarity": "rare"
+  }
+}

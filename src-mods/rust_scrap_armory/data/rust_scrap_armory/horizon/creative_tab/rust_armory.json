@@ -1,0 +1,11 @@
+{
+  "title": "Rust Scrap Armory",
+  "icon": "rust_scrap_armory:salvaged_cleaver",
+  "items": [
+    "rust_scrap_armory:scrap_metal",
+    "rust_scrap_armory:sheet_metal_block",
+    "rust_scrap_armory:hq_armored_wall",
+    "rust_scrap_armory:salvaged_cleaver",
+    "rust_scrap_armory:beancan_grenade"
+  ]
+}

@@ -1,0 +1,8 @@
+id = "dungeon_mobs_plus"
+name = "Dungeon Mobs & Frost Magic"
+version = "0.2.0"
+description = "Adds Armored Dungeon Brute and Outpost Guard living entity types, Frost Orb projectiles, Frostbite mob effect, and Runic Totem blocks."
+authors = ["Rust-store-"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "block_placement_reborn",
+  "version": "1.0.0",
+  "name": "Block Placement Reborn",
+  "description": "Precision block placement with DDA raycasting, sub-grid snapping, multi-block rotation/mirroring, ghost-block rendering previews, and undo/redo history.",
+  "authors": [
+    "AI Modding Specialist"
+  ],
+  "contact": {
+    "homepage": "https://github.com/entitybrian69-bit/Rust-store-",
+    "sources": "https://github.com/entitybrian69-bit/Rust-store-"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.blockplacement.BlockPlacementRebornMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:copper_ingot"
+  ],
+  "result": {
+    "id": "rust_scrap_armory:scrap_metal",
+    "count": 4
+  }
+}

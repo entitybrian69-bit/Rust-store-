@@ -1,0 +1,7 @@
+{
+  "template": "minecraft:breeze_rod",
+  "components": {
+    "minecraft:max_stack_size": 1,
+    "minecraft:rarity": "epic"
+  }
+}

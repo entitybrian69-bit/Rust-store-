@@ -1,0 +1,11 @@
+{
+  "template": "minecraft:glass",
+  "occludes": false,
+  "properties": {
+    "hardness": 0.3,
+    "resistance": 1.0,
+    "light": 12,
+    "sounds": "minecraft:glass"
+  },
+  "item": true
+}

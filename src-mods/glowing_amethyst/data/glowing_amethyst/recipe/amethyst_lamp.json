@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "GAG",
+    " G "
+  ],
+  "key": {
+    "G": "minecraft:glowstone_dust",
+    "A": "glowing_amethyst:glowing_amethyst_block"
+  },
+  "result": {
+    "id": "glowing_amethyst:amethyst_lamp",
+    "count": 1
+  }
+}

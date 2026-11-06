@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "rust_scrap_armory:sheet_metal_block",
+    "rust_scrap_armory:hq_armored_wall"
+  ]
+}

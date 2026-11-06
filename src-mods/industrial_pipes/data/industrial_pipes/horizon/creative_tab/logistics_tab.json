@@ -1,0 +1,10 @@
+{
+  "title": "Industrial Pipes",
+  "icon": "industrial_pipes:copper_pipe",
+  "items": [
+    "industrial_pipes:copper_pipe",
+    "industrial_pipes:steel_duct",
+    "industrial_pipes:factory_grate",
+    "industrial_pipes:pipe_wrench"
+  ]
+}

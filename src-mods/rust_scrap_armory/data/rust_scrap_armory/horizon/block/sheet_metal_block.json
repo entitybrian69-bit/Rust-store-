@@ -1,0 +1,9 @@
+{
+  "template": "minecraft:iron_block",
+  "properties": {
+    "hardness": 6.5,
+    "resistance": 12.0,
+    "sounds": "minecraft:copper"
+  },
+  "item": true
+}

@@ -1,0 +1,8 @@
+id = "glowing_amethyst"
+name = "Glowing Amethyst"
+version = "0.2.0"
+description = "Adds luminous Glowing Amethyst blocks, Chiseled Amethyst Lamps, and Radiant Shards with light level 15 for caves and bases."
+authors = ["Rust-store-"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

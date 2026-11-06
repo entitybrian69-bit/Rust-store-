@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ISI",
+    "SOS",
+    "ISI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "rust_scrap_armory:sheet_metal_block",
+    "O": "minecraft:obsidian"
+  },
+  "result": {
+    "id": "rust_scrap_armory:hq_armored_wall",
+    "count": 2
+  }
+}
