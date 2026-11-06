@@ -1,0 +1,10 @@
+id = "quick_place"
+name = "Quick Place"
+version = "0.2.0"
+description = "Places the block you just placed into the free neighbours of that block: air-only, capped per sweep."
+authors = ["Rust-store-"]
+# API 0.3 is the legacy WebAssembly server-mod line (side = "server").
+api = "0.3"
+side = "server"
+# world: read blocks and queue block changes. players: id/dimension of who placed and a chat line.
+capabilities = ["world", "players"]
