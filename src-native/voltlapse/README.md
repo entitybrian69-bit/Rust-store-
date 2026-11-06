@@ -49,9 +49,11 @@ machines produce the same result as fast ones.
 * Windows / macOS / Linux desktop: see [`docs/INSTALL_PC.md`](docs/INSTALL_PC.md).
 * Android: see [`docs/INSTALL_ANDROID.md`](docs/INSTALL_ANDROID.md).
 
-Both paths are the same two steps — drop `voltlapse.hnmod` into Horizon's
-native mod folder, then start the game. The `.hmod` variant additionally
-registers the icon, language files and content namespace.
+Both paths are the same three steps — drop `voltlapse.hnmod` into
+`<game-folder>/horizon-native-mods/`, switch it on in **Options → Mods** (mods
+are off by default), then start the game so the launcher can build it. The
+`.hmod` variant is the combined package: the same code plus the icon, the
+language files and the `voltlapse:` content namespace.
 
 ## First recording
 

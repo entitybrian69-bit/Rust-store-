@@ -4,8 +4,8 @@ Volt Lapse ships two files that carry the same code:
 
 | File | Use it when |
 | --- | --- |
-| `voltlapse.hnmod` | You only want the mod (recording, replay, camera, rendering). |
-| `voltlapse.hmod` | You also want the icon, the English/German/Nepali language files and the `voltlapse:` content namespace registered by the normal mod list. |
+| `voltlapse.hnmod` | **The one to install.** Native code only; every launcher in use reads it. |
+| `voltlapse.hmod` | The combined form: the same native code plus `horizon-mod.toml`, the icon and the language files. `docs/api/mod-files.md` defines it ("Both, in one `.hmod`"), but launchers are only switching to native `.hmod`s now — if yours doesn't list it, use the `.hnmod`. |
 
 Windows, macOS and Linux are the same procedure.
 
@@ -19,25 +19,36 @@ The game folder is the one holding `options.txt`. Typical locations:
 
 ## 2. Drop the file in
 
-Native mods live beside the launcher's other bundles:
+Horizon keeps the two kinds of mod apart: **content** mods go in
+`horizon-mods/`, **native** mods in `horizon-native-mods/`. Volt Lapse is code,
+so it goes in the native folder:
 
 ```text
 <game-folder>/
 ├── options.txt
-├── horizon-mods/
-│   └── voltlapse.hnmod        <- native mod, no load-order switch
+├── horizon-mods.txt           <- mod.<id>:true switches
+├── horizon-mods/              <- content mods (.hmod)
+├── horizon-native-mods/
+│   └── voltlapse.hnmod        <- Volt Lapse
 └── config/
     └── voltlapse/             <- created on first launch
 ```
 
-If you installed the `.hmod` instead, put it in the same folder; the game
-registers both halves under the single id `voltlapse` and refuses to run them
-twice.
+A `.hmod` that carries native code (this mod's combined package) belongs in
+`horizon-native-mods/` too — the launcher builds it by the native half it
+finds inside.
 
 Do **not** unzip the package. If your browser renamed it, make sure the
 extension is exactly `.hnmod` (Windows hides known extensions by default).
 
-## 3. First launch
+## 3. Turn it on
+
+Horizon mods are **off by default**. In the launcher (or in game, **Options →
+Mods**) switch Volt Lapse on; the choice is written to `horizon-mods.txt` as
+`mod.voltlapse:true`, and the row offers **Open folder**, which points at
+`<game-folder>/horizon-native-mods/`.
+
+## 4. First launch
 
 Native mods are compiled into the game the first time they are seen, so the
 first start after installing takes noticeably longer than later ones, and the
@@ -46,24 +57,32 @@ launcher shows a trust notice once. After the build finishes:
 1. Open **Options → Controls → Volt Lapse** and check the bindings.
 2. Enter a world and press **F6**. The indicator appears in the top-left.
 3. Press **F6** again to stop; the replay is written to
-   `<game-folder>/replays/voltlapse/`.
+   `<game-folder>/voltlapse/replays/`.
 
-## 4. Where things are written
+## 5. Where things are written
 
 ```text
 <game-folder>/
-├── config/voltlapse/
-│   ├── config.json            settings, repaired on load if damaged
-│   └── lang/<locale>.json     optional translation overrides
-├── replays/voltlapse/*.vrc    recordings, one file per replay
-└── exports/voltlapse/         `/voltlapse export` copies and rendered frames
+├── voltlapse/
+│   └── replays/*.vrc          recordings (storage.directory)
+└── config/voltlapse/
+    ├── config.json            settings, repaired on load if damaged
+    ├── lang/<locale>.json     optional translation overrides
+    ├── exports/               `/voltlapse export` copies, rendered frames
+    ├── journal/               crash recovery, one .journal per session
+    ├── cache/                 thumbnails
+    ├── overlays/              watermark images
+    └── profiles/              named setting profiles
 ```
 
-## 5. Uninstalling
+`storage.directory` moves the replay folder; a relative value is joined to the
+game folder, an absolute one is used as-is.
 
-Delete `horizon-mods/voltlapse.hnmod` (and `voltlapse.hmod`, if present) and
-restart. Recordings, config and exports are yours and are left alone; delete
-`replays/voltlapse/`, `exports/voltlapse/` and `config/voltlapse/` yourself if
+## 6. Uninstalling
+
+Delete `horizon-native-mods/voltlapse.hnmod` (and `voltlapse.hmod`, if present),
+switch it off, and restart. Recordings, config and exports are yours and are left alone; delete
+`voltlapse/` and `config/voltlapse/` yourself if
 you want them gone.
 
 ## Updating

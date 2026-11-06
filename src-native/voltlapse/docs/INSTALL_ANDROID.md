@@ -27,21 +27,25 @@ Inside it you need the same folders the PC build uses: `options.txt`,
 Using a file manager (or `adb push`):
 
 ```sh
-adb push voltlapse.hmod /sdcard/Download/
-# then move it, in the file manager, into
-#   .minecraft/horizon-mods/voltlapse.hmod
+adb push voltlapse.hnmod /sdcard/Download/
+adb shell mkdir -p /sdcard/Android/data/<launcher-package>/files/.minecraft/horizon-native-mods
+adb shell mv /sdcard/Download/voltlapse.hnmod \
+  /sdcard/Android/data/<launcher-package>/files/.minecraft/horizon-native-mods/
 ```
 
-`voltlapse.hmod` is the better choice on Android: it carries the language files
-and the icon, and those are read through the content namespace regardless of
-locale.
+Native mods go in `horizon-native-mods/`, not `horizon-mods/`; that is a
+launcher-side rule, not this mod's.
+
+`voltlapse.hnmod` is the safe choice: it is the format every launcher reads.
+The combined `voltlapse.hmod` also works once a launcher reads native `.hmod`s,
+and is the only one that carries the language files and the icon.
 
 ## 3. First launch
 
 * The first build is slow on mobile — expect a minute or more, and keep the
   app in the foreground.
 * Storage permission matters: without it the mod cannot create
-  `replays/voltlapse/` and will say so in chat rather than failing silently.
+  `voltlapse/replays/` and will say so in chat rather than failing silently.
   Grant "All files access" (Android 11+) or keep the game directory in
   app-private storage.
 
@@ -78,5 +82,5 @@ lower the frame budget, or run `/voltlapse config performance frame_budget_us 15
 ## 6. Sharing between phone and PC
 
 Replays are ordinary files. Copy `.vrc` files between
-`replays/voltlapse/` on both devices; nothing is platform specific, and a
+`voltlapse/replays/` on both devices; nothing is platform specific, and a
 replay carries its camera paths with it.
