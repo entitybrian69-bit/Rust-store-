@@ -62,9 +62,12 @@ fn axis(
 
 /// The camera position at `tick`, clamped to the path's ends.
 ///
-/// `tension` (0..=1) scales the Catmull-Rom tangents; `smoothing` (0..=1) pulls
-/// the Bézier control points towards the segment's ends. Both are ignored by
-/// `linear`, which is exactly what the name says.
+/// `tension` (0..=1) scales the Catmull-Rom tangents (0.5 is the classic
+/// Catmull-Rom); `smoothing` (0..=1) pulls the Bézier control points towards the
+/// neighbouring keyframes, so 0 keeps every segment straight. Both are ignored
+/// by `linear`, which is exactly what the name says. The neighbours of the first
+/// and last segments are extrapolated, so evenly spaced collinear keyframes stay
+/// exactly on the line.
 pub fn sample(
     keys: &[CameraKeyframe],
     tick: u64,
@@ -102,17 +105,19 @@ pub fn sample(
         (1usize, |k: &CameraKeyframe| k.y),
         (2usize, |k: &CameraKeyframe| k.z),
     ] {
+        let p1 = axis(keys, index, get);
+        let p2 = axis(keys, index + 1, get);
+        // A phantom neighbour on either side, so the first and last segments are
+        // shaped like the ones inside the path.
         let p0 = if index == 0 {
-            axis(keys, 0, get)
+            2.0 * p1 - p2
         } else {
             axis(keys, index - 1, get)
         };
-        let p1 = axis(keys, index, get);
-        let p2 = axis(keys, index + 1, get);
         let p3 = if index + 2 < keys.len() {
             axis(keys, index + 2, get)
         } else {
-            p2
+            2.0 * p2 - p1
         };
         let value = match mode {
             Interpolation::Linear => lerp(p1, p2, u),
@@ -122,10 +127,11 @@ pub fn sample(
                 hermite(p1, m0, p2, m1, u)
             }
             Interpolation::Bezier => {
-                // Control points pulled in by `smoothing`: 0 keeps the segment
-                // straight, 1 lets the neighbours bend it fully.
-                let c1 = p1 + (p2 - p0) * smoothing / 3.0;
-                let c2 = p2 - (p3 - p1) * smoothing / 3.0;
+                // Control points pulled towards the neighbouring keyframes by
+                // `smoothing`: 0 keeps the segment straight, 1 lets the
+                // neighbours bend it fully.
+                let c1 = p1 + (p0 - p1) * smoothing / 3.0;
+                let c2 = p2 + (p3 - p2) * smoothing / 3.0;
                 let v = 1.0 - u;
                 v * v * v * p1 + 3.0 * v * v * u * c1 + 3.0 * v * u * u * c2 + u * u * u * p2
             }
@@ -156,13 +162,14 @@ pub fn preview(
     }
     let step = step.max(1);
     let mut tick = from;
-    while tick <= to && out.len() < 4096 {
+    // One slot is kept for the closing sample, so the result never exceeds 4096.
+    while tick <= to && out.len() < 4095 {
         if let Some((x, y, z)) = sample(keys, tick, mode, tension, smoothing) {
             out.push((tick, x, y, z));
         }
         tick += step;
     }
-    if out.last().map(|last| last.0) != Some(to) {
+    if out.last().map(|last| last.0) != Some(to) && out.len() < 4096 {
         if let Some((x, y, z)) = sample(keys, to, mode, tension, smoothing) {
             out.push((to, x, y, z));
         }
@@ -195,7 +202,13 @@ mod tests {
             Interpolation::Bezier,
         ] {
             assert_eq!(sample(&keys, 0, mode, 0.5, 0.5), Some((0.0, 64.0, 0.0)));
-            assert_eq!(sample(&keys, 5, mode, 0.5, 0.5).map(|p| p.0), Some(5.0));
+            let middle = sample(&keys, 5, mode, 0.5, 0.5).expect("a midpoint");
+            assert!(
+                (middle.0 - 5.0).abs() < 1e-9,
+                "{} at tick 5: {middle:?}",
+                mode.name()
+            );
+            assert!((middle.1 - 64.0).abs() < 1e-9);
             assert_eq!(sample(&keys, 20, mode, 0.5, 0.5), Some((20.0, 64.0, 0.0)));
             assert_eq!(sample(&keys, 0, mode, 0.5, 0.5), Some((0.0, 64.0, 0.0)));
             assert_eq!(sample(&keys, 999, mode, 0.5, 0.5), Some((20.0, 64.0, 0.0)));
