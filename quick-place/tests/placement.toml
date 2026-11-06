@@ -13,8 +13,9 @@ join = "Alex"
 blocks = [{ x = 0, y = 64, z = 1, state = "minecraft:stone" }]
 place = { x = 0, y = 64, z = 0, state = "minecraft:stone" }
 expect.told = ["Alex: Quick Place: placed 4 block(s) with pad mode"]
+# The sandbox fires `place` as an event; it does not put the origin block in the
+# world, so only the sweep's own writes are asserted here.
 expect.blocks = [
-    { x = 0, y = 64, z = 0, state = "minecraft:stone" },
     { x = 0, y = 64, z = -1, state = "minecraft:stone" },
     { x = 1, y = 64, z = -1, state = "minecraft:stone" },
     { x = 1, y = 64, z = 0, state = "minecraft:stone" },
@@ -51,5 +52,5 @@ expect.told = []
 expect.blocks = [
     { x = 32, y = 64, z = 1, state = "minecraft:diamond_block" },
     { x = 33, y = 64, z = 0, state = "minecraft:diamond_block" },
-    { x = 32, y = 64, z = 0, state = "minecraft:stone" },
+    { x = 32, y = 64, z = 0, state = "minecraft:air" },
 ]

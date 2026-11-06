@@ -24,7 +24,6 @@ blocks = [{ x = 8, y = 65, z = 0, state = "minecraft:oak_planks" }]
 place = { x = 8, y = 64, z = 0, state = "minecraft:stone" }
 expect.told = ["Alex: Quick Place: placed 2 block(s) with pillar mode"]
 expect.blocks = [
-    { x = 8, y = 64, z = 0, state = "minecraft:stone" },
     { x = 8, y = 65, z = 0, state = "minecraft:oak_planks" },
     { x = 8, y = 66, z = 0, state = "minecraft:stone" },
     { x = 8, y = 67, z = 0, state = "minecraft:stone" },
