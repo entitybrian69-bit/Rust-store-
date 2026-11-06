@@ -7,7 +7,13 @@ on:
   push:
     branches: ["arena/5f02db8a-rust-store"]
     paths:
-      - "quick-place/**"
+      - "quick-place/src/**"
+      - "quick-place/tests/**"
+      - "quick-place/Cargo.toml"
+      - "quick-place/horizon-mod.toml"
+      - "quick-place/config.toml"
+      - "quick-place/build.sh"
+      - "quick-place/rust-toolchain.toml"
       - ".github/workflows/quick-place.yml"
   workflow_dispatch:
 

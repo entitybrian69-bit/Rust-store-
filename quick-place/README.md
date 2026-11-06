@@ -109,6 +109,56 @@ cd quick-place
   feedback);
 - `cargo horizon-mod check` — the registry's checks on the archive.
 
-CI (`.github/workflows/quick-place.yml`) does exactly this on every push to
-`quick-place/**`, then commits the built `.hmod` and its base64 to `dist/` and attaches
-them to the `quick-place-v0.2.0` release.
+CI (`.github/workflows/quick-place.yml`) does exactly this on every push to the mod's
+sources, then commits the built `.hmod` and its base64 to `dist/` and attaches them to the
+`quick-place-v0.2.0` release.
+
+## The delivered artifact
+
+| | |
+| --- | --- |
+| File | `dist/quick_place.hmod` (also a release asset) |
+| Size | **27,914 bytes** (manifest 435 B + `mod.wasm` 77,626 B, deflated) |
+| SHA-256 | `7e7c528a31e19f284d83bb70223689bf8d2d1367a21e5c35489b817e24347e06` |
+| Inside | `horizon-mod.toml`, `mod.wasm` — a WebAssembly **component** (`00 61 73 6d 0d 00 01 00`) |
+| Download | <https://github.com/entitybrian69-bit/Rust-store-/releases/download/quick-place-v0.2.0/quick_place.hmod> |
+| Base64 | <https://github.com/entitybrian69-bit/Rust-store-/releases/download/quick-place-v0.2.0/quick_place.hmod.b64> |
+
+On a phone, download the `.b64` and decode it:
+
+```sh
+base64 -d quick_place.hmod.b64 > quick_place.hmod     # GNU coreutils (Termux/Linux)
+# macOS/iOS: base64 -D -i quick_place.hmod.b64 -o quick_place.hmod
+shasum -a 256 quick_place.hmod                        # 7e7c528a31e19f284d83bb70223689bf8d2d1367a21e5c35489b817e24347e06
+```
+
+### What the build run proved (receipts)
+
+GitHub Actions run [`42219681280`](https://github.com/entitybrian69-bit/Rust-store-/actions/runs/42219681280)
+on commit `11a56f4bb520ad678322f1c2c67c891da5081b65`, full output in
+[`dist/build.log`](../dist/build.log):
+
+```text
+== host unit tests (pure planner + config parser) ==
+running 12 tests ... test result: ok. 12 passed
+== build the .hmod (wasm32 component, packed by horizon-mods) ==
+Built .../quick-place/target/horizon-mod/quick_place.hmod
+== legacy sandbox scripts (tests/*.toml) against the built .hmod ==
+running 2 scripts against target/horizon-mod/quick_place.hmod
+test tests/command.toml ... ok (6 steps)
+test tests/placement.toml ... ok (4 steps)
+test result: ok. 2 passed
+== registry check ==
+quick_place 0.2.0 (mod, API 0.3, server)
+  27914 bytes, SHA-256 7e7c528a..., unsigned
+  needs mod API level 4 or newer
+  may read and change the world's blocks
+  may see who is on the server and message them
+  trial run: started, 40 ticks, 120 frames, a chat line, /quickplace: ok
+```
+
+The sandbox scripts assert real behaviour, not just that the mod loads: the hook fires on a
+placed block, the sweep writes stone into the air neighbours, a pre-existing oak-log
+neighbour survives, the per-sweep cap is respected, an encased block produces no write and
+no message, and `/quickplace` reports and switches modes. That is a host-ABI test — still
+not a gameplay test.
