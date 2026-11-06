@@ -1,0 +1,14 @@
+[package]
+name = "horizon-mod-voltlapse"
+version = "1.0.0"
+edition = "2021"
+license = "LGPL-3.0-or-later"
+publish = false
+description = "Volt Lapse — replay recording, playback, cinematic camera paths and offline rendering for Horizon (PC and Android)."
+
+# Dev harness only: the file the bundle stages as its own crate. `cargo test` in this
+# folder runs the engine's unit and integration tests. The .hnmod ships mixins/voltlapse/.
+[lib]
+path = "mixins/voltlapse/engine/src/lib.rs"
+
+[dependencies]

@@ -1,0 +1,12 @@
+# The content half of Volt Lapse. It carries no registries: the mod's own
+# screens are drawn by its native half, and this package supplies the strings
+# and the icon that the mods list and the language setting use.
+id = "voltlapse"
+name = "Volt Lapse"
+version = "1.0.0"
+description = "Record your world, replay it, fly a cinematic camera path and render it to video. The native half ships in the same .hmod (and as voltlapse.hnmod for PC)."
+authors = ["Volt Lapse contributors", "Replay Mod authors (Johni0702 et al.)"]
+api = "0.2"
+side = "client"
+capabilities = []
+namespaces = ["voltlapse"]
