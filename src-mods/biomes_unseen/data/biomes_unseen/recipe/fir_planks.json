@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "biomes_unseen:fir_log"
+  ],
+  "result": {
+    "id": "biomes_unseen:fir_planks",
+    "count": 4
+  }
+}

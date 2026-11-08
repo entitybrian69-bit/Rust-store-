@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top",
+  "textures": {
+    "bottom": "biomes_unseen:block/cherry_planks",
+    "top": "biomes_unseen:block/cherry_planks"
+  }
+}

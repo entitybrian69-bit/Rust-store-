@@ -1,0 +1,9 @@
+{
+  "template": "minecraft:mud_bricks",
+  "properties": {
+    "hardness": 1.5,
+    "resistance": 3.0,
+    "sounds": "minecraft:mud_bricks"
+  },
+  "item": true
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/pressure_plate_down",
+  "textures": {
+    "down": "biomes_unseen:block/hellbark_planks",
+    "side": "biomes_unseen:block/hellbark_planks"
+  }
+}

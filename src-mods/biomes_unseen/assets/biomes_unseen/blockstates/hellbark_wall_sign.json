@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "biomes_unseen:block/hellbark_wall_sign"
+    },
+    "facing=south": {
+      "model": "biomes_unseen:block/hellbark_wall_sign",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "biomes_unseen:block/hellbark_wall_sign",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "biomes_unseen:block/hellbark_wall_sign",
+      "y": 270
+    }
+  }
+}

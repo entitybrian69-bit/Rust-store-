@@ -1,0 +1,9 @@
+{
+  "template": "minecraft:netherrack",
+  "properties": {
+    "hardness": 0.4,
+    "resistance": 0.4,
+    "sounds": "minecraft:netherrack"
+  },
+  "item": true
+}

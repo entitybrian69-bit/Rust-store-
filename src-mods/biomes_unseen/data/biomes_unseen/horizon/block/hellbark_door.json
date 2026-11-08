@@ -1,0 +1,8 @@
+{
+  "template": "minecraft:oak_door",
+  "properties": {
+    "hardness": 2.0,
+    "resistance": 3.0,
+    "sounds": "minecraft:wood"
+  }
+}

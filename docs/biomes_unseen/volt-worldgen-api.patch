@@ -1,0 +1,220 @@
+From da13467fcae85d3af15af2ef1c8bbf6e37412b62 Mon Sep 17 00:00:00 2001
+From: entitybrian69-bit <entitybrian69-bit@users.noreply.github.com>
+Date: Sun, 8 Nov 2026 15:12:24 +0000
+Subject: [PATCH] worldgen-api: data-driven mod biomes with horizon:climate
+ placement (PC+Android)
+
+---
+ crates/horizon-client/src/mod_content.rs      | 109 +++++++++++++++++-
+ .../horizon-client/src/mod_content_tests.rs   |  18 +++
+ docs/mods.md                                  |  17 +++
+ 3 files changed, 141 insertions(+), 3 deletions(-)
+
+diff --git a/crates/horizon-client/src/mod_content.rs b/crates/horizon-client/src/mod_content.rs
+index 7eda28f..4143718 100644
+--- a/crates/horizon-client/src/mod_content.rs
++++ b/crates/horizon-client/src/mod_content.rs
+@@ -1026,15 +1026,26 @@ const TAG_BUNDLES: [&str; 2] = ["block-tags.json", "worldgen/block_tags.json"];
+ const BIOME_TAGS: &str = "worldgen/biome_tags.json";
+ /// Worldgen registries a content mod may add to, and the bundle the
+ /// worldgen loader reads each from (id → the file's text): what structure
+-/// mods hold. Biomes, noise and density functions change the terrain and
+-/// are not read from mods.
+-const WORLDGEN_BUNDLES: [(&str, &str); 6] = [
++/// mods hold. Noise and density functions change the terrain shape and
++/// are not read from mods, but a mod may register its own biomes
++/// (`worldgen/biome/<name>.json`, the vanilla biome codec shape). A biome
++/// file may also carry `horizon:climate` (see `ClimateEntry`): the
++/// multi-noise parameter ranges at which the biome is placed, and
++/// `horizon:dimension` (`minecraft:overworld` by default, or
++/// `minecraft:the_nether`). Both keys are stripped before the biome joins
++/// the bundle, and the climate ranges are appended (quantized, as
++/// `GeneratorData`'s preset tables are) to that dimension's preset in
++/// `presets.json` when the root is built, so a data-only `.hmod` biome
++/// generates on PC and Android alike with no native code.
++const WORLDGEN_BUNDLES: [(&str, &str); 8] = [
+     ("structure", "worldgen/structures.json"),
+     ("structure_set", "worldgen/structure_sets.json"),
+     ("template_pool", "worldgen/template_pools.json"),
+     ("processor_list", "worldgen/processor_lists.json"),
+     ("configured_feature", "worldgen/features.json"),
++    ("feature", "worldgen/features.json"),
+     ("placed_feature", "worldgen/placed_features.json"),
++    ("biome", "worldgen/biomes.json"),
+ ];
+ 
+ /// The registry of `command-registries.json` that each bundle's ids join,
+@@ -1060,6 +1071,73 @@ const COMMAND_REGISTRIES: [(&str, &str); 6] = [
+     ),
+ ];
+ 
++/// One mod biome's placement in a dimension's multi-noise preset, from
++/// its `horizon:climate` object: each of the six climate fields is a
++/// `[min, max]` pair (or one number for a point), plus an `offset`.
++struct ClimateEntry {
++    preset: String,
++    biome: String,
++    coordinates: Vec<(f64, f64)>,
++    offset: f64,
++}
++impl ClimateEntry {
++    /// Reads and strips `horizon:climate`/`horizon:dimension` from a mod
++    /// biome's text. `Ok(None)`: no climate keys (the biome registers but
++    /// is placed by nothing, as a datapack biome nobody lists is).
++    fn take(id: &str, text: &str) -> Result<Option<(Self, String)>> {
++        if !text.contains("horizon:climate") && !text.contains("horizon:dimension") {
++            return Ok(None);
++        }
++        let mut doc: J = serde_json::from_str(text).map_err(|e| format!("{id}: {e}"))?;
++        let dim = match doc.get("horizon:dimension") {
++            Some(J::Str(d)) => d.clone(),
++            _ => "minecraft:overworld".to_owned(),
++        };
++        let preset = match dim.as_str() {
++            "minecraft:overworld" | "minecraft:the_nether" => dim.clone(),
++            other => return Err(format!("{id}: horizon:dimension {other:?} has no multi-noise preset").into()),
++        };
++        let Some(climate) = doc.get("horizon:climate").cloned() else {
++            return Ok(None);
++        };
++        let num = |v: &J| match v { J::Num(n) => n.as_f64().filter(|n| n.is_finite() && (-2.0..=2.0).contains(n)), _ => None };
++        let mut coordinates = Vec::new();
++        for key in ["temperature", "humidity", "continentalness", "erosion", "depth", "weirdness"] {
++            let range = match climate.get(key) {
++                Some(J::Arr(a)) if a.len() == 2 => (num(&a[0]), num(&a[1])),
++                Some(v) => (num(v), num(v)),
++                None => (Some(-2.0), Some(2.0)),
++            };
++            let (Some(lo), Some(hi)) = range else {
++                return Err(format!("{id}: horizon:climate.{key}: not a [min, max] pair in -2..=2").into());
++            };
++            if lo > hi {
++                return Err(format!("{id}: horizon:climate.{key}: min {lo} > max {hi}").into());
++            }
++            coordinates.push((lo, hi));
++        }
++        let offset = match climate.get("offset") { Some(v) => num(v), None => Some(0.0) }
++            .ok_or_else(|| format!("{id}: horizon:climate.offset: not a number in -2..=2"))?;
++        if let J::Obj(fields) = &mut doc {
++            fields.retain(|(k, _)| k != "horizon:climate" && k != "horizon:dimension");
++        }
++        Ok(Some((Self { preset, biome: id.to_owned(), coordinates, offset },
++                 serde_json::to_string(&doc)?)))
++    }
++    /// This entry in the quantized preset-table shape
++    /// (`[{"coordinates":[[min,max];6],"offset":long,"biome":id}]`),
++    /// quantized as vanilla's `quantizeCoord` (`(v * 10_000.0) as i64`).
++    fn quantized(&self) -> J {
++        let q = |v: f64| J::Num(((v as f32 * 10_000.0) as i64).into());
++        J::Obj(vec![
++            ("coordinates".into(), J::Arr(self.coordinates.iter()
++                .map(|(lo, hi)| J::Arr(vec![q(*lo), q(*hi)])).collect())),
++            ("offset".into(), q(self.offset)),
++            ("biome".into(), J::Str(self.biome.clone())),
++        ])
++    }
++}
++
+ /// A mod file that adds to a worldgen bundle: (bundle, id).
+ fn worldgen_entry(file: &str) -> Option<(&'static str, String)> {
+     let (ns, rest) = file.strip_prefix("data/")?.split_once("/worldgen/")?;
+@@ -1457,6 +1535,7 @@ pub fn build(base: &Path, mods: &[ContentMod], out: &Path) -> Result<Vec<String>
+     let mut tags: BTreeMap<String, TagMerge> = BTreeMap::new();
+     let mut warnings = Vec::new();
+     let mut worldgen: BTreeMap<&str, Vec<(String, String)>> = BTreeMap::new();
++    let mut climates: Vec<ClimateEntry> = Vec::new();
+     let mut additions: BTreeMap<&str, Vec<Addition>> = BTreeMap::new();
+     for m in mods {
+         let declarations = format!("data/{}/horizon/", m.id);
+@@ -1481,6 +1560,12 @@ pub fn build(base: &Path, mods: &[ContentMod], out: &Path) -> Result<Vec<String>
+                     let entries = worldgen.entry(bundle).or_default();
+                     match Addition::read(bundle, &text).map_err(|e| format!("{file}: {e}"))? {
+                         Some(addition) => additions.entry(bundle).or_default().push(addition),
++                        None if bundle == "worldgen/biomes.json" => {
++                            match ClimateEntry::take(&id, &text).map_err(|e| format!("{file}: {e}"))? {
++                                Some((entry, stripped)) => { climates.push(entry); entries.push((id, stripped)); }
++                                None => entries.push((id, text)),
++                            }
++                        }
+                         None => entries.push((id, text)),
+                     }
+                 } else if let Some(template) = file
+@@ -1576,6 +1661,24 @@ pub fn build(base: &Path, mods: &[ContentMod], out: &Path) -> Result<Vec<String>
+         }
+         overlay.write(bundle, &serde_json::to_vec(&doc)?)?;
+     }
++    // Mod biomes' climate ranges go at the end of their dimension's
++    // multi-noise preset table: an added biome wins only where its ranges
++    // are the closest match, as a datapack's appended entries do.
++    if !climates.is_empty() && base.join("presets.json").exists() {
++        let mut doc = read_json(&base.join("presets.json"))?;
++        let mut by_preset: BTreeMap<&str, Vec<&ClimateEntry>> = BTreeMap::new();
++        for entry in &climates { by_preset.entry(&entry.preset).or_default().push(entry); }
++        for (preset, entries) in by_preset {
++            let Some(J::Str(text)) = doc.get(preset) else { continue };
++            let mut table: J = serde_json::from_str(text).map_err(|e| format!("presets.json {preset}: {e}"))?;
++            let Some(J::Arr(list)) = &mut table else {
++                return Err(format!("presets.json {preset}: not a biome parameter list").into());
++            };
++            list.extend(entries.iter().map(|e| e.quantized()));
++            doc.set(preset, J::Str(serde_json::to_string(&table)?));
++        }
++        overlay.write("presets.json", &serde_json::to_vec(&doc)?)?;
++    }
+     // The commands suggest ids from `command-registries.json`: add the
+     // structures, pools, sets and features the mods bring.
+     let registries = out_path(&overlay, "command-registries.json");
+diff --git a/crates/horizon-client/src/mod_content_tests.rs b/crates/horizon-client/src/mod_content_tests.rs
+index 34fa45e..f0d2bb3 100644
+--- a/crates/horizon-client/src/mod_content_tests.rs
++++ b/crates/horizon-client/src/mod_content_tests.rs
+@@ -1463,3 +1463,21 @@ fn shapes_reject_unknown_or_missing_template_values() {
+     }
+     fs::remove_dir_all(scratch).unwrap();
+ }
++
++#[test]
++fn climate_entry_strips_keys_and_quantizes() {
++    let text = r#"{"temperature":0.8,"downfall":0.4,"has_precipitation":true,"horizon:dimension":"minecraft:the_nether","horizon:climate":{"temperature":[0.5,1.5],"humidity":0.0,"offset":0.25}}"#;
++    let (entry, stripped) = ClimateEntry::take("ruby:cove", text).unwrap().unwrap();
++    assert_eq!(entry.preset, "minecraft:the_nether");
++    assert!(!stripped.contains("horizon:climate") && !stripped.contains("horizon:dimension"));
++    assert!(stripped.contains("\"temperature\":0.8"));
++    let q = serde_json::to_string(&entry.quantized()).unwrap();
++    assert!(q.contains("\"coordinates\":[[5000,15000],[0,0]"), "{q}");
++    assert!(q.contains("\"offset\":2500,\"biome\":\"ruby:cove\""), "{q}");
++    // No climate keys: registers only, placed by nothing.
++    assert!(ClimateEntry::take("ruby:x", r#"{"temperature":0.8}"#).unwrap().is_none());
++    // Out-of-range and inverted ranges are refused, not clamped silently.
++    assert!(ClimateEntry::take("ruby:x", r#"{"horizon:climate":{"temperature":[2.0,1.0]}}"#).is_err());
++    assert!(ClimateEntry::take("ruby:x", r#"{"horizon:climate":{"temperature":9.0}}"#).is_err());
++    assert!(ClimateEntry::take("ruby:x", r#"{"horizon:dimension":"minecraft:the_end","horizon:climate":{}}"#).is_err());
++}
+diff --git a/docs/mods.md b/docs/mods.md
+index 08faf97..bcfac6e 100644
+--- a/docs/mods.md
++++ b/docs/mods.md
+@@ -271,3 +271,20 @@ Horizon's own mods are native. They live in
+ The game keeps the parts that must be fast, such as drawing the minimap's map, and a native mod picks the options
+ ([extras.md](extras.md)). Far View is not a mod any more: its distance and detail are Graphics > LOD Distance and Far
+ Detail ([graphics.md](graphics.md)).
++
++### Mod biomes (worldgen-api)
++
++A content mod may register its own biomes with `data/<ns>/worldgen/biome/<name>.json` (the vanilla biome
++codec shape: `temperature`, `downfall`, `has_precipitation`, `effects`, `features`, `spawners`), its own
++features with `data/<ns>/worldgen/feature/` (26.3 name; `configured_feature/` still works) and
++`data/<ns>/worldgen/placed_feature/`. A biome file may also carry two keys vanilla data never has:
++`horizon:climate` (each of temperature/humidity/continentalness/erosion/depth/weirdness a `[min, max]`
++range or one number in -2..=2, plus `offset`; a missing field spans the whole range) and
++`horizon:dimension` (`minecraft:overworld` by default, or `minecraft:the_nether`; any other dimension is
++refused). Both keys are stripped before the biome joins the bundle, and the ranges are appended, quantized
++as vanilla's `quantizeCoord` quantizes its preset tables, to that dimension's multi-noise preset in
++`presets.json`. An added biome is placed only where its ranges are the closest match, as a datapack's
++appended entries are. A biome without `horizon:climate` registers but is placed by nothing. This is
++data-only, so it works on Android exactly as on PC, and API 0.2 mods without biome files are unchanged.
++Malformed climate data (out of range, `min > max`, unknown dimension) refuses the mod with the file named.
++Unit coverage: `climate_entry_strips_keys_and_quantizes` in `crates/horizon-client/src/mod_content_tests.rs`.
+-- 
+2.39.5
+

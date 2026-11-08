@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/stairs_outer",
+  "textures": {
+    "bottom": "biomes_unseen:block/maple_planks",
+    "top": "biomes_unseen:block/maple_planks",
+    "side": "biomes_unseen:block/maple_planks",
+    "texture": "biomes_unseen:block/maple_planks",
+    "particle": "biomes_unseen:block/maple_planks",
+    "all": "biomes_unseen:block/maple_planks"
+  }
+}

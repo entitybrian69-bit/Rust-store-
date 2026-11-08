@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "biomes_unseen:block/magic_slab"
+    },
+    "type=top": {
+      "model": "biomes_unseen:block/magic_slab_top"
+    },
+    "type=double": {
+      "model": "biomes_unseen:block/magic_slab_double"
+    }
+  }
+}

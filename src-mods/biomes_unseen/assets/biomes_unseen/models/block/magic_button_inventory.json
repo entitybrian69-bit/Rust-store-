@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button_inventory",
+  "textures": {
+    "texture": "biomes_unseen:block/magic_planks"
+  }
+}

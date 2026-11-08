@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "biomes_unseen:block/jacaranda_leaves"
+  }
+}

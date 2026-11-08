@@ -1,0 +1,9 @@
+{
+  "template": "minecraft:white_tulip",
+  "properties": {
+    "hardness": 0.0,
+    "resistance": 0.0,
+    "sounds": "minecraft:grass"
+  },
+  "item": true
+}

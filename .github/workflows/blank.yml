@@ -28,6 +28,12 @@ jobs:
       - name: Validate all releases/*.hmod packages and catalog index
         run: python3 scripts/build_hmods.py --check-only
 
+      - name: Android import validation (Volt content_files::validate port)
+        run: python3 scripts/test_android_import.py
+
+      - name: Biomes Unseen registry/worldgen completeness
+        run: python3 scripts/test_biomes_unseen.py
+
       - name: Upload .hmod packages as workflow artifact
         uses: actions/upload-artifact@v4
         with:

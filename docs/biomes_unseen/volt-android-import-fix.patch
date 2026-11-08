@@ -1,0 +1,70 @@
+From 51babccd0c24b78d0b40735e2f8e7cbc446f20e7 Mon Sep 17 00:00:00 2001
+From: entitybrian69-bit <entitybrian69-bit@users.noreply.github.com>
+Date: Sun, 8 Nov 2026 18:56:54 +0000
+Subject: [PATCH] Fix Android import rejecting every content-only .hmod
+
+content_files::validate required horizon-mod.toml AND mod.wasm at the ZIP
+root, but horizon-mods Package::read explicitly allows content mods
+(capability registries) with no mod.wasm. Every content .hmod - including
+all six in the Rust-store catalog - was rejected with 'Archive is not a
+Mods package'. Accept manifest && (wasm || assets//data/ content) instead;
+manifest+capability validation still happens in Package::read on load.
+Tests: content-only imports, code imports, nested-manifest still rejected.
+---
+ crates/horizon-client/src/content_files.rs | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/crates/horizon-client/src/content_files.rs b/crates/horizon-client/src/content_files.rs
+index 25a7b63..6382bb5 100644
+--- a/crates/horizon-client/src/content_files.rs
++++ b/crates/horizon-client/src/content_files.rs
+@@ -80,6 +80,7 @@ pub fn validate(
+     let mut native_shader = false;
+     let mut manifest = false;
+     let mut wasm = false;
++    let mut content = false;
+     let mut buffer = [0u8; 65536];
+     for i in 0..zip.len() {
+         if cancelled() {
+@@ -114,6 +115,12 @@ pub fn validate(
+                     .any(|ext| raw.ends_with(&format!(".{ext}")));
+         manifest |= raw == "horizon-mod.toml";
+         wasm |= raw == "mod.wasm";
++        // A content mod's resources: `Package::read` allows capability-
++        // `registries` mods with no `mod.wasm` (content-only), so the
++        // archive sniff must accept them too. Manifest validity and the
++        // registries capability itself are checked by `Package::read`
++        // when the imported file is loaded, not here.
++        content |= !entry.is_dir() && (raw.starts_with("assets/") || raw.starts_with("data/"));
+         let expected = entry.size();
+         if raw == "pack.mcmeta" && expected > 1 << 20 {
+             return Err("Pack metadata is too large".into());
+@@ -150,7 +157,7 @@ pub fn validate(
+     if !match kind {
+         Kind::Packs => pack,
+         Kind::Shaders => shader,
+-        Kind::Mods => manifest && wasm,
++        Kind::Mods => manifest && (wasm || content),
+     } {
+         return Err(format!(
+             "Archive is not a {} package (required files must be at the ZIP root)",
+@@ -241,6 +248,16 @@ mod tests {
+         assert!(validate(&path, Kind::Shaders, "Test.zip", || false).unwrap());
+         std::fs::write(&path, archive(&[("horizon-mod.toml", b"manifest")])).unwrap();
+         assert!(validate(&path, Kind::Mods, "Test.hmod", || false).is_err());
++        // A content-only .hmod (manifest + assets/data, no mod.wasm, as
++        // `Package::read` allows for capability `registries`) imports.
++        std::fs::write(&path, archive(&[("horizon-mod.toml", b"manifest"), ("assets/x/lang/en_us.json", b"{}"), ("data/x/horizon/block/a.json", b"{}")])).unwrap();
++        assert!(validate(&path, Kind::Mods, "Test.hmod", || false).is_ok());
++        // A code .hmod (manifest + mod.wasm) still imports, and content
++        // without the manifest at the ZIP root still does not.
++        std::fs::write(&path, archive(&[("horizon-mod.toml", b"manifest"), ("mod.wasm", b"wasm")])).unwrap();
++        assert!(validate(&path, Kind::Mods, "Test.hmod", || false).is_ok());
++        std::fs::write(&path, archive(&[("sub/horizon-mod.toml", b"manifest"), ("assets/x/a.json", b"{}")])).unwrap();
++        assert!(validate(&path, Kind::Mods, "Test.hmod", || false).is_err());
+         let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
+         writer
+             .add_symlink(
+-- 
+2.39.5
+

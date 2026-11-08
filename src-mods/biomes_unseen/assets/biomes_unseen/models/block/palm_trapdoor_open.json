@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/trapdoor_open",
+  "textures": {
+    "texture": "biomes_unseen:block/palm_planks"
+  }
+}

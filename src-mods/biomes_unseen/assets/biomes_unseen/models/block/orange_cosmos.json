@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "biomes_unseen:block/orange_cosmos"
+  }
+}

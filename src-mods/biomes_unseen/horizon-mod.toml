@@ -1,0 +1,8 @@
+id = "biomes_unseen"
+name = "Biomes Unseen"
+version = "1.0.1"
+description = "Biomes O' Plenty-style expansion for Horizon 26.3: 12 wood sets, flowers, plants, nether flesh/brimstone, tanzanite gem tier and more. Biome registration is not exposed by Horizon API 0.2 - see docs/GAPS.md."
+authors = ["Biomes Unseen Contributors"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]

@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/stairs_inner",
+  "textures": {
+    "bottom": "biomes_unseen:block/hellbark_planks",
+    "top": "biomes_unseen:block/hellbark_planks",
+    "side": "biomes_unseen:block/hellbark_planks",
+    "texture": "biomes_unseen:block/hellbark_planks",
+    "particle": "biomes_unseen:block/hellbark_planks",
+    "all": "biomes_unseen:block/hellbark_planks"
+  }
+}
