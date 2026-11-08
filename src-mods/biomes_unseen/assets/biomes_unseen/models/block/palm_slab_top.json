@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "biomes_unseen:block/palm_planks",
+    "top": "biomes_unseen:block/palm_planks",
+    "side": "biomes_unseen:block/palm_planks",
+    "texture": "biomes_unseen:block/palm_planks",
+    "particle": "biomes_unseen:block/palm_planks",
+    "all": "biomes_unseen:block/palm_planks"
+  }
+}

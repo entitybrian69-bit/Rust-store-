@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "rotation=0": {
+      "model": "biomes_unseen:block/magic_sign"
+    },
+    "rotation=1": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 22
+    },
+    "rotation=2": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 45
+    },
+    "rotation=3": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 67
+    },
+    "rotation=4": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 90
+    },
+    "rotation=5": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 112
+    },
+    "rotation=6": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 135
+    },
+    "rotation=7": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 157
+    },
+    "rotation=8": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 180
+    },
+    "rotation=9": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 202
+    },
+    "rotation=10": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 225
+    },
+    "rotation=11": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 247
+    },
+    "rotation=12": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 270
+    },
+    "rotation=13": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 292
+    },
+    "rotation=14": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 315
+    },
+    "rotation=15": {
+      "model": "biomes_unseen:block/magic_sign",
+      "y": 337
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_side",
+  "textures": {
+    "texture": "biomes_unseen:block/umbran_planks"
+  }
+}

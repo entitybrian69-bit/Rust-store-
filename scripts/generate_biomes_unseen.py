@@ -88,6 +88,23 @@ for w,(base,border,leaf) in WOODS.items():
     block(f"{w}_planks", f"{disp} Planks", "minecraft:oak_planks", {"hardness":2.0,"resistance":3.0}, "cube", (base,border,leaf), "minecraft:wood")
     block(f"{w}_leaves", f"{disp} Leaves", "minecraft:oak_leaves", {"hardness":0.2,"resistance":0.2}, "leaves", (leaf,border,base), "minecraft:grass")
 
+# Wood shape variants (templates are vanilla blocks; behaviour/states copy the template)
+VAR_TEMPLATES = {
+ "stairs":"minecraft:oak_stairs","slab":"minecraft:oak_slab","fence":"minecraft:oak_fence",
+ "fence_gate":"minecraft:oak_fence_gate","door":"minecraft:oak_door","trapdoor":"minecraft:oak_trapdoor",
+ "button":"minecraft:oak_button","pressure_plate":"minecraft:oak_pressure_plate",
+ "sign":"minecraft:oak_sign","wall_sign":"minecraft:oak_wall_sign"}
+for w,(base,border,leaf) in WOODS.items():
+    disp=w.replace("_"," ").title()
+    for suf,tpl in VAR_TEMPLATES.items():
+        extra={"item":False} if suf=="wall_sign" else {}
+        d={"template":tpl,"properties":{"hardness":2.0,"resistance":3.0,"sounds":"minecraft:wood"}}
+        if suf=="sign": d.update({"wood_type":f"{ID}:{w}","wall_block":f"{ID}:{w}_wall_sign"})
+        if suf=="wall_sign": d.update({"wood_type":f"{ID}:{w}","item":False})
+        BLOCKS.append((f"{w}_{suf}", f"{disp} {suf.replace('_',' ').title()}", d, f"variant:{suf}", (base,border,leaf)))
+        LANG[f"block.{ID}.{w}_{suf}"]=f"{disp} {suf.replace('_',' ').title()}"
+    item(f"{w}_boat", f"{disp} Boat", "minecraft:oak_boat", {"minecraft:max_stack_size":1}, (base,border), "orb")
+    # sign editor backgrounds (24x26 / 16x16 are gui textures; block texture reused as source art)
 # ---- Plants & flowers ----
 PLANTS = {
  "lavender":((150,120,200),"minecraft:allium"), "orange_cosmos":((240,150,50),"minecraft:poppy"),
@@ -118,6 +135,103 @@ item("mudball","Mudball","minecraft:snowball",{"minecraft:max_stack_size":16},((
 item("origin_acorn","Origin Acorn","minecraft:oak_sapling",{"minecraft:max_stack_size":64},((140,110,60),(95,75,40)),"orb")
 for w in WOODS: item(f"{w}_sapling", f"{w.replace('_',' ').title()} Sapling", "minecraft:oak_sapling", {"minecraft:max_stack_size":64}, ((90,140,70),(60,95,45)), "orb")
 
+
+def gen_variant(name, suf, pal):
+    """Write vanilla-parent models + full state-variant blockstate for a wood shape."""
+    _sufs=["pressure_plate","fence_gate","wall_sign","stairs","slab","fence","door","trapdoor","button","sign"]
+    _wood=next((name[:-len(x)-1] for x in _sufs if name.endswith("_"+x)), name)
+    P=f"{ID}:block/{_wood}_planks"
+    texmap={"bottom":P,"top":P,"side":P,"texture":P,"particle":P,"all":P}
+    def model(mname, parent, textures): wj(MOD/f"assets/{ID}/models/block/{mname}.json", {"parent":parent,"textures":textures})
+    def bs(variants=None, multipart=None):
+        d={}
+        if variants is not None: d["variants"]=variants
+        if multipart is not None: d["multipart"]=multipart
+        wj(MOD/f"assets/{ID}/blockstates/{name}.json", d)
+    Y={"east":0,"south":90,"west":180,"north":270}
+    if suf=="stairs":
+        for m,par in [("","stairs"),("inner","stairs_inner"),("outer","stairs_outer")]: model(f"{name}{('_'+m) if m else ''}", f"minecraft:block/{par}", texmap)
+        v={}
+        for f,y in Y.items():
+            for half in ("bottom","top"):
+                for shape in ("straight","inner_left","inner_right","outer_left","outer_right"):
+                    mm = name if shape=="straight" else f"{name}_{'inner' if shape.startswith('inner') else 'outer'}"
+                    e={"model":f"{ID}:block/{mm}"}
+                    yy=y + (90 if shape.endswith("right") else 270 if shape.endswith("left") else 0)
+                    if half=="top": e["x"]=180; yy+=90
+                    if yy%360: e["y"]=yy%360
+                    if e.get("x") or e.get("y"): e["uvlock"]=True
+                    v[f"facing={f},half={half},shape={shape}"]=e
+        bs(v)
+    elif suf=="slab":
+        model(name,"minecraft:block/slab",texmap); model(f"{name}_top","minecraft:block/slab_top",texmap); model(f"{name}_double","minecraft:block/cube_all",{"all":P})
+        bs({"type=bottom":{"model":f"{ID}:block/{name}"},"type=top":{"model":f"{ID}:block/{name}_top"},"type=double":{"model":f"{ID}:block/{name}_double"}})
+    elif suf=="fence":
+        model(f"{name}_post","minecraft:block/fence_post",{"texture":P}); model(f"{name}_side","minecraft:block/fence_side",{"texture":P}); model(f"{name}_inventory","minecraft:block/fence_inventory",{"texture":P})
+        mp=[{"apply":{"model":f"{ID}:block/{name}_post"}}]
+        for side,y in Y.items(): mp.append({"when":{side:"true"},"apply":{"model":f"{ID}:block/{name}_side",**({"y":y} if y else {}),"uvlock":True}})
+        bs(multipart=mp)
+    elif suf=="fence_gate":
+        for m,par in [("","template_fence_gate"),("open","template_fence_gate_open"),("wall","template_fence_gate_wall"),("wall_open","template_fence_gate_wall_open")]: model(f"{name}_{m}" if m else name, f"minecraft:block/{par}", {"texture":P})
+        v={}
+        for f,y in Y.items():
+            for iw in ("false","true"):
+                for op in ("false","true"):
+                    mm=f"{name}{'_wall' if iw=='true' else ''}{'_open' if op=='true' else ''}"
+                    v[f"facing={f},in_wall={iw},open={op},powered=false"]={"model":f"{ID}:block/{mm}",**({"y":y} if y else {}),"uvlock":True}
+                    v[f"facing={f},in_wall={iw},open={op},powered=true"]=v[f"facing={f},in_wall={iw},open={op},powered=false"]
+        bs(v)
+    elif suf=="door":
+        for part in ("bottom_left","bottom_right","top_left","top_right"):
+            kind="door_bottom" if part.startswith("bottom") else "door_top"
+            model(f"{name}_{part}", f"minecraft:block/{kind}", {"bottom":P,"top":P})
+        v={}
+        for f,y in Y.items():
+            for half in ("lower","upper"):
+                for hinge in ("left","right"):
+                    for op in ("false","true"):
+                        mm=f"{name}_{'bottom' if half=='lower' else 'top'}_{hinge}"
+                        yy=(y + (90 if (op=='true') != (hinge=='right') else 0))%360
+                        e={"model":f"{ID}:block/{mm}"}
+                        if yy: e["y"]=yy
+                        v[f"facing={f},half={half},hinge={hinge},open={op},powered=false"]=e
+                        v[f"facing={f},half={half},hinge={hinge},open={op},powered=true"]=e
+        bs(v)
+    elif suf=="trapdoor":
+        for m in ("bottom","top","open"): model(f"{name}_{m}", f"minecraft:block/trapdoor_{m}", {"texture":P})
+        v={}
+        for f,y in Y.items():
+            for half in ("bottom","top"):
+                for op in ("false","true"):
+                    mm=f"{name}_open" if op=='true' else f"{name}_{half}"
+                    e={"model":f"{ID}:block/{mm}"}
+                    yy=(y+180)%360 if op=='true' else y
+                    if yy: e["y"]=yy
+                    v[f"facing={f},half={half},open={op},powered=false"]=e
+                    v[f"facing={f},half={half},open={op},powered=true"]=e
+        bs(v)
+    elif suf=="button":
+        model(name,"minecraft:block/button",{"texture":P}); model(f"{name}_pressed","minecraft:block/button_pressed",{"texture":P}); model(f"{name}_inventory","minecraft:block/button_inventory",{"texture":P})
+        v={}
+        for face in ("floor","wall","ceiling"):
+            for f,y in Y.items():
+                for pw in ("false","true"):
+                    e={"model":f"{ID}:block/{name}{'_pressed' if pw=='true' else ''}"}
+                    if face=="ceiling": e["x"]=180
+                    if face!="floor" and y: e["y"]=y
+                    if face=="floor" and y: e["y"]=y
+                    v[f"face={face},facing={f},powered={pw}"]=e
+        bs(v)
+    elif suf=="pressure_plate":
+        model(name,"minecraft:block/pressure_plate_up",{"up":P,"side":P}); model(f"{name}_down","minecraft:block/pressure_plate_down",{"down":P,"side":P})
+        bs({"powered=false":{"model":f"{ID}:block/{name}"},"powered=true":{"model":f"{ID}:block/{name}_down"}})
+    elif suf=="sign":
+        model(name,"minecraft:block/sign",{"particle":P})
+        bs({f"rotation={r}":{"model":f"{ID}:block/{name}",**({"y":int(r*22.5)} if r else {})} for r in range(16)})
+    elif suf=="wall_sign":
+        model(name,"minecraft:block/wall_sign",{"particle":P})
+        bs({f"facing={f}":{"model":f"{ID}:block/{name}",**({"y":y} if y else {})} for f,y in Y.items()})
+
 def main():
     MOD.mkdir(parents=True, exist_ok=True)
     (MOD/"horizon-mod.toml").write_text(
@@ -129,7 +243,9 @@ def main():
         wj(MOD/f"data/{ID}/horizon/block/{name}.json", d)
         base,border,accent = pal
         wb(MOD/f"assets/{ID}/textures/block/{name}.png", tex(base,border,accent, "leaves" if kind=="leaves" else "ore" if kind=="ore" else "grain" if kind=="log" else "bevel"))
-        if kind=="log":
+        if kind.startswith("variant:"):
+            gen_variant(name, kind.split(":",1)[1], pal)
+        elif kind=="log":
             wb(MOD/f"assets/{ID}/textures/block/{name}_top.png", tex(border,base,accent,"cross"))
             model={"parent":"minecraft:block/cube_column","textures":{"end":f"{ID}:block/{name}_top","side":f"{ID}:block/{name}"}}
         elif kind=="cross":
@@ -137,8 +253,10 @@ def main():
         else:
             model={"parent":"minecraft:block/cube_all","textures":{"all":f"{ID}:block/{name}"}}
         wj(MOD/f"assets/{ID}/models/block/{name}.json", model)
-        wj(MOD/f"assets/{ID}/blockstates/{name}.json", {"variants":{"":{"model":f"{ID}:block/{name}"}}})
-        wj(MOD/f"assets/{ID}/models/item/{name}.json", {"parent":f"{ID}:block/{name}"})
+        if not kind.startswith("variant:"):
+            wj(MOD/f"assets/{ID}/blockstates/{name}.json", {"variants":{"":{"model":f"{ID}:block/{name}"}}})
+        if d.get("item") is not False:
+            wj(MOD/f"assets/{ID}/models/item/{name}.json", {"parent":f"{ID}:block/{name}"})
         wj(MOD/f"data/{ID}/loot_table/blocks/{name}.json", {"type":"minecraft:block","pools":[{"rolls":1.0,"bonus_rolls":0.0,"entries":[{"type":"minecraft:item","name":f"{ID}:{name}"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]})
         (axe if name.endswith(("_log","_planks")) else pick if name in ("tanzanite_ore","tanzanite_block","brimstone") else axe if kind=="leaves" else pick).append(f"{ID}:{name}")
     for name,disp,d,pal,shape in ITEMS:
@@ -154,6 +272,51 @@ def main():
     wj(MOD/f"data/{ID}/recipe/tanzanite_pickaxe.json", {"type":"minecraft:crafting_shaped","pattern":["TTT"," S "," S "],"key":{"T":f"{ID}:tanzanite","S":"minecraft:stick"},"result":{"id":f"{ID}:tanzanite_pickaxe","count":1}})
     wj(MOD/f"data/{ID}/recipe/mud_brick_block.json", {"type":"minecraft:crafting_shaped","pattern":["MM","MM"],"key":{"M":f"{ID}:mudball"},"result":{"id":f"{ID}:mud_brick_block","count":1}})
 
+
+    # ---- Worldgen: biomes + configured/placed features (Volt worldgen-api) ----
+    import importlib.util as _ilu
+    _spec=_ilu.spec_from_file_location("bhn", Path(__file__).with_name("build_hnmod.py")); _bhn=_ilu.module_from_spec(_spec); _spec.loader.exec_module(_bhn)
+    def placed(fname, feature, placement): wj(MOD/f"data/{ID}/worldgen/placed_feature/{fname}.json", {"feature":f"{ID}:{feature}","placement":placement})
+    def configured(fname, cfg): wj(MOD/f"data/{ID}/worldgen/feature/{fname}.json", cfg)
+    COUNT=lambda n:[{"type":"minecraft:count","count":n},{"type":"minecraft:in_square"},{"type":"minecraft:surface_heightmap","heightmap":"OCEAN_FLOOR"},{"type":"minecraft:biome"}]
+    # trees per wood
+    for w in WOODS:
+        configured(f"tree_{w}", {"type":"minecraft:tree","config":{
+          "below_trunk_provider":{"type":"minecraft:simple_state_provider","state":{"Name":"minecraft:dirt"}},
+          "decorators":[],"ignore_vines":True,
+          "foliage_placer":{"type":"minecraft:blob_foliage_placer","radius":2,"offset":0,"height":3},
+          "foliage_provider":{"type":"minecraft:simple_state_provider","state":{"Name":f"{ID}:{w}_leaves","Properties":{"persistent":"false","distance":"7","waterlogged":"false"}}},
+          "minimum_size":{"type":"minecraft:two_layers_feature_size","limit":1,"lower_size":0,"upper_size":1},
+          "trunk_placer":{"type":"minecraft:straight_trunk_placer","base_height":4,"height_rand_a":2,"height_rand_b":0},
+          "trunk_provider":{"type":"minecraft:simple_state_provider","state":{"Name":f"{ID}:{w}_log","Properties":{"axis":"y"}}}}})
+        placed(f"tree_{w}", f"tree_{w}", COUNT(6))
+    for pl in PLANTS:
+        configured(f"flora_{pl}", {"type":"minecraft:simple_block","config":{"to_place":{"type":"minecraft:simple_state_provider","state":{"Name":f"{ID}:{pl}"}}}})
+        placed(f"flora_{pl}", f"flora_{pl}", COUNT(2))
+    configured("ore_tanzanite", {"type":"minecraft:ore","config":{"size":6,"discard_chance_on_air_exposure":0.0,"targets":[
+      {"target":{"predicate_type":"minecraft:tag_match","tag":"minecraft:stone_ore_replaceables"},"state":{"Name":f"{ID}:tanzanite_ore"}},
+      {"target":{"predicate_type":"minecraft:tag_match","tag":"minecraft:deepslate_ore_replaceables"},"state":{"Name":f"{ID}:tanzanite_ore"}}]}})
+    placed("ore_tanzanite","ore_tanzanite",[{"type":"minecraft:count","count":4},{"type":"minecraft:in_square"},{"type":"minecraft:height_range","height":{"type":"minecraft:trapezoid","max_inclusive":{"above_bottom":80},"min_inclusive":{"above_bottom":-20},"plateau":10}},{"type":"minecraft:biome"}])
+    # biome -> (tree wood, flora) by category/name heuristics
+    WOOD_FOR={"redwood":"redwood","maple":"maple","cherry":"cherry","fir":"fir","dead":"dead","hellbark":"hellbark","umbran":"umbran","magic":"magic","jacaranda":"jacaranda","palm":"palm","willow":"willow","mahogany":"mahogany"}
+    for (bn,temp,down,sky,fog,grass,water,weight,cat) in _bhn.BIOMES:
+        wood=next((v for k,v in WOOD_FOR.items() if k in bn), "fir" if cat in ("forest","snowy") else "palm" if cat in ("jungle","desert","savanna") else "dead" if cat=="nether" else "willow" if cat=="swamp" else "maple")
+        flora = "lavender" if "lavender" in bn else "burning_blossom" if cat=="nether" else "glowshroom" if bn in ("mystic_grove","ominous_woods") else "wildflower"
+        steps=[[] for _ in range(11)]
+        if cat!="nether": steps[6]=[f"{ID}:ore_tanzanite"]
+        steps[9]=[f"{ID}:tree_{wood}", f"{ID}:flora_{flora}"]
+        rng=lambda c,sp:(round(max(-2.0,c-sp),3), round(min(2.0,c+sp),3))
+        climate={"temperature":list(rng(temp*0.6-0.2,0.35)),"humidity":list(rng(down*1.2-0.6,0.4)),
+                 "continentalness":[-0.2,1.0] if cat not in ("beach",) else [-1.2,-0.2],
+                 "erosion":list(rng(0.0,0.6)),"depth":[0.0,0.0],"weirdness":list(rng(0.0,0.5)),"offset":0.0}
+        wj(MOD/f"data/{ID}/worldgen/biome/{bn}.json", {
+          "temperature":temp,"downfall":down,"has_precipitation":down>0.05,
+          "effects":{"sky_color":sky,"fog_color":fog,"water_color":water,"water_fog_color":water,"grass_color":grass,"foliage_color":grass},
+          "spawners":{},"spawn_costs":{},"carvers":[],"features":steps,
+          "horizon:climate":climate, **({"horizon:dimension":"minecraft:the_nether"} if cat=="nether" else {})})
+    # biome tags: overworld/nether membership for vanilla systems (locate, etc.)
+    wj(MOD/f"data/{ID}/tags/worldgen/biome/is_biomes_unseen.json", {"replace":False,"values":[f"{ID}:{b[0]}" for b in _bhn.BIOMES]})
+
     wj(MOD/"data/minecraft/tags/block/mineable/axe.json", {"replace":False,"values":sorted(set(axe))})
     wj(MOD/"data/minecraft/tags/block/mineable/pickaxe.json", {"replace":False,"values":sorted(set(pick))})
     all_ids=[f"{ID}:{n}" for n, *_ in BLOCKS]+[f"{ID}:{n}" for n, *_ in ITEMS]
@@ -163,3 +326,5 @@ def main():
     print(f"blocks={len(BLOCKS)} items={len(ITEMS)} total={len(all_ids)}")
 
 if __name__=="__main__": main()
+
+# ---- appended: variant + worldgen generation (executed from main via hook) ----

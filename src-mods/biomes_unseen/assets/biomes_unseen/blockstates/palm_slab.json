@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "biomes_unseen:block/palm_slab"
+    },
+    "type=top": {
+      "model": "biomes_unseen:block/palm_slab_top"
+    },
+    "type=double": {
+      "model": "biomes_unseen:block/palm_slab_double"
+    }
+  }
+}

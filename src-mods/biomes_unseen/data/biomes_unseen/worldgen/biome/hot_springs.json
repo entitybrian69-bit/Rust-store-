@@ -1,0 +1,61 @@
+{
+  "temperature": 0.9,
+  "downfall": 0.4,
+  "has_precipitation": true,
+  "effects": {
+    "sky_color": 9425120,
+    "fog_color": 15262928,
+    "water_color": 5224648,
+    "water_fog_color": 5224648,
+    "grass_color": 8038494,
+    "foliage_color": 8038494
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": [],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "biomes_unseen:ore_tanzanite"
+    ],
+    [],
+    [],
+    [
+      "biomes_unseen:tree_maple",
+      "biomes_unseen:flora_wildflower"
+    ],
+    []
+  ],
+  "horizon:climate": {
+    "temperature": [
+      -0.01,
+      0.69
+    ],
+    "humidity": [
+      -0.52,
+      0.28
+    ],
+    "continentalness": [
+      -0.2,
+      1.0
+    ],
+    "erosion": [
+      -0.6,
+      0.6
+    ],
+    "depth": [
+      0.0,
+      0.0
+    ],
+    "weirdness": [
+      -0.5,
+      0.5
+    ],
+    "offset": 0.0
+  }
+}

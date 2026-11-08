@@ -1,0 +1,60 @@
+{
+  "temperature": 2.0,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 8014378,
+    "fog_color": 4136460,
+    "water_color": 13589050,
+    "water_fog_color": 13589050,
+    "grass_color": 9071162,
+    "foliage_color": 9071162
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": [],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "biomes_unseen:tree_dead",
+      "biomes_unseen:flora_burning_blossom"
+    ],
+    []
+  ],
+  "horizon:climate": {
+    "temperature": [
+      0.65,
+      1.35
+    ],
+    "humidity": [
+      -1.0,
+      -0.2
+    ],
+    "continentalness": [
+      -0.2,
+      1.0
+    ],
+    "erosion": [
+      -0.6,
+      0.6
+    ],
+    "depth": [
+      0.0,
+      0.0
+    ],
+    "weirdness": [
+      -0.5,
+      0.5
+    ],
+    "offset": 0.0
+  },
+  "horizon:dimension": "minecraft:the_nether"
+}

@@ -1,6 +1,9 @@
 # Biomes Unseen (biomes_unseen) v1.0.0
 A Biomes O' Plenty-style expansion for Horizon (Minecraft 26.3 Rust rewrite), built only on Horizon API 0.2 registry types proven by this repo's example mods. 56 blocks, 17 items, 16 recipes: 12 wood sets (fir, redwood, mahogany, jacaranda, palm, willow, dead, magic, umbran, hellbark, cherry, maple), 12 flowers/plants, nether flesh/brimstone/ash, origin grass, mud bricks, and the tanzanite gem tier.
 
+## Requirements for biome generation
+Biome/worldgen registration needs the Volt Launcher build with the worldgen-api patch (branch `biomes-unseen-worldgen-api`, commit `da13467`, patch at `docs/biomes_unseen/volt-worldgen-api.patch`). On an unpatched engine the .hmod still loads and all 176 blocks/29 items work, but the 44 biomes will not generate.
+
 ## Install — PC (.hmod, recommended)
 1. Download `releases/biomes_unseen.hmod`. 2. Copy it into `<game-folder>/horizon-mods/`. 3. Start Horizon → Options → Mods → toggle **Biomes Unseen** ON. 4. Restart Horizon.
 ## Install — Android (.hmod)

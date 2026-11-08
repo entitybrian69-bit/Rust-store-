@@ -1,0 +1,10 @@
+{
+  "template": "minecraft:oak_sign",
+  "properties": {
+    "hardness": 2.0,
+    "resistance": 3.0,
+    "sounds": "minecraft:wood"
+  },
+  "wood_type": "biomes_unseen:dead",
+  "wall_block": "biomes_unseen:dead_wall_sign"
+}

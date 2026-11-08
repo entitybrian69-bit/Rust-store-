@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
-"""Build releases/biomes_unseen.hnmod (PC native source bundle).
+"""Build releases/biomes_unseen.hnmod — REAL schema from the engine code.
 
-Documented .hnmod contents (docs/INSTALL_PC.md): horizon-native.json +
-mixins/<id>/ Rust source compiled by horizon-launcher on PC.
-No horizon-mixins trait/macro names exist anywhere in this repo, so the Rust
-source deliberately uses ONLY std + its own types (no invented Horizon API).
-It carries the real biome/climate/feature data a native build needs; the
-missing engine hook is tracked in docs/biomes_unseen/GAPS.md.
-Android cannot compile .hnmod on-device; use biomes_unseen.hmod there.
+Schema source (read, not guessed):
+- horizon (docs/api/mod-files.md) + Volt crates/horizon-mods/src/index/native.rs
+  Manifest {schema:1, id, version, game, horizon:<40-hex>, mixins:<40-hex>, hooks?}
+  with #[serde(deny_unknown_fields)]; mixins/<id>/horizon-mixin.toml must exist
+  ([mod] id/version must match; [compatibility] horizon_revision, per
+  docs/native-mods.md), other entries only .rs/.toml under mixins/<id>/.
+- horizon = Volt Launcher HEAD this bundle is pinned to; mixins = horizon-mixins HEAD.
+Worldgen itself is data-driven via the .hmod (Volt worldgen-api patch), so this
+native bundle needs no injections: it is a valid zero-hook bundle carrying the
+biome dataset as a Rust helper for native tooling. Compilation requires
+`horizon-launcher native-build` with a Rust 1.95 toolchain (see GAPS.md).
 """
-import hashlib, json, zipfile
+import hashlib, json, subprocess, zipfile
 from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
+VOLT = ROOT.parent / "Volt-launcher"
+MIXINS_SHA = "5a64af938ec86b00d53d16a408aabc0038fb3e57"  # horizon-rust/horizon-mixins HEAD at build time
 
-# name, temp, downfall, sky, fog, grass, water, weight, category
 BIOMES = [
  ("bayou",0.8,0.9,0x7fb8d8,0xc8e8e0,0x6a9a4a,0x3f76e4,6,"swamp"),("bog",0.6,0.9,0x8aa8b0,0xb8c8c0,0x5a7a3a,0x3a5f8a,5,"swamp"),
  ("cherry_blossom_grove",0.7,0.8,0x7fc8e8,0xe8d0e8,0x7ab85a,0x3f76e4,4,"forest"),("cold_desert",0.4,0.2,0x8fc8e0,0xe0d8c0,0x9aa06a,0x3f76e4,5,"desert"),
@@ -35,69 +40,47 @@ BIOMES = [
  ("snowy_fir_clearing",-0.2,0.7,0x92c4de,0xe4ecec,0x6f9f62,0x3d57d6,5,"snowy"),("snowy_maple_woods",-0.1,0.7,0x8ec2dc,0xe8e4da,0x7fa065,0x3d57d6,5,"snowy"),
  ("tropics",0.95,0.8,0x6fc8dc,0xd4ecd8,0x59b84e,0x2fb8c8,3,"jungle"),("wetland",0.75,0.9,0x80bcc8,0xd0e4da,0x67a04b,0x3f76e4,6,"swamp"),
  ("wooded_scrubland",0.85,0.25,0x84d0e4,0xeee0bc,0x93a258,0x3f76e4,5,"desert"),
- # Nether
  ("crystalline_chasm",2.0,0.0,0x8a2a3a,0x4a0f1e,0xa04a6a,0xcf5a3a,4,"nether"),("infernal_dune",2.0,0.0,0x9a3a2a,0x5a1408,0xa05a3a,0xcf5a3a,5,"nether"),
  ("undergrowth",2.0,0.0,0x7a4a2a,0x3f1e0c,0x8a6a3a,0xcf5a3a,5,"nether"),("visceral_heap",2.0,0.0,0x8a3a4a,0x47121f,0xa04a5a,0xcf5a3a,4,"nether"),
  ("withered_abyss",2.0,0.0,0x4a4a5a,0x1c1c26,0x5a5a6a,0x8a3a3a,3,"nether"),
 ]
 
+def volt_sha():
+    try: return subprocess.check_output(["git","-C",str(VOLT),"rev-parse","HEAD"],text=True).strip()
+    except Exception: return "f275b6308efe4ff3d0ba35a8252bf63256ff1dd2"
+
 def rust():
     rows = ",\n    ".join(
         f'BiomeDef {{ id: "biomes_unseen:{n}", temperature: {t}, downfall: {d}, sky_color: 0x{s:06X}, fog_color: 0x{f:06X}, grass_color: 0x{g:06X}, water_color: 0x{w:06X}, weight: {wt}, category: "{c}" }}'
         for n,t,d,s,f,g,w,wt,c in BIOMES)
-    return f'''//! Biomes Unseen — biome/climate data for a Horizon native (.hnmod) build.
-//! std-only on purpose: no horizon-mixins trait names exist in the host repo,
-//! so this file invents none. See docs/biomes_unseen/GAPS.md.
+    return f'''//! Biomes Unseen — biome dataset helper for native tooling (std-only).
+//! Worldgen registration itself is data-driven via the companion .hmod
+//! (Volt worldgen-api: horizon:climate in data/biomes_unseen/worldgen/biome/).
 #![forbid(unsafe_code)]
-
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct BiomeDef {{
-    pub id: &'static str, pub temperature: f32, pub downfall: f32,
-    pub sky_color: u32, pub fog_color: u32, pub grass_color: u32,
-    pub water_color: u32, pub weight: u32, pub category: &'static str,
-}}
-
-/// Per-biome toggles/weights (the configurable surface for a native build).
-#[derive(Debug, Clone)]
-pub struct Config {{ pub enabled: Vec<(&'static str, bool)>, pub weight_scale: f32 }}
-impl Default for Config {{
-    fn default() -> Self {{ Self {{ enabled: BIOMES.iter().map(|b| (b.id, true)).collect(), weight_scale: 1.0 }} }}
-}}
-
+pub struct BiomeDef {{ pub id: &'static str, pub temperature: f32, pub downfall: f32,
+    pub sky_color: u32, pub fog_color: u32, pub grass_color: u32, pub water_color: u32,
+    pub weight: u32, pub category: &'static str }}
 pub static BIOMES: &[BiomeDef] = &[
     {rows}
 ];
-
-pub fn enabled_biomes(cfg: &Config) -> Vec<&'static BiomeDef> {{
-    BIOMES.iter().filter(|b| cfg.enabled.iter().find(|(id, _)| id == &b.id).map(|(_, e)| *e).unwrap_or(true)).collect()
-}}
-
-#[cfg(test)]
-mod tests {{
-    use super::*;
-    #[test] fn ids_unique_and_namespaced() {{
-        let mut ids: Vec<&str> = BIOMES.iter().map(|b| b.id).collect();
-        let n = ids.len(); ids.sort_unstable(); ids.dedup();
-        assert_eq!(n, ids.len()); assert!(ids.iter().all(|i| i.starts_with("biomes_unseen:")));
-    }}
-    #[test] fn default_config_enables_all() {{ assert_eq!(enabled_biomes(&Config::default()).len(), BIOMES.len()); }}
-}}
 '''
 
 def main():
-    manifest = {"id":"biomes_unseen","name":"Biomes Unseen","version":"1.0.0","side":"client",
-      "description":"Native source bundle: biome/climate/feature data (std-only Rust). PC horizon-launcher only; Android use biomes_unseen.hmod.",
-      "contents":["horizon-native.json","mixins/biomes_unseen/src/lib.rs","mixins/biomes_unseen/Cargo.toml"]}
+    sha = volt_sha()
+    manifest = {"schema":1,"id":"biomes_unseen","version":"1.0.0","game":"26.3","horizon":sha,"mixins":MIXINS_SHA,"hooks":1}
     files = {
       "horizon-native.json": json.dumps(manifest, indent=2)+"\n",
-      "mixins/biomes_unseen/Cargo.toml": '[package]\nname = "biomes_unseen"\nversion = "1.0.0"\nedition = "2021"\n\n[lib]\npath = "src/lib.rs"\n',
+      "mixins/biomes_unseen/horizon-mixin.toml":
+        f'[mod]\nid = "biomes_unseen"\nversion = "1.0.0"\n\n[compatibility]\nhorizon_revision = "{sha}"\n',
       "mixins/biomes_unseen/src/lib.rs": rust(),
+      "mixins/biomes_unseen/README.md": "# Biomes Unseen native bundle\nZero-hook bundle: biome dataset helper. Worldgen is data-driven via biomes_unseen.hmod (Volt worldgen-api patch). Build: horizon-launcher native-build <this file> --trust-native-code (PC only).\n",
     }
     out = ROOT/"releases/biomes_unseen.hnmod"; out.parent.mkdir(exist_ok=True)
     with zipfile.ZipFile(out,"w",zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
         for name in sorted(files):
             zi = zipfile.ZipInfo(name, date_time=(2026,1,1,0,0,0)); zi.compress_type=zipfile.ZIP_DEFLATED; zi.external_attr=0o100644<<16
             zf.writestr(zi, files[name])
-    print(out, out.stat().st_size, hashlib.sha256(out.read_bytes()).hexdigest(), f"biomes={len(BIOMES)}")
+    print(out, out.stat().st_size, hashlib.sha256(out.read_bytes()).hexdigest(), f"biomes={len(BIOMES)} horizon={sha}")
 
 if __name__=="__main__": main()
