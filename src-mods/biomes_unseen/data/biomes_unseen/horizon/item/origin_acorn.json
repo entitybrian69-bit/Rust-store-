@@ -1,0 +1,6 @@
+{
+  "template": "minecraft:oak_sapling",
+  "components": {
+    "minecraft:max_stack_size": 64
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "template": "minecraft:diamond_pickaxe",
+  "components": {
+    "minecraft:max_damage": 1700,
+    "minecraft:rarity": "rare"
+  }
+}

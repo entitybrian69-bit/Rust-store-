@@ -1,0 +1,9 @@
+{
+  "template": "minecraft:nether_wart_block",
+  "properties": {
+    "hardness": 0.4,
+    "resistance": 0.4,
+    "sounds": "minecraft:nether_wart_block"
+  },
+  "item": true
+}

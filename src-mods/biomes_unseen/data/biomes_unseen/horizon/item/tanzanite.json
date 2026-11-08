@@ -1,0 +1,7 @@
+{
+  "template": "minecraft:emerald",
+  "components": {
+    "minecraft:max_stack_size": 64,
+    "minecraft:rarity": "uncommon"
+  }
+}

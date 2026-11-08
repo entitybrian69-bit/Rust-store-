@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "biomes_unseen:block/umbran_log_top",
+    "side": "biomes_unseen:block/umbran_log"
+  }
+}

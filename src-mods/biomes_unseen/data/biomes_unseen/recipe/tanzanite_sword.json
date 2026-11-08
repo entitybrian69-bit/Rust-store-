@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " T ",
+    " T ",
+    " S "
+  ],
+  "key": {
+    "T": "biomes_unseen:tanzanite",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "biomes_unseen:tanzanite_sword",
+    "count": 1
+  }
+}

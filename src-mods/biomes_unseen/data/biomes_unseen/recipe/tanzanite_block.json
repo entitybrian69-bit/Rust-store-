@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "TTT",
+    "TTT",
+    "TTT"
+  ],
+  "key": {
+    "T": "biomes_unseen:tanzanite"
+  },
+  "result": {
+    "id": "biomes_unseen:tanzanite_block",
+    "count": 1
+  }
+}

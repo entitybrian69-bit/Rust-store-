@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MM",
+    "MM"
+  ],
+  "key": {
+    "M": "biomes_unseen:mudball"
+  },
+  "result": {
+    "id": "biomes_unseen:mud_brick_block",
+    "count": 1
+  }
+}

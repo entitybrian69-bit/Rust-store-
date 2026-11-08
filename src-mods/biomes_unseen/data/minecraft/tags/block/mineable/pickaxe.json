@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "biomes_unseen:ash_block",
+    "biomes_unseen:brimstone",
+    "biomes_unseen:burning_blossom",
+    "biomes_unseen:cattail",
+    "biomes_unseen:flesh_block",
+    "biomes_unseen:glowshroom",
+    "biomes_unseen:lavender",
+    "biomes_unseen:mud_brick_block",
+    "biomes_unseen:orange_cosmos",
+    "biomes_unseen:origin_grass_block",
+    "biomes_unseen:pink_daffodil",
+    "biomes_unseen:pink_hibiscus",
+    "biomes_unseen:porous_flesh",
+    "biomes_unseen:rose",
+    "biomes_unseen:tanzanite_block",
+    "biomes_unseen:tanzanite_ore",
+    "biomes_unseen:violet",
+    "biomes_unseen:waterlily_pad",
+    "biomes_unseen:white_anemone",
+    "biomes_unseen:wildflower"
+  ]
+}

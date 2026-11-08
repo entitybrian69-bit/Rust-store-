@@ -1,0 +1,2 @@
+# Credits & License
+Biomes Unseen code/textures in this repo: MIT (see repo LICENSE). All textures are original procedural pixel art — no Biomes O' Plenty assets, code, or sounds were copied. "Biomes O' Plenty" name/content references are for parity documentation only; this is an unofficial recreation ("Biomes Unseen") and is not affiliated with Biomes O' Plenty or its authors. Original BOP concept credit: the Biomes O' Plenty team.

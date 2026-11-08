@@ -7,6 +7,34 @@
   "format_spec": "https://github.com/horizon-rust/horizon/blob/main/docs/api/mod-files.md",
   "mods": [
     {
+      "id": "biomes_unseen",
+      "name": "Biomes Unseen",
+      "version": "1.0.0",
+      "description": "Biomes O' Plenty-style expansion for Horizon 26.3: 12 wood sets, flowers, plants, nether flesh/brimstone, tanzanite gem tier and more. Biome registration is not exposed by Horizon API 0.2 - see docs/GAPS.md.",
+      "authors": [
+        "Biomes Unseen Contributors"
+      ],
+      "api": "0.2",
+      "side": "both",
+      "capabilities": [
+        "registries"
+      ],
+      "file_name": "biomes_unseen.hmod",
+      "size_bytes": 120329,
+      "sha256": "c36423f55cc8eaf8fcbda09069f73647a97002bdef903a03a0f9950815fff27b",
+      "entry_count": 420,
+      "counts": {
+        "blocks": 56,
+        "items": 17,
+        "creative_tabs": 1,
+        "mob_effects": 0,
+        "entity_types": 0,
+        "menus": 0,
+        "recipes": 16,
+        "textures": 85
+      }
+    },
+    {
       "id": "block_placement_reborn",
       "name": "Block Placement Reborn",
       "version": "1.0.0",
