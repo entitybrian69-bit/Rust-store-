@@ -52,6 +52,18 @@ python3 scripts/build_hmods.py --check-only
 
 ---
 
+## 🧩 Community WASM HMOD project
+
+**Volt Survival Suite** is a client-side code mod maintained in the [Volt Launcher source](https://github.com/entitybrian69-bit/Volt-launcher/tree/android/mods/community/volt-survival-suite). Unlike the content-only mods below, it contains a WebAssembly component and uses Horizon's sandboxed mod SDK.
+
+Features: live survival HUD, coordinates and facing, health/hunger, world time and dimension, target-block inspection, persistent HUD toggle, and the `/kit`, `/where`, `/inspect`, and `/time` commands.
+
+Its [GitHub Actions build](https://github.com/entitybrian69-bit/Volt-launcher/actions/workflows/build-volt-survival-suite.yml) runs tests, creates the component, packages the `.hmod`, and uploads a workflow artifact. The artifact is a CI build, not yet a signed registry release; wait for a successful run before installing it.
+
+Volt also includes the [HMOD Doctor](https://github.com/entitybrian69-bit/Volt-launcher/blob/android/docs/hmod-doctor.md), a diagnostic CLI for checking manifests, code/content package types, content validation and duplicate mod IDs.
+
+---
+
 ## 📖 Guides & Documentation
 
 - 📱 **[Installing `.hmod` Mods on Android (`docs/INSTALL_ANDROID.md`)](docs/INSTALL_ANDROID.md)**
