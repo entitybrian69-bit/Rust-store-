@@ -1,22 +1,38 @@
-# Fresh Moves — player animation for Horizon (`.hnmod`)
+# Fresh Moves — player animation for Horizon (`.hmod` + `.hnmod`)
 
 A native Horizon mod that gives every player model — your own in third person and
 everyone else's in multiplayer — a full set of fluid, weighty animation on top of
 the vanilla one, plus first-person hand, item and camera motion and an
 action-game combat layer.
 
-- **Package:** `releases/fresh_moves-1.0.0.hnmod`
-- **Bundle id / version:** `fresh_moves` `1.0.0` (native manifest schema 1)
-- **Pinned engine:** Horizon `26.3`, `horizon` revision
-  `a30ed9e44d35877d01f1ce5ceccb4346e9994c2d`, `mixins` revision
-  `5a64af938ec86b00d53d16a408aabc0038fb3e57`, hook API `397`
-- **Source:** [`src-mods/fresh_moves/`](../src-mods/fresh_moves)
-- **Build + validate:** `python3 scripts/build_hnmod.py`
+One mod, two packages, both built from the same source:
 
-This is a **native** mod (`.hnmod`), not a content mod (`.hmod`). Horizon's
-content pipeline has one capability — `registries` — which registers blocks,
-items, recipes, tags, loot, creative tabs, mob effects, entity types and menus.
-Nothing in it can pose a model, so player animation has to be code.
+- **`releases/fresh_moves-1.0.0.hmod`** — the **combined** package: a `.hmod`
+  with its content manifest (`horizon-mod.toml`) *and* the native bundle inside.
+  Horizon installs it as one `.hmod` under a version's native mods and snapshots
+  its content with that exact native build, so the code and the manifest can
+  never drift apart.
+- **`releases/fresh_moves-1.0.0.hnmod`** — the same native bundle, code only.
+  What a registry native mod and the Android build service take.
+
+| | |
+| :--- | :--- |
+| **Bundle id / version** | `fresh_moves` `1.0.0` (native manifest schema 1) |
+| **Engine** | Horizon `26.3`, `horizon` revision `a30ed9e44d35877d01f1ce5ceccb4346e9994c2d`, `mixins` revision `5a64af938ec86b00d53d16a408aabc0038fb3e57`, hook API `397` |
+| **Source** | [`src-mods/fresh_moves/`](../src-mods/fresh_moves) |
+| **Build + validate** | `python3 scripts/build_hnmod.py` |
+
+**Why the animation is native code even in a `.hmod`.** Horizon's content
+pipeline has one capability — `registries` — which registers blocks, items,
+recipes, tags, loot, creative tabs, mob effects, entity types and menus. Nothing
+in it can pose a model, so player animation has to be code, and a `.hmod` on its
+own cannot animate a player. Horizon therefore reads a `.hmod` that carries both
+halves: `horizon_mods::index::native::content` puts `horizon-mod.toml`,
+`assets/` and `data/` on the content side and `mixins/<id>/` on the native side
+of the same archive, `Content::read` accepts a content half with **no files**
+(ours has none: a manifest and nothing else), and the launcher unpacks the file,
+builds the code and installs the content snapshot beside it. That is what
+`fresh_moves-1.0.0.hmod` is.
 
 ---
 
@@ -173,17 +189,21 @@ whatever the game crate already links.
 
 ### PC (Horizon launcher, `horizon-rust/horizon`)
 
-1. Put `fresh_moves-1.0.0.hnmod` in the launcher's `horizon-native-mods/`
-   folder (beside the launcher's other native bundles).
-2. Start the launcher and install/launch the game once. The launcher compiles
-   every `.hnmod` in that folder into the client (Rust; first build takes a few
-   minutes, later starts are incremental).
+1. Put **`fresh_moves-1.0.0.hmod`** (or the `.hnmod`, both work) in the
+   launcher's `horizon-native-mods/` folder. The launcher names a native mod by
+   that folder and accepts either extension
+   (`native_status::is_native_file`).
+2. Start the launcher and install/launch the game once. It unpacks every native
+   mod in that folder and compiles it into the client (Rust; the first build
+   takes a few minutes, later starts are incremental).
 3. In game: **Options → Mods** shows *Fresh Moves 1.0.0*. Open it to configure.
 
 ### Android (Starling, formerly Horizon Android)
 
-1. Import `fresh_moves-1.0.0.hnmod` in the app (the native-mods screen accepts
-   the file directly) or copy it into `horizon-native-mods/`.
+1. Import **`fresh_moves-1.0.0.hnmod`** in the app (the native-mods screen
+   accepts the file directly) or copy it into `horizon-native-mods/`. The
+   code-only package is the one its import expects; the combined `.hmod` is the
+   PC form, and is accepted only by an Android build that reads combined mods.
 2. The app builds the bundle in its build service / a GitHub runner and swaps the
    library in on the next launch. Builds are SHA-256 checked against the library
    that replaces the old one.
@@ -194,24 +214,31 @@ can be compiled into the client from source (it needs no Cargo changes: it is a
 support module plus hooks, compiled by the launcher's own build). The launcher is
 the supported path on both platforms.
 
-> The `.hnmod` is a **source bundle**, by design: Horizon compiles native mods
+> Both packages are **source bundles**, by design: Horizon compiles native mods
 > from source into the pinned engine, which is what makes the fast paths fast.
-> It is not an Android `.so` or an APK.
+> Neither is an Android `.so` or an APK, and no build of Horizon loads a
+> pre-compiled native mod.
 
 ---
 
 ## 5. Build and validate
 
 ```sh
-# Check the source folder and rebuild the .hnmod deterministically, then validate it
+# Rebuild both packages deterministically from src-mods/fresh_moves/, then validate them
 python3 scripts/build_hnmod.py
 
-# Validate the packaged archive only
+# Validate the packaged archives only
 python3 scripts/build_hnmod.py --check-only
 ```
 
-The validator enforces the reader's own rules — the zip's shape, paths and
-limits (512 entries, 64 MiB, 64 MiB per file), the manifest's fields
+For the combined `.hmod` it also enforces the content half: `horizon-mod.toml`
+parses, its `id` and `version` equal the native manifest's, `capabilities`
+contains `registries` (required of any `.hmod` without a `mod.wasm`), there is no
+`mod.wasm`, and every content path is `assets/<namespace>/…` or
+`data/<namespace>/…` in a namespace the mod owns.
+
+Beyond that, the validator enforces the reader's own rules — the zip's shape,
+paths and limits (512 entries, 64 MiB, 64 MiB per file), the manifest's fields
 (`deny_unknown_fields`, `[a-z0-9_]{1,64}` id, 40-hex revisions), the
 `mixins/<id>/` prefix, which files may live there, that `[mod]` id/version and
 `[compatibility] horizon_revision` agree with the manifest, that every hook name
@@ -244,4 +271,10 @@ pose exceeds what the engine can draw.
 - **One mod's pose slot.** If another animation mod also installs a pose on
   player models, the first one to take a model keeps it (see §3) — Fresh Moves
   never fights for it.
-- **No items, blocks or world content** — this mod adds none.
+- **No items, blocks or world content** — this mod adds none. Its `.hmod`
+  content half is a manifest with no files at all, which is deliberate and
+  valid: `Content::read` runs over `assets/` and `data/` and finds none.
+- **The `.hmod` is the PC form.** The launcher reads a combined `.hmod`
+  (`index::native::Bundle::read`, `install_content`, `native_status::is_native_file`);
+  Android's import flow is built around `.hnmod`. Both files carry the same code,
+  so a client that takes either gets the same animation.

@@ -1,21 +1,35 @@
 #!/usr/bin/env python3
-"""Build and validate a Horizon native mod (.hnmod) bundle.
+"""Build and validate Horizon native mods: the .hnmod and the combined .hmod.
 
 Zero dependencies: Python 3.10+ and the standard library only.
+
+Two packages come out of one source folder, the same mod:
+
+  * `fresh_moves-1.0.0.hnmod` — code only: `horizon-native.json` and
+    `mixins/fresh_moves/`. What a registry native mod and Android's build
+    service take.
+  * `fresh_moves-1.0.0.hmod` — the combined mod: the same native bundle plus
+    `horizon-mod.toml`. Horizon installs it as one `.hmod` under a version's
+    native mods and snapshots its content with the exact native build
+    (`launcher/src/native_mods/source.rs`, `install_content`).
 
 The rules enforced here are the ones in Horizon's own readers and spec:
 
   * docs/api/mod-files.md          the zip's shape, paths, limits and entries
   * crates/horizon-mods/src/index/native.rs
-                                   the manifest's fields and what a bundle may
-                                   carry under mixins/<id>/
+                                   the native manifest's fields, what a bundle
+                                   may carry under mixins/<id>/, and how a
+                                   combined `.hmod`'s content half is read
+  * crates/horizon-mods/src/manifest.rs
+                                   `Package::read`: the content manifest, and
+                                   `registries` when there is no `mod.wasm`
   * native-hooks.json              every name a hook may ask for
 
 Usage:
 
-    python3 scripts/build_hnmod.py                       # build + validate
-    python3 scripts/build_hnmod.py --check-only           # validate only
-    python3 scripts/build_hnmod.py --check-only path.hnmod
+    python3 scripts/build_hnmod.py                        # build + validate both
+    python3 scripts/build_hnmod.py --check-only            # validate only
+    python3 scripts/build_hnmod.py --check-only path       # validate one archive
 
 Exit status is 0 only when every check passes.
 """
@@ -33,12 +47,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "src-mods" / "fresh_moves"
+CONTENT = SOURCE / "content"
 RELEASES = ROOT / "releases"
 CATALOG = ROOT / "scripts" / "native-hooks-catalog.json"
 
 MANIFEST = "horizon-native.json"
 MIXIN_MANIFEST = "horizon-mixin.toml"
-
+# The content half of a combined `.hmod`: a `.hmod`'s own manifest, read by
+# `horizon_mods::Package::read`. A bare `.hmod` without a native manifest is a
+# content mod and not this script's business.
+CONTENT_MANIFEST = "horizon-mod.toml"
 # docs/api/mod-files.md, "Limits".
 MAX_ENTRIES = 512
 MAX_UNPACKED = 64 * 1024 * 1024
@@ -53,6 +71,13 @@ CONTENT_PATH = re.compile(r"^(assets|data)/[a-z0-9_.\-]+(/[a-z0-9_.\-]+)+$")
 
 # crates/horizon-mods/src/index/native.rs, `allowed`.
 ALLOWED_NAMES = re.compile(r"^(README|LICENSE|LICENCE|COPYING|NOTICE)[^/]*$")
+
+
+def is_content(name: str) -> bool:
+    """Whether a combined `.hmod`'s path is content rather than native source:
+    `horizon_mods::index::native::content`. Content sits at the archive's top
+    level and never inside `mixins/<id>/`."""
+    return name == CONTENT_MANIFEST or name.startswith(("assets/", "data/"))
 
 
 class Problem(Exception):
@@ -144,8 +169,8 @@ def check_mixin_manifest(text: str, manifest: dict) -> dict:
     return mixin
 
 
-def check_entries(manifest: dict, names: list[str], files: dict[str, bytes]) -> None:
-    """The archive's paths, as `Bundle::read_format` checks them."""
+def check_entries(manifest: dict, names: list[str], files: dict[str, bytes], combined: bool) -> None:
+    """The archive's paths, as `Bundle::read` checks them."""
     if len(names) > MAX_ENTRIES:
         fail(f"the bundle has {len(names)} entries, the limit is {MAX_ENTRIES}")
     total = sum(len(v) for v in files.values())
@@ -167,6 +192,9 @@ def check_entries(manifest: dict, names: list[str], files: dict[str, bytes]) -> 
     prefix = f"mixins/{manifest['id']}/"
     for name in names:
         if name == MANIFEST:
+            continue
+        if combined and is_content(name):
+            # A combined `.hmod`: `horizon_mods::index::native::content`.
             continue
         rest = name[len(prefix):] if name.startswith(prefix) else None
         if rest is None:
@@ -196,6 +224,59 @@ def allowed(rest: str) -> bool:
     if rest == ".gitignore":
         return True
     return False
+
+
+def check_content(manifest: dict, names: list[str], files: dict[str, bytes]) -> dict:
+    """The content half of a combined `.hmod`, as `Package::read` and
+    `Content::read` check it."""
+    if CONTENT_MANIFEST not in names:
+        fail(f"a combined .hmod needs {CONTENT_MANIFEST}")
+    if "mod.wasm" in names:
+        fail("mod.wasm is gone: a .hmod carries native code or content, not WebAssembly")
+    try:
+        content = tomllib.loads(files[CONTENT_MANIFEST].decode("utf-8"))
+    except (tomllib.TOMLDecodeError, UnicodeDecodeError) as e:
+        fail(f"{CONTENT_MANIFEST} is not TOML: {e}")
+    for field in ("id", "name", "version", "api"):
+        if not isinstance(content.get(field), str) or not content[field]:
+            fail(f"{CONTENT_MANIFEST} is missing {field!r}")
+    if content["id"] != manifest["id"]:
+        fail(
+            f"{CONTENT_MANIFEST} is mod {content['id']!r}, the native manifest "
+            f"{manifest['id']!r}: one archive is one mod"
+        )
+    if content["version"] != manifest["version"]:
+        fail(
+            f"{CONTENT_MANIFEST} is version {content['version']!r}, the native manifest "
+            f"{manifest['version']!r}"
+        )
+    capabilities = content.get("capabilities", [])
+    if not isinstance(capabilities, list) or "registries" not in capabilities:
+        fail(
+            f"{CONTENT_MANIFEST} needs capabilities = [\"registries\"]: a mod with no "
+            "mod.wasm may only be a content mod"
+        )
+    namespaces = [content["id"], *content.get("namespaces", [])]
+    for name in names:
+        if not is_content(name) or name == CONTENT_MANIFEST:
+            continue
+        # `content::check_path`: assets/<namespace>/<file> or data/<namespace>/<file>,
+        # every part lowercase letters, digits, `_`, `.` or `-`.
+        parts = name.split("/")
+        if parts[0] not in ("assets", "data") or len(parts) < 3:
+            fail(f"{name}: content is assets/<namespace>/<file> or data/<namespace>/<file>")
+        for part in parts:
+            if not part or part in (".", "..") or any(
+                not (c.islower() or c.isdigit() or c in "_.-") for c in part
+            ):
+                fail(f"{name}: content paths take a-z, 0-9, _, . and - only")
+        # A mod adds files in its own namespaces, its listed ones, or vanilla
+        # and convention tags and atlases.
+        if parts[1] not in namespaces and not (
+            parts[0] == "data" and parts[1] in ("minecraft", "c") and "/tags/" in name
+        ):
+            fail(f"{name}: a mod adds content in its own namespaces ({', '.join(namespaces)})")
+    return content
 
 
 def check_injections(manifest: dict, mixin: dict, names: set[str], catalog: dict) -> None:
@@ -275,8 +356,16 @@ def check_rust(name: str, text: str) -> None:
         fail(f"{name}: parentheses do not balance")
 
 
-def check_bundle(manifest: dict, mixin: dict, names: list[str], files: dict[str, bytes], catalog: dict) -> None:
-    check_entries(manifest, names, files)
+def check_bundle(
+    manifest: dict,
+    mixin: dict,
+    names: list[str],
+    files: dict[str, bytes],
+    catalog: dict,
+    combined: bool = False,
+) -> dict:
+    check_entries(manifest, names, files, combined)
+    content = check_content(manifest, names, files) if combined else {}
     prefix = f"mixins/{manifest['id']}/"
     check_injections(manifest, mixin, set(names), catalog)
 
@@ -308,6 +397,14 @@ def check_bundle(manifest: dict, mixin: dict, names: list[str], files: dict[str,
             if disk.is_file() and disk.read_bytes() != data:
                 fail(f"{name}: the bundle's copy differs from {disk}")
 
+    # The content half must be the source folder's copy too, byte for byte.
+    for name, data in files.items():
+        if combined and is_content(name):
+            disk = CONTENT / name
+            if disk.is_file() and disk.read_bytes() != data:
+                fail(f"{name}: the archive's copy differs from {disk}")
+    return content
+
 
 # ---------------------------------------------------------------------------
 # The catalog of hook names, from the game's own native-hooks.json
@@ -328,20 +425,50 @@ def load_catalog() -> dict[str, set[int]]:
 # Packing
 # ---------------------------------------------------------------------------
 
-def build(source: Path, out_dir: Path) -> Path:
-    manifest = check_manifest(read_text(source / MANIFEST))
-    out_dir.mkdir(parents=True, exist_ok=True)
-    target = out_dir / f"{manifest['id']}-{manifest['version']}.hnmod"
-    files = source_files(source)
-    # Deterministic: fixed timestamps, sorted names, deflate.
+def write_archive(target: Path, entries: dict[str, bytes]) -> None:
+    """A deterministic zip: fixed timestamps, sorted names, deflate."""
     with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for path in files:
-            name = path.relative_to(source).as_posix()
+        for name in sorted(entries):
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
-            archive.writestr(info, path.read_bytes())
-    return target
+            archive.writestr(info, entries[name])
+
+
+def native_entries(source: Path) -> dict[str, bytes]:
+    """`horizon-native.json` and `mixins/<id>/`, as they sit in an archive."""
+    return {
+        path.relative_to(source).as_posix(): path.read_bytes()
+        for path in source_files(source)
+        if not path.is_relative_to(CONTENT)
+    }
+
+
+def content_entries() -> dict[str, bytes]:
+    """`horizon-mod.toml` and the assets and data beside it, at the archive's
+    top level (the content half of a combined `.hmod`)."""
+    return {
+        path.relative_to(CONTENT).as_posix(): path.read_bytes()
+        for path in source_files(CONTENT)
+    }
+
+
+def build(source: Path, content: Path, out_dir: Path) -> list[Path]:
+    """Writes both packages of the one mod: the code-only `.hnmod` and the
+    combined `.hmod` (the same native bundle plus its content manifest)."""
+    manifest = check_manifest(read_text(source / MANIFEST))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    native = native_entries(source)
+    named = f"{manifest['id']}-{manifest['version']}"
+
+    hnmod = out_dir / f"{named}.hnmod"
+    write_archive(hnmod, native)
+
+    hmod = out_dir / f"{named}.hmod"
+    combined = dict(native)
+    combined.update(content_entries() if content.is_dir() else {})
+    write_archive(hmod, combined)
+    return [hnmod, hmod]
 
 
 def read_bundle(path: Path) -> tuple[dict, dict, list[str], dict[str, bytes]]:
@@ -385,37 +512,49 @@ def report(path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("archive", nargs="?", help="a built .hnmod to check")
+    parser.add_argument("archive", nargs="?", help="a built .hnmod or combined .hmod to check")
     parser.add_argument("--check-only", action="store_true", help="check without building")
     parser.add_argument("--source", type=Path, default=SOURCE, help="the unpacked bundle")
-    parser.add_argument("--out", type=Path, default=RELEASES, help="where the .hnmod goes")
+    parser.add_argument("--content", type=Path, default=CONTENT, help="the content half of the .hmod")
+    parser.add_argument("--out", type=Path, default=RELEASES, help="where the packages go")
     args = parser.parse_args()
 
     catalog = load_catalog()
-    target = Path(args.archive) if args.archive else None
 
-    if args.check_only and target is None:
-        built = sorted(args.out.glob("*.hnmod"))
-        if not built:
-            print(f"no .hnmod in {args.out}; build one first", file=sys.stderr)
+    if args.archive:
+        targets = [Path(args.archive)]
+    elif args.check_only:
+        # Every native package in releases: the .hnmod files, and the .hmod
+        # files that carry a native manifest. A plain content .hmod is another
+        # script's business and is left to build_hmods.py.
+        targets = []
+        for path in sorted(args.out.glob("*.hnmod")) + sorted(args.out.glob("*.hmod")):
+            with zipfile.ZipFile(path) as archive:
+                if MANIFEST in archive.namelist():
+                    targets.append(path)
+        if not targets:
+            print(f"no native package in {args.out}; build one first", file=sys.stderr)
             return 1
-        targets = built
-    elif target is not None:
-        targets = [target]
     else:
-        built = build(args.source, args.out)
-        print(f"built {built}")
-        targets = [built]
+        built = build(args.source, args.content, args.out)
+        for path in built:
+            print(f"built {path}")
+        targets = built
 
     failures = 0
     for path in targets:
         try:
             manifest, mixin, names, files = read_bundle(path)
-            check_bundle(manifest, mixin, names, files, catalog)
+            combined = CONTENT_MANIFEST in files
+            content = check_bundle(manifest, mixin, names, files, catalog, combined)
             injections = mixin.get("injection", [])
             modules = mixin.get("module", [])
-            print(f"ok  {path.name}: {manifest['id']} {manifest['version']}, "
-                  f"{len(names)} entries, {len(injections)} hooks, {len(modules)} modules")
+            kind = "combined .hmod" if combined else ".hnmod"
+            extra = f", content {CONTENT_MANIFEST}" if combined else ""
+            print(f"ok  {path.name}: {kind}, {manifest['id']} {manifest['version']}, "
+                  f"{len(names)} entries, {len(injections)} hooks, {len(modules)} modules{extra}")
+            if combined and not content.get("description"):
+                print(f"    note: {CONTENT_MANIFEST} has no description")
         except Problem as e:
             failures += 1
             print(f"FAIL {path.name}: {e}", file=sys.stderr)

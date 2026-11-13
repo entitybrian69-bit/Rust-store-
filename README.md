@@ -27,9 +27,10 @@ Every `.hmod` in this repository is pre-packaged, verified against the official 
 
 ---
 
-## 🎬 Fresh Moves — Native Player Animation (`.hnmod`)
+## 🎬 Fresh Moves — Player Animation (`.hmod` + `.hnmod`)
 
-**[`releases/fresh_moves-1.0.0.hnmod`](releases/fresh_moves-1.0.0.hnmod)** — a native Horizon mod that gives
+**[`releases/fresh_moves-1.0.0.hmod`](releases/fresh_moves-1.0.0.hmod)** — a **single `.hmod`** carrying the
+animation, and its code-only twin **[`releases/fresh_moves-1.0.0.hnmod`](releases/fresh_moves-1.0.0.hnmod)**. It gives
 every player model a full animation set: idle breathing and weight shift, walk,
 sprint, sneak, jump, fall, land, swim, climb and ride; mine, place, eat, drink,
 bow, shield and tool use; a three-hit sword combo, heavy attack, dodge, sprint
@@ -38,20 +39,25 @@ camera sway — in **both first and third person**, on **PC and Android**.
 
 | | |
 | :--- | :--- |
-| **File** | `fresh_moves-1.0.0.hnmod` (source bundle, compiled by the launcher) |
+| **Files** | `fresh_moves-1.0.0.hmod` (combined: content manifest + native code) and `fresh_moves-1.0.0.hnmod` (code only) |
 | **Bundle id / version** | `fresh_moves` `1.0.0`, native manifest schema `1` |
 | **Pinned engine** | Horizon `26.3`, `horizon` `a30ed9e4…`, `mixins` `5a64af93…`, hook API `397` |
 | **Hooks** | 12 named hook points, none cancellable — it cannot skip another mod's code |
 | **Config** | `config/fresh_moves-client.toml` + in-game page (Options → Mods → Fresh Moves) |
 | **Validate** | `python3 scripts/build_hnmod.py --check-only` |
 
-Install: drop the file in the launcher's `horizon-native-mods/` (PC) or import it
-in Starling (Android), then launch. Full detail, the config reference and the
-multi-mod rules are in **[`docs/FRESH_MOVES.md`](docs/FRESH_MOVES.md)**.
+Install: drop the `.hmod` (or the `.hnmod`) in the launcher's
+`horizon-native-mods/` on PC; import the `.hnmod` in Starling on Android — then
+launch. Full detail, the config reference and the multi-mod rules are in
+**[`docs/FRESH_MOVES.md`](docs/FRESH_MOVES.md)**.
 
-Content mods (`.hmod`) cannot animate a player: Horizon's content API has one
-capability (`registries`) and nothing in it poses a model. That is why this one is
-a `.hnmod`.
+A `.hmod` alone cannot animate a player — Horizon's content API has one capability
+(`registries`) and nothing in it poses a model. Horizon does read a `.hmod` that
+carries **both** halves in one archive (`horizon_mods::index::native::content`,
+`launcher/src/native_mods/source.rs`), which is exactly what
+`fresh_moves-1.0.0.hmod` is: `horizon-mod.toml` beside `horizon-native.json` and
+`mixins/fresh_moves/`, installed as one file and built with its content
+snapshotted. The `.hnmod` is the same bundle without the content manifest.
 
 ---
 

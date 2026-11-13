@@ -1,0 +1,18 @@
+# The content half of the combined `fresh_moves-1.0.0.hmod` (packed beside the
+# native bundle): a manifest with no assets or data, which is a valid content
+# package — Horizon's own reader (`horizon_mods::Content::read`) accepts one with
+# no files, and `Package::read` requires the `registries` capability exactly
+# because such a mod has no `mod.wasm`.
+#
+# The animation itself is native code (`horizon-native.json` + `mixins/fresh_moves/`
+# in the same archive), which is the only way a Horizon mod can pose a model:
+# the content pipeline's one capability registers blocks, items, recipes, tags,
+# loot, creative tabs, mob effects, entity types and menus — no animation.
+id = "fresh_moves"
+name = "Fresh Moves"
+version = "1.0.0"
+description = "Fluid player animation: idle, walk, sprint, sneak, jump, fall, land, swim, climb and ride; mine, place, eat, drink, bow, shield and tool use; a three-hit sword combo, heavy attack, dodge, sprint attack, hurt and death; eased blending, head tracking and a first-person camera sway, in first and third person. The animation is native code carried in this package."
+authors = ["Rust-store-"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]
