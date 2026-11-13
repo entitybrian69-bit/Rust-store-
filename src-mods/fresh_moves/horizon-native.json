@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "id": "fresh_moves",
+  "version": "1.0.0",
+  "game": "26.3",
+  "horizon": "a30ed9e44d35877d01f1ce5ceccb4346e9994c2d",
+  "mixins": "5a64af938ec86b00d53d16a408aabc0038fb3e57",
+  "hooks": 397
+}

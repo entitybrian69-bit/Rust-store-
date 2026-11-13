@@ -1,0 +1,1741 @@
+{
+ "about": "Horizon's native-hooks.json, reduced to each hook's name and contract versions. Source: https://github.com/horizon-rust/horizon/blob/a30ed9e44d35877d01f1ce5ceccb4346e9994c2d/native-hooks.json (the Horizon revision this store's native mods are pinned to). Only names and versions are kept, so the validator can check a bundle offline.",
+ "hooks": [
+  {
+   "name": "frame",
+   "version": 1
+  },
+  {
+   "name": "tick",
+   "version": 1
+  },
+  {
+   "name": "visuals",
+   "version": 1
+  },
+  {
+   "name": "emissive",
+   "version": 1
+  },
+  {
+   "name": "world_lifecycle",
+   "version": 1
+  },
+  {
+   "name": "server_about_to_start",
+   "version": 1
+  },
+  {
+   "name": "server_stopping",
+   "version": 1
+  },
+  {
+   "name": "server_tick",
+   "version": 1
+  },
+  {
+   "name": "level_tick_pre",
+   "version": 1
+  },
+  {
+   "name": "level_tick_post",
+   "version": 1
+  },
+  {
+   "name": "block_changed",
+   "version": 1
+  },
+  {
+   "name": "neighbor_changed",
+   "version": 1
+  },
+  {
+   "name": "random_tick",
+   "version": 1
+  },
+  {
+   "name": "tick_block",
+   "version": 1
+  },
+  {
+   "name": "update_shape",
+   "version": 1
+  },
+  {
+   "name": "hud",
+   "version": 1
+  },
+  {
+   "name": "key",
+   "version": 1
+  },
+  {
+   "name": "wheel",
+   "version": 1
+  },
+  {
+   "name": "command",
+   "version": 1
+  },
+  {
+   "name": "commands",
+   "version": 1
+  },
+  {
+   "name": "zoom",
+   "version": 1
+  },
+  {
+   "name": "minimap",
+   "version": 1
+  },
+  {
+   "name": "mods",
+   "version": 1
+  },
+  {
+   "name": "settings",
+   "version": 1
+  },
+  {
+   "name": "settings_click",
+   "version": 1
+  },
+  {
+   "name": "panel_event",
+   "version": 1
+  },
+  {
+   "name": "block_entity",
+   "version": 1
+  },
+  {
+   "name": "block_entity_ticks",
+   "version": 1
+  },
+  {
+   "name": "block_entity_tick",
+   "version": 1
+  },
+  {
+   "name": "block_entity_update_tag",
+   "version": 1
+  },
+  {
+   "name": "block_entity_container",
+   "version": 1
+  },
+  {
+   "name": "screen",
+   "version": 1
+  },
+  {
+   "name": "screen_draw",
+   "version": 1
+  },
+  {
+   "name": "screen_click",
+   "version": 1
+  },
+  {
+   "name": "screen_tooltip",
+   "version": 1
+  },
+  {
+   "name": "menu_button",
+   "version": 1
+  },
+  {
+   "name": "register_commands",
+   "version": 1
+  },
+  {
+   "name": "perform_command",
+   "version": 1
+  },
+  {
+   "name": "menu_clicked",
+   "version": 1
+  },
+  {
+   "name": "menu_closed",
+   "version": 1
+  },
+  {
+   "name": "tooltip",
+   "version": 1
+  },
+  {
+   "name": "use_item_on",
+   "version": 1
+  },
+  {
+   "name": "use_item",
+   "version": 1
+  },
+  {
+   "name": "destroy_block",
+   "version": 1
+  },
+  {
+   "name": "place_block",
+   "version": 1
+  },
+  {
+   "name": "right_click_block",
+   "version": 1
+  },
+  {
+   "name": "block_spread",
+   "version": 1
+  },
+  {
+   "name": "piston_move",
+   "version": 1
+  },
+  {
+   "name": "explosion_detonate",
+   "version": 1
+  },
+  {
+   "name": "fill_bucket",
+   "version": 1
+  },
+  {
+   "name": "attack_entity",
+   "version": 1
+  },
+  {
+   "name": "net_from_client",
+   "version": 1
+  },
+  {
+   "name": "net_from_server",
+   "version": 1
+  },
+  {
+   "name": "player_died",
+   "version": 1
+  },
+  {
+   "name": "mob_spawned",
+   "version": 1
+  },
+  {
+   "name": "mob_killed",
+   "version": 1
+  },
+  {
+   "name": "item_dropped",
+   "version": 1
+  },
+  {
+   "name": "item_picked_up",
+   "version": 1
+  },
+  {
+   "name": "hurt_enemy",
+   "version": 1
+  },
+  {
+   "name": "inventory_tick",
+   "version": 1
+  },
+  {
+   "name": "on_equip",
+   "version": 1
+  },
+  {
+   "name": "block_signal",
+   "version": 1
+  },
+  {
+   "name": "is_signal_source",
+   "version": 1
+  },
+  {
+   "name": "health_hud",
+   "version": 1
+  },
+  {
+   "name": "interact_entity",
+   "version": 1
+  },
+  {
+   "name": "left_click_block",
+   "version": 1
+  },
+  {
+   "name": "player_tick",
+   "version": 1
+  },
+  {
+   "name": "entity_join_level",
+   "version": 1
+  },
+  {
+   "name": "living_incoming_damage",
+   "version": 1
+  },
+  {
+   "name": "menu_button_v2",
+   "version": 1
+  },
+  {
+   "name": "entity_leave_level",
+   "version": 1
+  },
+  {
+   "name": "block_entity_fluids",
+   "version": 1
+  },
+  {
+   "name": "should_apply_effect_tick_this_tick",
+   "version": 1
+  },
+  {
+   "name": "apply_effect_tick",
+   "version": 1
+  },
+  {
+   "name": "on_effect_added",
+   "version": 1
+  },
+  {
+   "name": "mob_effect_added",
+   "version": 1
+  },
+  {
+   "name": "chunk_load",
+   "version": 1
+  },
+  {
+   "name": "chunk_unload",
+   "version": 1
+  },
+  {
+   "name": "player_logged_in",
+   "version": 1
+  },
+  {
+   "name": "player_logged_out",
+   "version": 1
+  },
+  {
+   "name": "world_drawn",
+   "version": 1
+  },
+  {
+   "name": "render_needs",
+   "version": 1
+  },
+  {
+   "name": "item_bar",
+   "version": 1
+  },
+  {
+   "name": "has_analog_output",
+   "version": 1
+  },
+  {
+   "name": "analog_output",
+   "version": 1
+  },
+  {
+   "name": "component_types",
+   "version": 1
+  },
+  {
+   "name": "dispense_item",
+   "version": 1
+  },
+  {
+   "name": "tooltip_component",
+   "version": 1
+  },
+  {
+   "name": "tooltip_component_draw",
+   "version": 1
+  },
+  {
+   "name": "can_survive",
+   "version": 1
+  },
+  {
+   "name": "may_place_on",
+   "version": 1
+  },
+  {
+   "name": "block_entity_submit",
+   "version": 1
+  },
+  {
+   "name": "block_entity_render_bounding_box",
+   "version": 1
+  },
+  {
+   "name": "is_valid_bonemeal_target",
+   "version": 1
+  },
+  {
+   "name": "is_bonemeal_success",
+   "version": 1
+  },
+  {
+   "name": "perform_bonemeal",
+   "version": 1
+  },
+  {
+   "name": "block_step_on",
+   "version": 1
+  },
+  {
+   "name": "block_entity_inside",
+   "version": 1
+  },
+  {
+   "name": "block_fall_on",
+   "version": 1
+  },
+  {
+   "name": "consume_effect",
+   "version": 1
+  },
+  {
+   "name": "loot_table_load",
+   "version": 1
+  },
+  {
+   "name": "loot_drops",
+   "version": 1
+  },
+  {
+   "name": "state_for_placement",
+   "version": 1
+  },
+  {
+   "name": "enchant_effect",
+   "version": 1
+  },
+  {
+   "name": "screen_render_post",
+   "version": 1
+  },
+  {
+   "name": "modify_default_components",
+   "version": 1
+  },
+  {
+   "name": "screen_mouse_button_pressed_pre",
+   "version": 1
+  },
+  {
+   "name": "screen_mouse_button_released_pre",
+   "version": 1
+  },
+  {
+   "name": "camera_shake",
+   "version": 1
+  },
+  {
+   "name": "shader_params",
+   "version": 1
+  },
+  {
+   "name": "block_highlight",
+   "version": 1
+  },
+  {
+   "name": "render_hand",
+   "version": 1
+  },
+  {
+   "name": "client_resources_reloaded",
+   "version": 1
+  },
+  {
+   "name": "item_decorations",
+   "version": 1
+  },
+  {
+   "name": "use_duration",
+   "version": 1
+  },
+  {
+   "name": "use_animation",
+   "version": 1
+  },
+  {
+   "name": "can_eat",
+   "version": 1
+  },
+  {
+   "name": "living_entity_use_item_start",
+   "version": 1
+  },
+  {
+   "name": "living_entity_use_item_finish",
+   "version": 1
+  },
+  {
+   "name": "screen_mouse_scrolled_pre",
+   "version": 1
+  },
+  {
+   "name": "player_command",
+   "version": 1
+  },
+  {
+   "name": "perform_console_command",
+   "version": 1
+  },
+  {
+   "name": "screen_key_pressed_pre",
+   "version": 1
+  },
+  {
+   "name": "screen_char_typed_pre",
+   "version": 1
+  },
+  {
+   "name": "data_pack_files",
+   "version": 1
+  },
+  {
+   "name": "biome_colors",
+   "version": 1
+  },
+  {
+   "name": "server_data_loaded",
+   "version": 1
+  },
+  {
+   "name": "compute_fov",
+   "version": 1
+  },
+  {
+   "name": "mob_submit",
+   "version": 1
+  },
+  {
+   "name": "camera_distance",
+   "version": 1
+  },
+  {
+   "name": "compute_fog_color",
+   "version": 1
+  },
+  {
+   "name": "mouse_button_pre",
+   "version": 1
+  },
+  {
+   "name": "mouse_button_post",
+   "version": 1
+  },
+  {
+   "name": "player_respawned",
+   "version": 1
+  },
+  {
+   "name": "render_fog",
+   "version": 1
+  },
+  {
+   "name": "screen_key_released_pre",
+   "version": 1
+  },
+  {
+   "name": "music",
+   "version": 1
+  },
+  {
+   "name": "music_layers",
+   "version": 1
+  },
+  {
+   "name": "datapack_sync",
+   "version": 1
+  },
+  {
+   "name": "recipes_received",
+   "version": 1
+  },
+  {
+   "name": "input_key",
+   "version": 1
+  },
+  {
+   "name": "mouse_scrolling",
+   "version": 1
+  },
+  {
+   "name": "screen_mouse_dragged_pre",
+   "version": 1
+  },
+  {
+   "name": "mod_container_viewers",
+   "version": 1
+  },
+  {
+   "name": "living_knockback",
+   "version": 1
+  },
+  {
+   "name": "experience_orb_can_merge",
+   "version": 1
+  },
+  {
+   "name": "experience_orb_merge",
+   "version": 1
+  },
+  {
+   "name": "menu_slot_rules",
+   "version": 1
+  },
+  {
+   "name": "living_entity_use_item_tick",
+   "version": 1
+  },
+  {
+   "name": "on_use_tick",
+   "version": 1
+  },
+  {
+   "name": "living_entity_use_item_stop",
+   "version": 1
+  },
+  {
+   "name": "release_using",
+   "version": 1
+  },
+  {
+   "name": "loot_function",
+   "version": 1
+  },
+  {
+   "name": "loot_condition",
+   "version": 1
+  },
+  {
+   "name": "level_load",
+   "version": 1
+  },
+  {
+   "name": "level_unload",
+   "version": 1
+  },
+  {
+   "name": "client_level_load",
+   "version": 1
+  },
+  {
+   "name": "client_level_unload",
+   "version": 1
+  },
+  {
+   "name": "hears_projectile_impacts",
+   "version": 1
+  },
+  {
+   "name": "projectile_impact",
+   "version": 1
+  },
+  {
+   "name": "entity_mount",
+   "version": 1
+  },
+  {
+   "name": "interaction_key",
+   "version": 1
+  },
+  {
+   "name": "gui_layer_pre",
+   "version": 1
+  },
+  {
+   "name": "gui_layer_post",
+   "version": 1
+  },
+  {
+   "name": "map_decorations",
+   "version": 1
+  },
+  {
+   "name": "player_start_tracking",
+   "version": 1
+  },
+  {
+   "name": "player_stop_tracking",
+   "version": 1
+  },
+  {
+   "name": "block_entity_energy",
+   "version": 1
+  },
+  {
+   "name": "data_map_types",
+   "version": 1
+  },
+  {
+   "name": "living_breathe",
+   "version": 1
+  },
+  {
+   "name": "blocks",
+   "version": 1
+  },
+  {
+   "name": "items",
+   "version": 1
+  },
+  {
+   "name": "entity_tick_pre",
+   "version": 1
+  },
+  {
+   "name": "entity_tick_post",
+   "version": 1
+  },
+  {
+   "name": "entity_tick_listened",
+   "version": 1
+  },
+  {
+   "name": "item_fluid_tank",
+   "version": 1
+  },
+  {
+   "name": "living_equipment_change",
+   "version": 1
+  },
+  {
+   "name": "living_equipment_listened",
+   "version": 1
+  },
+  {
+   "name": "player_submit",
+   "version": 1
+  },
+  {
+   "name": "mob_layer",
+   "version": 1
+  },
+  {
+   "name": "player_render_listened",
+   "version": 1
+  },
+  {
+   "name": "sign_changed",
+   "version": 1
+  },
+  {
+   "name": "standalone_models",
+   "version": 1
+  },
+  {
+   "name": "player_container_open",
+   "version": 1
+  },
+  {
+   "name": "player_container_close",
+   "version": 1
+  },
+  {
+   "name": "player_toggle_flight",
+   "version": 1
+  },
+  {
+   "name": "anvil_damaged",
+   "version": 1
+  },
+  {
+   "name": "arrow_loose",
+   "version": 1
+  },
+  {
+   "name": "beacon_state_change",
+   "version": 1
+  },
+  {
+   "name": "bell_ring",
+   "version": 1
+  },
+  {
+   "name": "block_break_progress_update",
+   "version": 1
+  },
+  {
+   "name": "block_burn",
+   "version": 1
+  },
+  {
+   "name": "block_cook",
+   "version": 1
+  },
+  {
+   "name": "block_damage_abort",
+   "version": 1
+  },
+  {
+   "name": "block_dispense_armor",
+   "version": 1
+  },
+  {
+   "name": "block_exp",
+   "version": 1
+  },
+  {
+   "name": "block_fade",
+   "version": 1
+  },
+  {
+   "name": "block_failed_dispense",
+   "version": 1
+  },
+  {
+   "name": "block_form",
+   "version": 1
+  },
+  {
+   "name": "block_ignite",
+   "version": 1
+  },
+  {
+   "name": "block_lock_check",
+   "version": 1
+  },
+  {
+   "name": "block_receive_game",
+   "version": 1
+  },
+  {
+   "name": "block_shear_entity",
+   "version": 1
+  },
+  {
+   "name": "brewing_complete",
+   "version": 1
+  },
+  {
+   "name": "brewing_fuel",
+   "version": 1
+  },
+  {
+   "name": "brewing_start",
+   "version": 1
+  },
+  {
+   "name": "broadcast_message",
+   "version": 1
+  },
+  {
+   "name": "campfire_start",
+   "version": 1
+  },
+  {
+   "name": "cauldron_level_changed",
+   "version": 1
+  },
+  {
+   "name": "chorus_fruit_teleport",
+   "version": 1
+  },
+  {
+   "name": "compost_item",
+   "version": 1
+  },
+  {
+   "name": "crafter_craft",
+   "version": 1
+  },
+  {
+   "name": "creeper_ignite",
+   "version": 1
+  },
+  {
+   "name": "creeper_power",
+   "version": 1
+  },
+  {
+   "name": "critical_hit",
+   "version": 1
+  },
+  {
+   "name": "difficulty_changed",
+   "version": 1
+  },
+  {
+   "name": "dragon_egg_form",
+   "version": 1
+  },
+  {
+   "name": "enchant_item",
+   "version": 1
+  },
+  {
+   "name": "ender_pearl_teleport",
+   "version": 1
+  },
+  {
+   "name": "entities_load",
+   "version": 1
+  },
+  {
+   "name": "entities_unload",
+   "version": 1
+  },
+  {
+   "name": "entity_break_door",
+   "version": 1
+  },
+  {
+   "name": "entity_breed",
+   "version": 1
+  },
+  {
+   "name": "entity_change_block",
+   "version": 1
+  },
+  {
+   "name": "entity_drop_item",
+   "version": 1
+  },
+  {
+   "name": "entity_enter_block",
+   "version": 1
+  },
+  {
+   "name": "entity_enter_love_mode",
+   "version": 1
+  },
+  {
+   "name": "entity_portal",
+   "version": 1
+  },
+  {
+   "name": "entity_pose_change",
+   "version": 1
+  },
+  {
+   "name": "entity_shoot_bow",
+   "version": 1
+  },
+  {
+   "name": "entity_tame",
+   "version": 1
+  },
+  {
+   "name": "entity_teleport",
+   "version": 1
+  },
+  {
+   "name": "entity_toggle_glide",
+   "version": 1
+  },
+  {
+   "name": "entity_transform",
+   "version": 1
+  },
+  {
+   "name": "entity_unleash",
+   "version": 1
+  },
+  {
+   "name": "exp_bottle",
+   "version": 1
+  },
+  {
+   "name": "experience_orb_pickup_listened",
+   "version": 1
+  },
+  {
+   "name": "experience_orb_pickup",
+   "version": 1
+  },
+  {
+   "name": "mending_repair",
+   "version": 1
+  },
+  {
+   "name": "explosion_prime",
+   "version": 1
+  },
+  {
+   "name": "fire_odds",
+   "version": 1
+  },
+  {
+   "name": "smoke_source",
+   "version": 1
+  },
+  {
+   "name": "firework_explode",
+   "version": 1
+  },
+  {
+   "name": "fluid_level_change",
+   "version": 1
+  },
+  {
+   "name": "framerate_limit",
+   "version": 1
+  },
+  {
+   "name": "furnace_burn",
+   "version": 1
+  },
+  {
+   "name": "furnace_extract",
+   "version": 1
+  },
+  {
+   "name": "furnace_smelt",
+   "version": 1
+  },
+  {
+   "name": "furnace_start_smelt",
+   "version": 1
+  },
+  {
+   "name": "game_event",
+   "version": 1
+  },
+  {
+   "name": "hopper_inventory_search",
+   "version": 1
+  },
+  {
+   "name": "hopper_pickup_item",
+   "version": 1
+  },
+  {
+   "name": "ingredient",
+   "version": 1
+  },
+  {
+   "name": "inventory_block_start",
+   "version": 1
+  },
+  {
+   "name": "inventory_move_item",
+   "version": 1
+  },
+  {
+   "name": "item_crafted",
+   "version": 1
+  },
+  {
+   "name": "item_despawn",
+   "version": 1
+  },
+  {
+   "name": "item_energy_buffer",
+   "version": 1
+  },
+  {
+   "name": "item_expire",
+   "version": 1
+  },
+  {
+   "name": "item_spawn",
+   "version": 1
+  },
+  {
+   "name": "leaves_decay",
+   "version": 1
+  },
+  {
+   "name": "lightning_strike",
+   "version": 1
+  },
+  {
+   "name": "menu_quick_move",
+   "version": 1
+  },
+  {
+   "name": "moisture_change",
+   "version": 1
+  },
+  {
+   "name": "anvil_craft_post",
+   "version": 1
+  },
+  {
+   "name": "anvil_craft_pre",
+   "version": 1
+  },
+  {
+   "name": "armor_stand_manipulate",
+   "version": 1
+  },
+  {
+   "name": "bucket_empty",
+   "version": 1
+  },
+  {
+   "name": "container_opened",
+   "version": 1
+  },
+  {
+   "name": "creative_slot",
+   "version": 1
+  },
+  {
+   "name": "food_level_changed",
+   "version": 1
+  },
+  {
+   "name": "hanging_break",
+   "version": 1
+  },
+  {
+   "name": "hanging_place",
+   "version": 1
+  },
+  {
+   "name": "item_damaged",
+   "version": 1
+  },
+  {
+   "name": "player_changed_dimension",
+   "version": 1
+  },
+  {
+   "name": "player_clone",
+   "version": 1
+  },
+  {
+   "name": "player_commands_sent",
+   "version": 1
+  },
+  {
+   "name": "player_destroy_item",
+   "version": 1
+  },
+  {
+   "name": "player_fish",
+   "version": 1
+  },
+  {
+   "name": "player_flower_pot_manipulate",
+   "version": 1
+  },
+  {
+   "name": "player_game_mode_changed",
+   "version": 1
+  },
+  {
+   "name": "player_insert_lectern_book",
+   "version": 1
+  },
+  {
+   "name": "player_item_frame_change",
+   "version": 1
+  },
+  {
+   "name": "player_item_mend",
+   "version": 1
+  },
+  {
+   "name": "player_lectern_page_change",
+   "version": 1
+  },
+  {
+   "name": "player_load_from_file",
+   "version": 1
+  },
+  {
+   "name": "player_login",
+   "version": 1
+  },
+  {
+   "name": "player_save_to_file",
+   "version": 1
+  },
+  {
+   "name": "player_sprint",
+   "version": 1
+  },
+  {
+   "name": "player_swap_hands",
+   "version": 1
+  },
+  {
+   "name": "player_take_lectern_book",
+   "version": 1
+  },
+  {
+   "name": "player_teleported",
+   "version": 1
+  },
+  {
+   "name": "player_totem",
+   "version": 1
+  },
+  {
+   "name": "resource_pack_status",
+   "version": 1
+  },
+  {
+   "name": "spawn_change",
+   "version": 1
+  },
+  {
+   "name": "tnt_primed",
+   "version": 1
+  },
+  {
+   "name": "vehicle_create",
+   "version": 1
+  },
+  {
+   "name": "vehicle_damage",
+   "version": 1
+  },
+  {
+   "name": "vehicle_destroy",
+   "version": 1
+  },
+  {
+   "name": "vehicle_moved",
+   "version": 1
+  },
+  {
+   "name": "world_border_bounds_changed",
+   "version": 1
+  },
+  {
+   "name": "world_border_center_changed",
+   "version": 1
+  },
+  {
+   "name": "world_game_rule_change",
+   "version": 1
+  },
+  {
+   "name": "note_play",
+   "version": 1
+  },
+  {
+   "name": "player_advancement_criterion_grant",
+   "version": 1
+  },
+  {
+   "name": "player_advancement_done",
+   "version": 1
+  },
+  {
+   "name": "player_advancement_progress",
+   "version": 1
+  },
+  {
+   "name": "player_arm_swing",
+   "version": 1
+  },
+  {
+   "name": "player_attack_cooldown_reset",
+   "version": 1
+  },
+  {
+   "name": "player_bed_enter",
+   "version": 1
+  },
+  {
+   "name": "player_bed_leave",
+   "version": 1
+  },
+  {
+   "name": "player_bucket_entity",
+   "version": 1
+  },
+  {
+   "name": "player_bundle_item_select",
+   "version": 1
+  },
+  {
+   "name": "player_change_beacon_effect",
+   "version": 1
+  },
+  {
+   "name": "player_change_main_hand",
+   "version": 1
+  },
+  {
+   "name": "player_client_loaded_world",
+   "version": 1
+  },
+  {
+   "name": "player_deep_sleep",
+   "version": 1
+  },
+  {
+   "name": "player_edit_book",
+   "version": 1
+  },
+  {
+   "name": "player_egg_throw",
+   "version": 1
+  },
+  {
+   "name": "player_elytra_boost",
+   "version": 1
+  },
+  {
+   "name": "player_exp_change",
+   "version": 1
+  },
+  {
+   "name": "player_exp_cooldown_change",
+   "version": 1
+  },
+  {
+   "name": "player_input",
+   "version": 1
+  },
+  {
+   "name": "player_item_cooldown",
+   "version": 1
+  },
+  {
+   "name": "player_item_held",
+   "version": 1
+  },
+  {
+   "name": "player_jump",
+   "version": 1
+  },
+  {
+   "name": "player_kicked",
+   "version": 1
+  },
+  {
+   "name": "player_launch_projectile",
+   "version": 1
+  },
+  {
+   "name": "player_level_change",
+   "version": 1
+  },
+  {
+   "name": "player_locale_change",
+   "version": 1
+  },
+  {
+   "name": "player_loom_pattern_select",
+   "version": 1
+  },
+  {
+   "name": "player_map_filled",
+   "version": 1
+  },
+  {
+   "name": "player_name_entity",
+   "version": 1
+  },
+  {
+   "name": "player_open_sign",
+   "version": 1
+  },
+  {
+   "name": "player_pick_item",
+   "version": 1
+  },
+  {
+   "name": "player_pickup_arrow",
+   "version": 1
+  },
+  {
+   "name": "player_portal",
+   "version": 1
+  },
+  {
+   "name": "player_ready_arrow",
+   "version": 1
+  },
+  {
+   "name": "player_recipe_book_click",
+   "version": 1
+  },
+  {
+   "name": "player_recipe_book_settings_change",
+   "version": 1
+  },
+  {
+   "name": "player_recipe_discovered",
+   "version": 1
+  },
+  {
+   "name": "player_riptide",
+   "version": 1
+  },
+  {
+   "name": "player_shear_entity",
+   "version": 1
+  },
+  {
+   "name": "player_shield_disable",
+   "version": 1
+  },
+  {
+   "name": "player_spawn_point_set",
+   "version": 1
+  },
+  {
+   "name": "player_stat_award",
+   "version": 1
+  },
+  {
+   "name": "player_stonecutter_recipe_select",
+   "version": 1
+  },
+  {
+   "name": "player_stop_spectating_entity",
+   "version": 1
+  },
+  {
+   "name": "player_stop_using_item",
+   "version": 1
+  },
+  {
+   "name": "player_swap_with_equipment_slot",
+   "version": 1
+  },
+  {
+   "name": "player_teleport_end_gateway",
+   "version": 1
+  },
+  {
+   "name": "player_toggle_entity_age_lock",
+   "version": 1
+  },
+  {
+   "name": "player_toggle_sneak",
+   "version": 1
+  },
+  {
+   "name": "player_trade",
+   "version": 1
+  },
+  {
+   "name": "player_unleash_entity",
+   "version": 1
+  },
+  {
+   "name": "player_velocity",
+   "version": 1
+  },
+  {
+   "name": "portal_create",
+   "version": 1
+  },
+  {
+   "name": "potion_splash",
+   "version": 1
+  },
+  {
+   "name": "prepare_anvil",
+   "version": 1
+  },
+  {
+   "name": "prepare_grindstone",
+   "version": 1
+  },
+  {
+   "name": "prepare_hopper_transfer",
+   "version": 1
+  },
+  {
+   "name": "prepare_item_craft",
+   "version": 1
+  },
+  {
+   "name": "prepare_item_enchant",
+   "version": 1
+  },
+  {
+   "name": "prepare_smithing",
+   "version": 1
+  },
+  {
+   "name": "projectile_launch",
+   "version": 1
+  },
+  {
+   "name": "raid_spawn_wave",
+   "version": 1
+  },
+  {
+   "name": "raid_state_change",
+   "version": 1
+  },
+  {
+   "name": "sculk_bloom",
+   "version": 1
+  },
+  {
+   "name": "sleep_finished_time",
+   "version": 1
+  },
+  {
+   "name": "sponge_absorb",
+   "version": 1
+  },
+  {
+   "name": "tab_complete",
+   "version": 1
+  },
+  {
+   "name": "target_hit",
+   "version": 1
+  },
+  {
+   "name": "thunder_change",
+   "version": 1
+  },
+  {
+   "name": "time_skip",
+   "version": 1
+  },
+  {
+   "name": "trade_select",
+   "version": 1
+  },
+  {
+   "name": "trade_with_villager",
+   "version": 1
+  },
+  {
+   "name": "vault_change_state",
+   "version": 1
+  },
+  {
+   "name": "vault_loot",
+   "version": 1
+  },
+  {
+   "name": "weather_change",
+   "version": 1
+  },
+  {
+   "name": "whitelist_state_update",
+   "version": 1
+  },
+  {
+   "name": "world_border_bounds_change_finish",
+   "version": 1
+  },
+  {
+   "name": "world_saved",
+   "version": 1
+  },
+  {
+   "name": "living_drown",
+   "version": 1
+  },
+  {
+   "name": "living_fall",
+   "version": 1
+  },
+  {
+   "name": "living_heal",
+   "version": 1
+  },
+  {
+   "name": "living_jump",
+   "version": 1
+  },
+  {
+   "name": "arrow_nock",
+   "version": 1
+  },
+  {
+   "name": "baby_entity_spawn",
+   "version": 1
+  },
+  {
+   "name": "can_player_sleep",
+   "version": 1
+  },
+  {
+   "name": "compute_fov_modifier",
+   "version": 1
+  },
+  {
+   "name": "explosion_knockback",
+   "version": 1
+  },
+  {
+   "name": "hand_drawn",
+   "version": 1
+  },
+  {
+   "name": "ingredient_test",
+   "version": 1
+  },
+  {
+   "name": "item_container",
+   "version": 1
+  },
+  {
+   "name": "item_model_property",
+   "version": 1
+  },
+  {
+   "name": "living_conversion_post",
+   "version": 1
+  },
+  {
+   "name": "living_conversion_pre",
+   "version": 1
+  },
+  {
+   "name": "living_death",
+   "version": 1
+  },
+  {
+   "name": "living_get_projectile",
+   "version": 1
+  },
+  {
+   "name": "living_incoming_damage_v2",
+   "version": 1
+  },
+  {
+   "name": "living_knockback_v2",
+   "version": 1
+  },
+  {
+   "name": "mob_split",
+   "version": 1
+  },
+  {
+   "name": "register_configs",
+   "version": 1
+  },
+  {
+   "name": "config_loading",
+   "version": 1
+  },
+  {
+   "name": "config_reloading",
+   "version": 1
+  },
+  {
+   "name": "config_unloading",
+   "version": 1
+  },
+  {
+   "name": "movement_input",
+   "version": 1
+  },
+  {
+   "name": "note_block_change",
+   "version": 1
+  },
+  {
+   "name": "potential_spawns",
+   "version": 1
+  },
+  {
+   "name": "village_siege",
+   "version": 1
+  },
+  {
+   "name": "player_chat",
+   "version": 1
+  },
+  {
+   "name": "player_xp_change",
+   "version": 1
+  },
+  {
+   "name": "recipe_book_categories",
+   "version": 1
+  },
+  {
+   "name": "render_hand_pose",
+   "version": 1
+  },
+  {
+   "name": "render_item_in_frame",
+   "version": 1
+  },
+  {
+   "name": "render_name_tag",
+   "version": 1
+  },
+  {
+   "name": "screen_closing",
+   "version": 1
+  },
+  {
+   "name": "screen_init_post",
+   "version": 1
+  },
+  {
+   "name": "screen_opening",
+   "version": 1
+  },
+  {
+   "name": "tooltip_color",
+   "version": 1
+  },
+  {
+   "name": "camera_pose",
+   "version": 1
+  },
+  {
+   "name": "client_chat_received",
+   "version": 1
+  },
+  {
+   "name": "client_packet",
+   "version": 1
+  },
+  {
+   "name": "menu_extra_data",
+   "version": 1
+  },
+  {
+   "name": "merchant_offer_traded",
+   "version": 1
+  },
+  {
+   "name": "add_server_reload_listeners",
+   "version": 1
+  },
+  {
+   "name": "server_reload_listener_apply",
+   "version": 1
+  },
+  {
+   "name": "client_start",
+   "version": 1
+  },
+  {
+   "name": "client_disconnecting",
+   "version": 1
+  },
+  {
+   "name": "client_stopping",
+   "version": 1
+  },
+  {
+   "name": "menu_background",
+   "version": 1
+  },
+  {
+   "name": "gui_render_post",
+   "version": 1
+  },
+  {
+   "name": "world_hold",
+   "version": 1
+  },
+  {
+   "name": "world_warp",
+   "version": 1
+  }
+ ]
+}

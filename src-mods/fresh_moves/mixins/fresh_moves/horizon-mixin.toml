@@ -1,0 +1,182 @@
+[mod]
+id = "fresh_moves"
+version = "1.0.0"
+# Runs its same-site HEAD hooks after Zoom (100) and before Wrench (210). Only
+# the row it adds to Options > Mods, its settings page and its tick order are
+# affected: every hook point below is its own, and none of them cancels
+# anything, so no other mod's hook is skipped because of this one.
+
+# The Horizon revision these hooks and the fields the adapter reads were
+# checked against (2026-11-13). `hooks = 397` in horizon-native.json lets a
+# launcher build the mod on any Horizon whose hook points are at 397 or later;
+# this revision is the one it was written for. A Horizon that renames a field
+# the adapter reads fails the build with the compiler's own error rather than
+# misbehaving quietly.
+[compatibility]
+horizon_revision = "a30ed9e44d35877d01f1ce5ceccb4346e9994c2d"
+
+# --- Support modules -------------------------------------------------------
+# Both are ordinary modules of `crate::game`, so they can read the game's own
+# player models and the engine's pose hook without a game→mod→game dependency.
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "fresh_moves"
+source = "runtime.rs"
+
+[[module]]
+id = "native"
+file = "crates/horizon-client/src/game.rs"
+name = "fresh_moves_native"
+source = "native.rs"
+
+# --- Hooks -----------------------------------------------------------------
+# Every one is a named hook point from the source's native-hooks.json, so a
+# hook point may move in the source without breaking this bundle.
+
+# Once a client tick: read the players in view and animate them.
+[[injection]]
+id = "tick"
+hook = "tick"
+hook_version = 1
+kind = "HEAD"
+helper = "tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+]
+
+# Once a frame: the frame-rate smoothing for the hand and the camera.
+[[injection]]
+id = "frame"
+hook = "frame"
+hook_version = 1
+kind = "HEAD"
+helper = "frame.rs"
+bindings = [
+  { name = "elapsed", ty = "std::time::Duration", value = "elapsed" },
+]
+
+# The local player's movement input, read only.
+[[injection]]
+id = "input"
+hook = "movement_input"
+hook_version = 1
+kind = "HEAD"
+helper = "input.rs"
+bindings = [
+  { name = "forward", ty = "&mut f32", value = "&mut *forward" },
+  { name = "strafe", ty = "&mut f32", value = "&mut *strafe" },
+  { name = "jump", ty = "&mut bool", value = "&mut *jump" },
+  { name = "sneak", ty = "&mut bool", value = "&mut *sneak" },
+]
+
+# The first-person hand, item, map and empty-arm pose.
+[[injection]]
+id = "hand"
+hook = "render_hand_pose"
+hook_version = 1
+kind = "HEAD"
+helper = "hand.rs"
+bindings = [
+  { name = "swing", ty = "f32", value = "swing" },
+  { name = "equip", ty = "f32", value = "equip" },
+  { name = "x", ty = "&mut f32", value = "&mut *x" },
+  { name = "y", ty = "&mut f32", value = "&mut *y" },
+  { name = "z", ty = "&mut f32", value = "&mut *z" },
+  { name = "pitch", ty = "&mut f32", value = "&mut *pitch" },
+  { name = "yaw", ty = "&mut f32", value = "&mut *yaw" },
+  { name = "roll", ty = "&mut f32", value = "&mut *roll" },
+  { name = "scale", ty = "&mut f32", value = "&mut *scale" },
+]
+
+# The camera's sway, added to the game's own shake.
+[[injection]]
+id = "shake"
+hook = "camera_shake"
+hook_version = 1
+kind = "HEAD"
+helper = "shake.rs"
+bindings = [
+  { name = "partial", ty = "f32", value = "partial" },
+  { name = "shake", ty = "&mut crate::game::native_hooks::NativeShake", value = "&mut *shake" },
+]
+
+# The third-person camera's distance.
+[[injection]]
+id = "camera"
+hook = "camera_distance"
+hook_version = 1
+kind = "HEAD"
+helper = "cam.rs"
+bindings = [
+  { name = "partial", ty = "f32", value = "partial" },
+  { name = "distance", ty = "&mut f32", value = "&mut *distance" },
+]
+
+# The config file.
+[[injection]]
+id = "configs"
+hook = "register_configs"
+hook_version = 1
+kind = "HEAD"
+helper = "cfg_register.rs"
+bindings = [
+  { name = "configs", ty = "&mut Vec<crate::game::native_configs::NativeConfig>", value = "&mut *configs" },
+]
+
+[[injection]]
+id = "config_load"
+hook = "config_loading"
+hook_version = 1
+kind = "HEAD"
+helper = "cfg_load.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "config", ty = "&crate::game::native_configs::NativeConfigFile", value = "config" },
+]
+
+[[injection]]
+id = "config_reload"
+hook = "config_reloading"
+hook_version = 1
+kind = "HEAD"
+helper = "cfg_reload.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "config", ty = "&crate::game::native_configs::NativeConfigFile", value = "config" },
+]
+
+# Options > Mods: the row and the settings page.
+[[injection]]
+id = "mods"
+hook = "mods"
+hook_version = 1
+kind = "HEAD"
+helper = "mods.rs"
+bindings = [
+  { name = "mods", ty = "&mut Vec<crate::game::native_hooks::NativeMod>", value = "&mut *mods" },
+]
+
+[[injection]]
+id = "settings"
+hook = "settings"
+hook_version = 1
+kind = "HEAD"
+helper = "settings.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "buttons", ty = "&mut Vec<String>", value = "&mut *buttons" },
+]
+
+[[injection]]
+id = "settings_click"
+hook = "settings_click"
+hook_version = 1
+kind = "HEAD"
+helper = "click.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "button", ty = "usize", value = "button" },
+]

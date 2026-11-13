@@ -17,11 +17,41 @@ Every `.hmod` in this repository is pre-packaged, verified against the official 
 - [📲 One-Copy Direct HTTPS URLs for Horizon Android](#-one-copy-direct-https-urls-for-horizon-android)
 - [🔍 Detailed Mod Breakdowns](#-detailed-mod-breakdowns)
 - [🧭 Platform Compatibility Matrix (`.hmod` vs `.hnmod`)](#-platform-compatibility-matrix-hmod-vs-hnmod)
+- [🎬 Fresh Moves — Native Player Animation (`.hnmod`)](#-fresh-moves--native-player-animation-hnmod)
 - [📖 Guides & Documentation](#-guides--documentation)
   - [Android Installation Guide (`docs/INSTALL_ANDROID.md`)](docs/INSTALL_ANDROID.md)
   - [PC Installation Guide (`docs/INSTALL_PC.md`)](docs/INSTALL_PC.md)
   - [Create & Submit `.hmod` Mods (`docs/CREATE_HMOD.md`)](docs/CREATE_HMOD.md)
   - [Upstream Horizon & Community Mod Directory (`catalog/COMMUNITY_MODS.md`)](catalog/COMMUNITY_MODS.md)
+  - [Fresh Moves: design, config and install (`docs/FRESH_MOVES.md`)](docs/FRESH_MOVES.md)
+
+---
+
+## 🎬 Fresh Moves — Native Player Animation (`.hnmod`)
+
+**[`releases/fresh_moves-1.0.0.hnmod`](releases/fresh_moves-1.0.0.hnmod)** — a native Horizon mod that gives
+every player model a full animation set: idle breathing and weight shift, walk,
+sprint, sneak, jump, fall, land, swim, climb and ride; mine, place, eat, drink,
+bow, shield and tool use; a three-hit sword combo, heavy attack, dodge, sprint
+attack, hurt and death; eased blending, head tracking and a subtle first-person
+camera sway — in **both first and third person**, on **PC and Android**.
+
+| | |
+| :--- | :--- |
+| **File** | `fresh_moves-1.0.0.hnmod` (source bundle, compiled by the launcher) |
+| **Bundle id / version** | `fresh_moves` `1.0.0`, native manifest schema `1` |
+| **Pinned engine** | Horizon `26.3`, `horizon` `a30ed9e4…`, `mixins` `5a64af93…`, hook API `397` |
+| **Hooks** | 12 named hook points, none cancellable — it cannot skip another mod's code |
+| **Config** | `config/fresh_moves-client.toml` + in-game page (Options → Mods → Fresh Moves) |
+| **Validate** | `python3 scripts/build_hnmod.py --check-only` |
+
+Install: drop the file in the launcher's `horizon-native-mods/` (PC) or import it
+in Starling (Android), then launch. Full detail, the config reference and the
+multi-mod rules are in **[`docs/FRESH_MOVES.md`](docs/FRESH_MOVES.md)**.
+
+Content mods (`.hmod`) cannot animate a player: Horizon's content API has one
+capability (`registries`) and nothing in it poses a model. That is why this one is
+a `.hnmod`.
 
 ---
 

@@ -1,4 +1,4 @@
-name: Validate & Publish Horizon .hmod Packages
+name: Validate & Publish Horizon .hmod / .hnmod Packages
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   validate-hmods:
-    name: Validate .hmod Packages (Horizon API 0.2 Spec)
+    name: Validate .hmod and .hnmod Packages (Horizon 26.3)
     runs-on: ubuntu-latest
 
     steps:
@@ -28,12 +28,16 @@ jobs:
       - name: Validate all releases/*.hmod packages and catalog index
         run: python3 scripts/build_hmods.py --check-only
 
+      - name: Validate the native bundle (releases/*.hnmod)
+        run: python3 scripts/build_hnmod.py --check-only
+
       - name: Upload .hmod packages as workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: horizon-hmod-packages
           path: |
             releases/*.hmod
+            releases/*.hnmod
             catalog/mods-index.json
 
       - name: Publish .hmod assets to GitHub Release (on v* tag)
@@ -45,4 +49,4 @@ jobs:
             gh release create "${GITHUB_REF_NAME}" \
               --title "Horizon .hmod Store Release ${GITHUB_REF_NAME}" \
               --generate-notes
-          gh release upload "${GITHUB_REF_NAME}" releases/*.hmod catalog/mods-index.json --clobber
+          gh release upload "${GITHUB_REF_NAME}" releases/*.hmod releases/*.hnmod catalog/mods-index.json --clobber
